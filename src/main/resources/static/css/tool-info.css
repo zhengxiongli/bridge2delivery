@@ -1,6 +1,6 @@
 .tool-info {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3,255px);
     gap: 137px;
     padding: 0 180px;
 }
