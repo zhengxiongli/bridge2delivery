@@ -6,6 +6,7 @@ build/
 !**/src/test/**
 checkstyle.cache
 .DS_Store
+.history
 
 ### STS ###
 .apt_generated

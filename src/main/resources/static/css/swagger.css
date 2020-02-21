@@ -1,0 +1,86 @@
+.swagger-container {
+    width: 1140px;
+    height: 298px;
+    margin: 31px auto 100px;
+    background-color: #00a6f3;
+    text-align: center;
+}
+.swagger-wrap {
+    width: 1114px;
+    height: 279px;
+    border: 2px dashed #003d97;
+    background-color: #007cdc;
+    margin: 9px auto;
+    display: inline-block;
+    text-align: center;
+}
+
+.swagger-wrap .logo {
+    width: 59px;
+    height: 59px;
+    margin: 55px 0 20px;
+    display: inline-block;
+}
+
+.swagger-wrap .search input {
+    width: 262px;
+    height: 40px;
+    border-radius: 1px;
+    border: solid 1px #000000;
+    background-color: #ffffff;
+    outline: none;
+    padding: 11px;
+    vertical-align: middle;
+    color: #a7a7a7;
+}
+
+.swagger-wrap .search button {
+    width: 59px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #003d97;
+    background-color: #003d97;
+    vertical-align: middle;
+    color: #fff;
+    margin-left: 19px;
+    outline: none;
+    cursor: pointer;
+}
+
+.swagger-wrap .search p {
+    margin-top: 26px;
+    color: #fff;
+}
+
+.guide {
+    padding: 50px;
+    margin-top: 122px;
+    background: #f5f5f5;
+    text-align: center;
+}
+.guide .guide-title {
+    font-size: 22px;
+    margin-bottom: 55px;
+}
+
+.guide .guide-list {
+    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(350px,1fr));
+    grid-template-rows: 357px;
+    gap: 76px;
+    padding: 0 50px;
+}
+
+.guide .guide-list .guide-item {
+    background: #d8d8d8;
+}
+
+.guide .guide-more {
+    font-size: 13px;
+    margin-top: 75px;
+}
+
+.guide .guide-more a {
+    color: #0757fe;
+}
