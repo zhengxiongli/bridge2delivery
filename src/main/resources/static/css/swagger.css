@@ -31,6 +31,7 @@
     outline: none;
     padding: 11px;
     vertical-align: middle;
+    color: #a7a7a7;
 }
 
 .swagger-wrap .search button {
@@ -42,6 +43,8 @@
     vertical-align: middle;
     color: #fff;
     margin-left: 19px;
+    outline: none;
+    cursor: pointer;
 }
 
 .swagger-wrap .search p {
