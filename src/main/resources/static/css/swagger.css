@@ -64,14 +64,15 @@
 }
 
 .guide .guide-list {
-    display: flex;
-    align-items: center;
     justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(350px,1fr));
+    grid-template-rows: 357px;
+    gap: 76px;
+    padding: 0 50px;
 }
 
 .guide .guide-list .guide-item {
-    width: 350px;
-    height: 357px;
     background: #d8d8d8;
 }
 
