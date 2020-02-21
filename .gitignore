@@ -5,6 +5,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 checkstyle.cache
+.DS_Store
 
 ### STS ###
 .apt_generated
