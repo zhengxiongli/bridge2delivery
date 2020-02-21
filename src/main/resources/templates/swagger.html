@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/swagger.css" />
+    <link rel="stylesheet" href="/css/tool-info.css">
+    <script src="/js/index.js"></script>
+  </head>
+  <body>
+    <div th:replace="header::header"/>
+    <main class="app-main">
+      <h2 class="title"><img style="width: 17px; height: 23px; vertical-align: middle" src="/assets/transfer.svg" alt=""> Swagger转Word</h2>
+      <p class="description">接口文档转换</p>
+      <section class="swagger-container">
+        <div class="swagger-wrap">
+          <div class="logo"><img class="img-response" src="/assets/swagger-logo.svg" alt=""></div>
+          <div class="search">
+            <input type="text" placeholder="http://swagger-url">
+            <button type="button">请求</button>
+            <p>或直接拽文件进来</p>
+          </div>
+        </div>
+      </section>
+      <div th:replace="tool-info::toolInfo"></div>
+      <section class="guide">
+        <h2 class="guide-title">如何将Swagger转成接口文档</h2>
+        <div class="guide-list">
+          <div class="guide-item"></div>
+          <div class="guide-item"></div>
+          <div class="guide-item"></div>
+        </div>
+        <p class="guide-more"><a href="#">查看更多</a></p>
+      </section>
+    </main>
+  </body>
+</html>

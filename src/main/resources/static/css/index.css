@@ -34,7 +34,7 @@ body {
 .app-main {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 26px 41px;
+    padding: 26px 0;
 }
 
 .app-main .title {
@@ -57,6 +57,7 @@ body {
     align-items: center;
     gap: 0 10px;
     margin-bottom: 94px;
+    padding: 0 40px;
 }
 
 .app-main .menu .item {
@@ -84,7 +85,8 @@ body {
     font-size: 13px;
     height: 53px;
 }
-.app-main .menu .item button {
+.app-main .menu .item .link {
+    display: inline-block;
     width: 150px;
     height: 40px;
     outline: none;
@@ -92,6 +94,7 @@ body {
     background-color: #ffffff;
     border: none;
     cursor: pointer;
+    line-height: 40px;
 }
 
 .app-main .menu .item .cover img {
