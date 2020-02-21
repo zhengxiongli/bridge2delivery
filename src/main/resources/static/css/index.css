@@ -14,7 +14,12 @@ body {
 }
 
 .app-header .logo {
-    margin: 0 73px 0 31px;
+    width: 84px;
+    margin-left: 31px;
+}
+
+.app-header .logo img {
+    width: 100%
 }
 
 .app-header .nav {
@@ -27,7 +32,7 @@ body {
 }
 
 .app-main {
-    /*max-width: 1440px;*/
+    max-width: 1440px;
     margin: 0 auto;
     padding: 26px 41px;
 }
@@ -58,14 +63,17 @@ body {
     /*width: 446px;*/
     background-color: #007cdc;
     text-align: center;
-    padding: 40px 95px 29px;
+    padding: 40px 90px 29px;
     color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 .app-main .menu .item .cover {
     width: 100px;
     height: 100px;
-    border: 1px solid red;
-    border-radius: 100%;
     margin-bottom: 33px;
     overflow: hidden;
     text-align: center;

@@ -1,6 +1,6 @@
 .tool-info {
     display: grid;
-    grid-template-columns: repeat(3,255px);
+    grid-template-columns: repeat(3,1fr);
     gap: 137px;
     padding: 0 180px;
 }
@@ -12,7 +12,6 @@
 .tool-info .item .cover {
     width: 30px;
     height: 30px;
-    border: 1px solid;
     display: inline-block;
 }
 .tool-info .item h4 {
