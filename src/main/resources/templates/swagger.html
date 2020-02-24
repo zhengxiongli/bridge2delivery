@@ -22,7 +22,11 @@
           <div class="search">
             <input type="text" placeholder="http://swagger-url"/>
             <button type="button" class="analysis">解析</button>
-            <p><button type="button" class="select-file-button">选择文件</button>或直接拽文件进来</p>
+            <p>
+              <input type="file" accept="application/json" hidden/>
+              <button class="select-file-button">选择文件</button>
+              或直接拽文件进来
+            </p>
           </div>
         </div>
       </section>
@@ -38,4 +42,13 @@
       </section>
     </main>
   </body>
+  <script>
+    window.onload = ()=> {
+      const selectFileBtn = document.querySelector('.select-file-button')
+      const fileInput = document.querySelector('input[type="file"]')
+      selectFileBtn.addEventListener('click',() => {
+        fileInput.click()
+      })
+    }
+  </script>
 </html>
