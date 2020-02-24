@@ -80,6 +80,9 @@ body {
     text-align: center;
     display: inline-block;
 }
+.app-main .menu .item.swagger {
+    grid-column: 2 / span 1;
+}
 
 .app-main .menu .item .desc {
     font-size: 13px;
