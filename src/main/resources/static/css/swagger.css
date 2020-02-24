@@ -16,10 +16,15 @@
 }
 
 .swagger-wrap .logo {
-    width: 59px;
-    height: 59px;
-    margin: 55px 0 20px;
+    width: 47px;
+    height: 47px;
+    margin-top: 47px;
     display: inline-block;
+}
+
+.swagger-wrap .desc {
+    margin: 17px 0;
+    color: #fff;
 }
 
 .swagger-wrap .search input {
@@ -60,7 +65,7 @@
 }
 
 .swagger-wrap .search p {
-    margin-top: 26px;
+    margin-top: 15px;
     color: #fff;
 }
 
