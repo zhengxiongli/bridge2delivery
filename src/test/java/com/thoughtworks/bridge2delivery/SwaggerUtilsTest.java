@@ -3,7 +3,7 @@ package com.thoughtworks.bridge2delivery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
 
-public class Test {
+public class SwaggerUtilsTest {
 
     @org.junit.jupiter.api.Test
     public void test() throws JsonProcessingException {

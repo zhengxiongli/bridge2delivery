@@ -18,19 +18,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
+//使用@RestController，这样下面就不用标注@ResponseBody
 @Controller
 @RequestMapping("/swagger")
 public class SwaggerController {
     private static final int BUFF_SIZE = 1024;
+    //upload在做download的事情，下载和上传可以单独分开，或改下名字
     @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public String upload(@RequestParam("swaggerFile")  MultipartFile file, HttpServletResponse response) throws FileNotFoundException {
+        //删除println这种输出，统一使用log.info\log.error\log.debug这种
         System.out.println(file);
         if (file.isEmpty()) {
+            //不要直接返回错误信息，统一抛出异常，有统一的异常处理：ExceptionHandler
             return "文件不能为空";
         }
         this.downloadWord(response);
+        //下载文件应该是流输出，没有返回值
         return "上传失败";
     }
 
