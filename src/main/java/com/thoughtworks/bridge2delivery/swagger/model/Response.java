@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 public class Response {
-    private int status;
+    private String status;
     private String description;
     private DataType dataType;
     private BaseInfo schema;

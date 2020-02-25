@@ -9,7 +9,7 @@ public enum  DataType {
     STRING("string", StringInfo.class), INTEGER("integer", IntegerInfo.class),
     ARRAY("array", ArrayInfo.class), FILE("file", FileInfo.class),
     OBJECT("object", ObjectInfo.class), ENUM("enum", EnumInfo.class),
-    REF("ref", RefInfo.class);
+    REF("ref", RefInfo.class), BOOLEAN("boolean", BooleanInfo.class);
 
     private String value;
     private Class<? extends BaseInfo> clazz;

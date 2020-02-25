@@ -10,6 +10,7 @@ import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,15 +86,18 @@ public final class SwaggerUtils {
         Iterator<Map.Entry<String, Map>> iterator = definitions.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Map> entry = iterator.next();
-            modelInfos.add(parseModel(entry.getValue()));
+            modelInfos.add(parseModel(entry.getKey(), entry.getValue()));
         }
         fillRefModels(modelInfos);
         return modelInfos;
     }
 
-    private static ObjectInfo parseModel(Map<String, Map> modelInfo) {
+    private static ObjectInfo parseModel(String title, Map<String, Map> modelInfo) {
         ObjectInfo model = new ObjectInfo();
         model.build(modelInfo);
+        if (StringUtils.isEmpty(model.getTitle())) {
+            model.setTitle(title);
+        }
         return model;
     }
 

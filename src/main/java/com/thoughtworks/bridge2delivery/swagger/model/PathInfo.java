@@ -54,7 +54,7 @@ public class PathInfo {
         while (iterator.hasNext()) {
             Map.Entry<String, Map> entry = iterator.next();
             Response res = new Response();
-            res.setStatus(Integer.parseInt(entry.getKey()));
+            res.setStatus(entry.getKey());
             res.build(entry.getValue(), models);
             responses.add(res);
         }
