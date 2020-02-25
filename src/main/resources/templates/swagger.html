@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>嘀嗒验收小工具</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="short icon" href="/assets/di-da.svg" type="image/x-icon">
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/swagger.css" />
     <link rel="stylesheet" href="/css/tool-info.css">
-    <script src="/js/index.js"></script>
   </head>
   <body>
     <div th:replace="header::header"/>
@@ -17,10 +18,15 @@
       <section class="swagger-container">
         <div class="swagger-wrap">
           <div class="logo"><img class="img-response" src="/assets/swagger-logo.svg" alt=""></div>
+          <p class="desc">请输入你的Swagger源</p>
           <div class="search">
-            <input type="text" placeholder="http://swagger-url">
-            <button type="button">请求</button>
-            <p>或直接拽文件进来</p>
+            <input type="text" placeholder="http://swagger-url"/>
+            <button type="button" class="analysis">解析</button>
+            <p>
+              <input type="file" hidden/>
+              <button class="select-file-button">选择文件</button>
+              或直接拽文件进来
+            </p>
           </div>
         </div>
       </section>
@@ -36,4 +42,5 @@
       </section>
     </main>
   </body>
+  <script src="/js/swagger.js"></script>
 </html>

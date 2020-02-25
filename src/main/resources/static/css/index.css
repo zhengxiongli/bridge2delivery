@@ -33,6 +33,7 @@ body {
 
 .app-main {
     max-width: 1440px;
+    min-width: 1200px;
     margin: 0 auto;
     padding: 26px 0;
 }
@@ -79,6 +80,9 @@ body {
     overflow: hidden;
     text-align: center;
     display: inline-block;
+}
+.app-main .menu .item.swagger {
+    grid-column: 2 / span 1;
 }
 
 .app-main .menu .item .desc {
