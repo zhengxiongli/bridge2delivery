@@ -10,7 +10,7 @@ public class ParamInfo {
     private String name;
     private String paramType;
     private String description;
-    private String dataType;
+    private DataType dataType;
     private String defaultVal;
     private boolean allowEmptyValue;
     private boolean required;
@@ -21,13 +21,13 @@ public class ParamInfo {
         this.setName(JSONUtils.getMapValueAndToString(paramInfo, "name"));
         this.setParamType(JSONUtils.getMapValueAndToString(paramInfo, "in"));
         this.setDescription(JSONUtils.getMapValueAndToString(paramInfo, "description"));
-        this.setDescription(JSONUtils.getMapValueAndToString(paramInfo, "type"));
         this.setDefaultVal(JSONUtils.getMapValueAndToString(paramInfo, "default"));
         this.setAllowEmptyValue(Boolean.parseBoolean(JSONUtils.getMapValueAndToString(paramInfo,
                 "allowEmptyValue")));
         this.setRequired(Boolean.parseBoolean(JSONUtils.getMapValueAndToString(paramInfo,
                 "required")));
         this.setFormat(JSONUtils.getMapValueAndToString(paramInfo, "format"));
+        this.setDataType(DataType.fromValue(JSONUtils.getMapValueAndToString(paramInfo, "type")));
         fillSchema(paramInfo, models);
         return this;
     }
@@ -40,7 +40,12 @@ public class ParamInfo {
         String ref = JSONUtils.getRef(schema);
         if (ref != null) {
             this.schema = models.get(ref);
-            this.setDataType("object");
+            this.setDataType(DataType.OBJECT);
+        } else {
+            BaseInfo baseInfo = BaseInfo.newInstance(schema);
+            this.setSchema(baseInfo.build(schema));
+            this.setDataType(baseInfo.getType());
+            this.getSchema().fillRef(models);
         }
     }
 }

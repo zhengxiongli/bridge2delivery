@@ -9,7 +9,7 @@ import java.util.Map;
 public class Response {
     private int status;
     private String description;
-    private String dataType;
+    private DataType dataType;
     private BaseInfo schema;
 
     public void build(Map<String, Map> map, Map<String, BaseInfo> models) {
@@ -25,12 +25,12 @@ public class Response {
         String ref = JSONUtils.getRef(schema);
         if (ref != null) {
             this.schema = models.get(ref);
-            this.setDataType("object");
+            this.setDataType(DataType.OBJECT);
         } else {
-            this.setDataType(JSONUtils.getMapValueAndToString(schema, "type"));
             BaseInfo baseInfo = BaseInfo.newInstance(schema);
             this.setSchema(baseInfo.build(schema));
             this.getSchema().fillRef(models);
+            this.setDataType(baseInfo.getType());
         }
     }
 }

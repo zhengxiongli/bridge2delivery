@@ -1,6 +1,7 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.exception.TypeNotFoundException;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 
@@ -27,6 +28,9 @@ public enum  DataType {
     }
 
     public static DataType fromValue(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        }
         return Arrays.stream(DataType.values()).filter(t -> t.getValue().equalsIgnoreCase(value))
                 .findFirst().orElseThrow(TypeNotFoundException::new);
     }
