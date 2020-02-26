@@ -2,10 +2,12 @@ package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class BooleanInfo extends BaseInfo {
     @Override
     public String getJsonExample() {

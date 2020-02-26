@@ -2,6 +2,7 @@ package com.thoughtworks.bridge2delivery.swagger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
 import com.thoughtworks.bridge2delivery.swagger.model.BaseInfo;
 import com.thoughtworks.bridge2delivery.swagger.model.ObjectInfo;
@@ -115,7 +116,7 @@ public final class SwaggerUtils {
     private static void validate(Map<String, Object> map) {
         for (String checkItem : CHECK_ITEMS) {
             if (map.get(checkItem) == null) {
-                throw new CustomException("非法的swagger数据");
+                throw new CustomException(Messages.INVALID_SWAGGER_JSON);
             }
         }
     }

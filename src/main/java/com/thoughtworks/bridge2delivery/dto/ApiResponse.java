@@ -12,4 +12,10 @@ public class ApiResponse<T> {
         response.setMessage(message);
         return response;
     }
+
+    public static <T> ApiResponse ok(T data) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setData(data);
+        return apiResponse;
+    }
 }
