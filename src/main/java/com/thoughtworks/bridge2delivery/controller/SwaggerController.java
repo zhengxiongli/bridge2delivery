@@ -42,6 +42,7 @@ import java.util.Map;
 @Slf4j
 @Api(description = "swagger导出")
 public class SwaggerController {
+    private static final String DEFAULT_TEMPLATE_PATH = "classpath:static/template/swagger.html";
     private static final int BUFF_SIZE = 1024;
     private final ThymeleafUtils thymeleafUtils;
 
@@ -57,6 +58,7 @@ public class SwaggerController {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
         }
         SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(Utils.getTextFromFile(file));
+        log.debug("swagger json: " + swaggerInfo);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
         return ApiResponse.ok(null);
     }
@@ -98,7 +100,7 @@ public class SwaggerController {
             String fileName = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".doc";
             response.setHeader("Content-disposition", "attachment;filename=swagger-" +
                     URLEncoder.encode(fileName, "utf-8"));
-            byte[] bytes = getFinnalyHtml(request).getBytes();
+            byte[] bytes = getFinallyHtml(request).getBytes();
             bos.write(bytes, 0, bytes.length);
             bos.flush();
         }
@@ -108,7 +110,7 @@ public class SwaggerController {
     @ApiOperation(value = "图片预览")
     public void imagePreview(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ParserConfigurationException, SAXException {
-        String html = getFinnalyHtml(request);
+        String html = getFinallyHtml(request);
         response.setContentType("image/jpeg");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
@@ -123,7 +125,7 @@ public class SwaggerController {
         return ApiResponse.ok(getFinnalyHtml(request));
     }
 
-    private String getFinnalyHtml(HttpServletRequest request) {
+    private String getFinallyHtml(HttpServletRequest request) {
         SwaggerInfo swaggerInfo = (SwaggerInfo) request.getSession().getAttribute(SessionAttributes.SWAGGER_INFO);
         String template = (String) request.getSession().getAttribute(SessionAttributes.SWAGGER_TEMPLATE);
         if (swaggerInfo == null) {
@@ -135,29 +137,19 @@ public class SwaggerController {
         }
         Map<String, Object> map = new HashMap<>();
         map.put("swaggerInfo", swaggerInfo);
-        String html = thymeleafUtils.renderTemplate(template, map);
-        return html;
+        try {
+            return thymeleafUtils.renderTemplate(template, map);
+        }catch (Exception e) {
+            throw new CustomException(Messages.PARSE_ERROR);
+        }
     }
 
     private String getDefaultTemplate() {
         try {
-            File file = ResourceUtils.getFile("classpath:templates/default.html");
-            return getFileText(file);
-        } catch (Exception e) {
-            log.error("load swagger default template error", e);
-            throw new CustomException(Messages.UPLOAD_SWAGGER_TEMPLATE);
+            File file = ResourceUtils.getFile(DEFAULT_TEMPLATE_PATH);
+            return Utils.getTextFromInputStream(new FileInputStream(file));
+        } catch (IOException e) {
+            throw new CustomException(Messages.TEMPLATE_FILE_NOT_FOUND);
         }
-    }
-
-    private String getFileText(File file) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            int len = 0;
-            byte[] bytes = new byte[BUFF_SIZE];
-            while ((len = inputStream.read(bytes)) > -1) {
-                builder.append(new String(bytes, 0, len));
-            }
-        }
-        return builder.toString();
     }
 }

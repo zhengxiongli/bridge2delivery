@@ -39,7 +39,7 @@ public final class Utils {
         }
     }
 
-    private static String getTextFromInputStream(InputStream inputStream) throws IOException {
+    public static String getTextFromInputStream(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
         try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
             try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
