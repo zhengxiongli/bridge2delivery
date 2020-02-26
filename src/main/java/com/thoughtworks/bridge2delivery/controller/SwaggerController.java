@@ -6,12 +6,16 @@ import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
 import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
+import com.thoughtworks.bridge2delivery.swagger.model.PathInfo;
+import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
 import com.thoughtworks.bridge2delivery.utils.ThymeleafUtils;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +38,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -119,13 +126,23 @@ public class SwaggerController {
     }
 
     @GetMapping(value = "/html")
-    @ApiOperation(value = "html预览")
-    public ApiResponse<String> htmlPreview(HttpServletRequest request) {
-        return ApiResponse.ok(getFinallyHtml(request));
+    @ApiOperation(value = "html预览", produces = MediaType.TEXT_HTML_VALUE)
+    public String htmlPreview(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        return getPreviewHtml(request);
     }
 
     private String getFinallyHtml(HttpServletRequest request) {
         SwaggerInfo swaggerInfo = (SwaggerInfo) request.getSession().getAttribute(SessionAttributes.SWAGGER_INFO);
+        return getHtml(request, swaggerInfo);
+    }
+
+    private String getPreviewHtml(HttpServletRequest request) {
+        SwaggerInfo swaggerInfo = (SwaggerInfo) request.getSession().getAttribute(SessionAttributes.SWAGGER_INFO);
+        return getHtml(request, getPreviewSwaagerInfo(swaggerInfo));
+    }
+
+    private String getHtml(HttpServletRequest request, SwaggerInfo swaggerInfo) {
         String template = (String) request.getSession().getAttribute(SessionAttributes.SWAGGER_TEMPLATE);
         if (swaggerInfo == null) {
             throw new CustomException(Messages.UPLOAD_SWAGGER_JSON);
@@ -142,6 +159,28 @@ public class SwaggerController {
             throw new CustomException(Messages.PARSE_ERROR);
         }
     }
+
+    private SwaggerInfo getPreviewSwaagerInfo(SwaggerInfo swaggerInfo) {
+        SwaggerInfo previewSwaggerInfo = new SwaggerInfo();
+        List<PathTag> tags = new ArrayList<>();
+        for (int i = 0; i < 2 && i < swaggerInfo.getTagList().size(); i++) {
+            PathTag orignTag = swaggerInfo.getTagList().get(i);
+            PathTag pathTag = new PathTag();
+            pathTag.setDescription(orignTag.getDescription());
+            pathTag.setName(orignTag.getName());
+            pathTag.setPathList(orignTag.getPathList().size() > 2 ?
+                    orignTag.getPathList().subList(0, 2) : orignTag.getPathList());
+            tags.add(pathTag);
+        }
+        previewSwaggerInfo.setTagList(tags);
+        previewSwaggerInfo.setVersion(swaggerInfo.getVersion());
+        previewSwaggerInfo.setDescription(swaggerInfo.getDescription());
+        previewSwaggerInfo.setTitle(swaggerInfo.getTitle());
+        previewSwaggerInfo.setModels(swaggerInfo.getModels().size() > 2 ?
+                swaggerInfo.getModels().subList(0, 2) : swaggerInfo.getModels());
+        return previewSwaggerInfo;
+    }
+
 
     private String getDefaultTemplate() {
         try {

@@ -137,3 +137,9 @@
 .preview .preview-content {
     padding: 10px;
 }
+
+.preview .preview-content iframe {
+    width: 100%;
+    border: none;
+    height: 600px;
+}

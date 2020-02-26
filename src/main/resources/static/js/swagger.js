@@ -62,16 +62,21 @@ function registerParseJsonUrl() {
             body: fd
         })
             .then(res => res.blob())
-            .then(showPreview)
+            .then(showPreviewIFrame)
             .catch((res) => alert(res.data.message));
     });
 }
 
-function showPreview() {
+function showPreviewImage() {
     const preview = $('.preview'), previewImg = $('.preview-img');
     preview.style.display = "block";
-    preview
     previewImg.src = '/swagger/image?' + (new Date().getTime());
+}
+
+function showPreviewIFrame() {
+    const preview = $('.preview'), previewIframe = $('.preview-iframe');
+    preview.style.display = "block";
+    previewIframe.src = '/swagger/html?' + (new Date().getTime());
 }
 
 function uploadJSON(file) {
@@ -82,7 +87,7 @@ function uploadJSON(file) {
         body: fd,
     })
         .then(res => {/*res.blob()*/})
-        .then(showPreview)
+        .then(showPreviewIFrame)
         .catch(() => alert('上传失败'))
 }
 
