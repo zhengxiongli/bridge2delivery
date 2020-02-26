@@ -20,13 +20,26 @@
           <div class="logo"><img class="img-response" src="/assets/swagger-logo.svg" alt=""></div>
           <p class="desc">请输入你的Swagger源</p>
           <div class="search">
-            <input type="text" placeholder="http://swagger-url"/>
+            <input type="text" class="url-input" placeholder="http://swagger-url"/>
             <button type="button" class="analysis">解析</button>
             <p>
               <input type="file" hidden/>
               <button class="select-file-button">选择文件</button>
               或直接拽文件进来
             </p>
+          </div>
+          <div class="preview">
+            <div class="preview-head">
+              <div class="preview-title">效果预览</div>
+              <div class="preview-btns">
+                <button class="reset-to-defalut" style="display: none">恢复默认模板</button>
+                <button class="select-template-btn" style="display: none">更换模板</button>
+                <button class="generate" onclick="downloadFile()">生成</button>
+              </div>
+            </div>
+            <div class="preview-content">
+              <img class="preview-img" src="">
+            </div>
           </div>
         </div>
       </section>

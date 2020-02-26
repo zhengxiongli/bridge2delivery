@@ -1,13 +1,11 @@
 .swagger-container {
     width: 1140px;
-    height: 298px;
     margin: 31px auto 100px;
     background-color: #00a6f3;
     text-align: center;
 }
 .swagger-wrap {
     width: 1114px;
-    height: 279px;
     border: 2px dashed #003d97;
     background-color: #007cdc;
     margin: 9px auto;
@@ -100,4 +98,42 @@
 
 .guide .guide-more a {
     color: #0757fe;
+}
+
+.preview {
+    margin: 24px 56px;
+    background-color: #fff;
+    display: none;
+}
+
+.preview .preview-head {
+    padding: 12px 18px;
+    background-color: #f4f4f4;
+    display: flex;
+}
+
+.preview .preview-head .preview-title {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+    flex: 1;
+    text-align: left;
+}
+
+.preview .preview-head .preview-btns button {
+    margin: 0;
+    outline: none;
+    height: 40px;
+    width: 120px;
+    font-size: 14px;
+    border: solid 1px #fff;
+    border-radius: 1px;
+    background-color: #fff;
+    color: #00a6f3;
+    cursor: pointer;
+}
+
+.preview .preview-content {
+    padding: 10px;
 }

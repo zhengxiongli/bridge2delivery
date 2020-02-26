@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 public final class Utils {
     private static final int MAX_WAIT_TIME = 10 * 1000;
     private static final int IMAGE_WIDTH = 800;
-    private static final int IMAGE_HEIGHT = 1200;
+    private static final int IMAGE_HEIGHT = 600;
 
     private Utils() {
     }

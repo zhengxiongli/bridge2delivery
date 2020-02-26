@@ -50,24 +50,44 @@ function validateJSON(file) {
 }
 
 function downloadFile(blob) {
-    const filename = `test.docx`
     const a = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    a.href = url;
-    a.download = filename;
+    a.href = "/swagger/word";
     a.click();
-    URL.revokeObjectURL(url);
+    a.remove();
 }
+
+function registerParseJsonUrl() {
+    const analysisBtn = $(".analysis");
+    analysisBtn.addEventListener('click', () => {
+        const urlInput = $('.url-input'), fd = new FormData();
+        fd.append("url", urlInput.value);
+        fetch('/swagger/url', {
+            method: "POST",
+            body: fd
+        })
+            .then(res => res.blob())
+            .then(showPreview)
+            .catch((res) => alert(res.data.message));
+    });
+}
+
+function showPreview() {
+    const preview = $('.preview'), previewImg = $('.preview-img');
+    preview.style.display = "block";
+    preview
+    previewImg.src = '/swagger/image?' + (new Date().getTime());
+}
+
 function uploadJSON(file) {
     const fd = new FormData()
     fd.append('swaggerFile', file)
-    fetch('/swagger/upload', {
+    fetch('/swagger/json', {
         method: 'POST',
         body: fd,
     })
-        .then(res => res.blob())
-        .then(downloadFile)
-        .catch(() => alert('下载失败'))
+        .then(res => {/*res.blob()*/})
+        .then(showPreview)
+        .catch(() => alert('上传失败'))
 }
 
 function renderJSON(file) {
@@ -141,4 +161,5 @@ window.onload = () => {
     proxyFileSelect()
     registerDrag($('.swagger-container'))
     registerFileSelectListener()
+    registerParseJsonUrl();
 }
