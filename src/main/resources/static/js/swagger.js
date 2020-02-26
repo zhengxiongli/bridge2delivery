@@ -22,6 +22,7 @@ function registerFileSelectListener() {
         const file = fileInput.files[0];
         validateJSON(file);
         renderJSON(file)
+        fileInput.value = '';
     })
 }
 
