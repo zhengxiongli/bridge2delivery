@@ -29,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
@@ -122,7 +121,7 @@ public class SwaggerController {
     @GetMapping(value = "/html")
     @ApiOperation(value = "html预览")
     public ApiResponse<String> htmlPreview(HttpServletRequest request) {
-        return ApiResponse.ok(getFinnalyHtml(request));
+        return ApiResponse.ok(getFinallyHtml(request));
     }
 
     private String getFinallyHtml(HttpServletRequest request) {
@@ -139,7 +138,7 @@ public class SwaggerController {
         map.put("swaggerInfo", swaggerInfo);
         try {
             return thymeleafUtils.renderTemplate(template, map);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CustomException(Messages.PARSE_ERROR);
         }
     }
