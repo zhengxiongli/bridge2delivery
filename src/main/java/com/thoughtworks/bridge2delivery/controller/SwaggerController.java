@@ -1,5 +1,6 @@
 package com.thoughtworks.bridge2delivery.controller;
 
+<<<<<<< Updated upstream
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
@@ -16,6 +17,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+=======
+import com.thoughtworks.bridge2delivery.exception.CustomException;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+>>>>>>> Stashed changes
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +56,7 @@ import java.util.Map;
 public class SwaggerController {
     private static final String DEFAULT_TEMPLATE_PATH = "classpath:static/template/swagger.html";
     private static final int BUFF_SIZE = 1024;
+<<<<<<< Updated upstream
     private final ThymeleafUtils thymeleafUtils;
 
     public SwaggerController(final ThymeleafUtils thymeleafUtils) {
@@ -84,6 +91,15 @@ public class SwaggerController {
             throws IOException {
         if (file.isEmpty()) {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
+=======
+
+    @RequestMapping(value = "upload", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public String upload(@RequestParam("swaggerFile")  MultipartFile file, HttpServletResponse response) throws FileNotFoundException {
+        if (file.isEmpty()) {
+            throw new CustomException("文件不能为空");
+>>>>>>> Stashed changes
         }
         String template = Utils.getTextFromFile(file);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
