@@ -110,7 +110,7 @@
             <tr th:unless="${path.responses == null}" th:each="response : ${path.responses}" class="text-center">
                 <td width="10%" th:text="${response.status ?: ''}">200</td>
                 <td width="15%" th:text="${response.dataType == null ? '' : #strings.toLowerCase(response.dataType)}">STRING</td>
-                <td width="15%" th:text="${response.schema != null ? response.schema.refName : ''}">
+                <td width="15%" th:text="${response.refName}">
                     test
                 </td>
                 <td colspan="4" th:text="${response.description}">成功</td>

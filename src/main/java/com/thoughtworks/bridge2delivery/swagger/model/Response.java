@@ -17,6 +17,13 @@ public class Response {
         this.fillSchema(map, models);
     }
 
+    public String getRefName() {
+        if (schema == null || (schema.getType() != DataType.ARRAY && schema.getType() != DataType.OBJECT)) {
+            return "";
+        }
+        return schema.getRefName();
+    }
+
     private void fillSchema(Map<String, Map> map, Map<String, BaseInfo> models) {
         Map schema = map.get("schema");
         if (schema == null) {
