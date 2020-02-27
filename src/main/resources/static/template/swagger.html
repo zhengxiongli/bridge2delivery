@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>
-    <title th:text="${swaggerInfo.title}">Title</title>
+    <title th:text="${swaggerInfo.title == null ? '' : swaggerInfo.title}">Title</title>
     <style type="text/css">
         body {
             font-family: Trebuchet MS, sans-serif;
@@ -36,7 +36,9 @@
     </style>
 </head>
 <body>
-<h1 class="text-center" th:text="|${swaggerInfo.title}(${swaggerInfo.version})|">系统名称(版本号)</h1>
+<h1 class="text-center"
+    th:text="|${swaggerInfo.title}${swaggerInfo.version != null ? '(' +  swaggerInfo.version + ')' : ''}|">
+    系统名称(版本号)</h1>
 <h3 class="text-center" th:text="${swaggerInfo.description}">文档描述</h3>
 <div th:each="tag : ${swaggerInfo.tagList}">
     <h2 th:text="|${tagStat.count}. ${tag.name}|">1. Tag名称</h2>
@@ -44,7 +46,7 @@
     <div style="margin: 0 2em" th:each="path : ${tag.pathList}">
         <table>
             <tr>
-                <td class="back-color title" colspan="7" th:text="|${pathStat.count}. ${path.summary}|">1. 接口名称</td>
+                <td class="back-color title" colspan="7" th:text="|${pathStat.count}. ${path.summary?: ''}|">1. 接口名称</td>
             </tr>
             <tr>
                 <td class="text-center" width="10%">描述</td>
@@ -56,10 +58,13 @@
             </tr>
             <tr>
                 <td class="text-center" width="10%">Method</td>
-                <td colspan="6" th:text="${#strings.toUpperCase(path.method)}">GET</td>
+                <td colspan="6" th:text="${#strings.toLowerCase(path.method)}">GET</td>
             </tr>
-            <tr th:unless="${path.params == null}">
-                <td class="text-center" rowspan="2" th:rowspan="${#lists.size(path.params) + 1}" width="10%">Request</td>
+            <tr>
+                <td class="text-center" rowspan="3"
+                    th:rowspan="${(path.params == null ? 1 : #lists.size(path.params)) + 1}"
+                    width="10%">Request
+                </td>
                 <th width="10%" class="back-color">参数名</th>
                 <th width="10%" class="back-color">数据类型</th>
                 <th width="15%" class="back-color">引用对象</th>
@@ -67,20 +72,40 @@
                 <th width="10%" class="back-color">是否必填</th>
                 <th class="back-color">说明</th>
             </tr>
-            <tr th:unless="${path.params == null}" th:each="param : ${path.params}" class="text-center">
-                <td width="10%" th:text="${param.name}">username</td>
-                <td width="10%" th:text="${param.dataType}">STRING</td>
-                <td width="15%" th:text="${#strings.equals(param.dataType, 'OBJECT') ? param.schema.title : ''}"></td>
-                <td width="15%" th:text="${param.paramType}">path</td>
+            <tr th:each="param : ${path.params}" class="text-center">
+                <td width="10%" th:text="${param.name?: ''}">username</td>
+                <td width="10%" th:text="${param.dataType?: ''}">STRING</td>
+                <td width="15%"
+                    th:text="${#strings.equals(param.dataType, 'OBJECT') ? param.schema.title : ''}"></td>
+                <td width="15%" th:text="${param.paramType?: ''}">path</td>
                 <td width="15%" th:text="${param.required ? '是' : '否'}">是</td>
                 <td th:text="${param.description}">用户名称</td>
             </tr>
-            <tr th:unless="${path.responses == null}">
-                <td class="text-center" rowspan="2" th:rowspan="${#lists.size(path.responses) + 1}" width="10%">Response</td>
+            <tr th:if="${path.params == null}" class="text-center">
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+            </tr>
+            <tr>
+                <td class="text-center" rowspan="2"
+                    th:rowspan="${(path.responses == null ? 1 : #lists.size(path.responses)) + 1}"
+                    width="10%">Response
+                </td>
                 <th width="20%" class="back-color">状态码</th>
                 <th width="15%" class="back-color">数据类型</th>
                 <th width="15%" class="back-color">引用对象</th>
                 <th colspan="4" class="back-color">说明</th>
+            </tr>
+            <tr th:if="${path.responses == null}" class="text-center">
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
             </tr>
             <tr th:unless="${path.responses == null}" th:each="response : ${path.responses}" class="text-center">
                 <td width="10%" th:text="${response.status ?: ''}">200</td>
@@ -98,7 +123,7 @@
 <div style="margin: 0 2em">
     <table th:each="model : ${swaggerInfo.models}">
         <tr>
-            <td class="back-color title" colspan="5" th:text="${model.title}">User</td>
+            <td class="back-color title" colspan="5" th:text="${model.title == null ? '' : model.title}">User</td>
         </tr>
         <tr>
             <td class="text-center" width="20%">描述</td>
@@ -123,7 +148,7 @@
         </tr>
         <tr>
             <td class="text-center" width="20%">示例</td>
-            <td colspan="4" class="text-center" th:text="${model.jsonExample}">{"username" : ""zhangsan"}</td>
+            <td colspan="4" th:text="${model.jsonExample}">{"username" : ""zhangsan"}</td>
         </tr>
     </table>
     <br/>
