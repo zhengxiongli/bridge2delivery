@@ -22,7 +22,9 @@ export function isValidJSON(fileType) {
 }
 
 export function isURL(value) {
-    return /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/.test(value)
+    return /^((https?):\/\/)?(\w+|-)+(\.[\w-]+)?([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/.test(
+        value
+    )
 }
 
 export function parseJSON(data) {
