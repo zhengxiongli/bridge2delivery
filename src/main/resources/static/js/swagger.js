@@ -1,14 +1,6 @@
+import { $, validateResponse, isURL, validateJSON, parseJSON } from "./utils.js";
+
 const fileInput = $('input[type="file"]');
-const JSON_FILE_TYPE = 'application/json';
-
-function $(selector) {
-    return document.querySelector(selector)
-}
-
-function throwError(msg) {
-    alert(`[ERROR]: ${msg}`);
-    throw new Error(msg)
-}
 
 function proxyFileSelect() {
     const selectFileBtn = $('.select-file-button');
@@ -26,45 +18,29 @@ function registerFileSelectListener() {
     })
 }
 
-function isValidJSON(fileType) {
-    return !(!fileType || fileType !== JSON_FILE_TYPE);
-}
-
-function parseJSON(data) {
-    try {
-        JSON.parse(data);
-    } catch (err) {
-        console.log('parseJSON:', err.message);
-        throwError('解析 JSON 文件失败')
-    }
-}
-
-function validateJSON(file) {
-    if (!isValidJSON(file.type)) {
-        throwError('请选择正确的json文件')
-    }
-    return true
-}
-
 function registerParseJsonUrl() {
     const analysisBtn = $(".analysis");
     analysisBtn.addEventListener('click', () => {
-        const urlInput = $('.url-input'), fd = new FormData();
+        const urlInput = $('.url-input')
+        if(!isURL(urlInput.value)) {
+            return alert('请输入有效的URL')
+        }
+        const fd = new FormData();
         fd.append("url", urlInput.value);
         fetch('/swagger/url', {
             method: "POST",
             body: fd
         })
-            .then(res => res.blob())
+            .then(validateResponse)
             .then(showPreviewIFrame)
-            .catch((res) => alert(res.data.message));
     });
 }
 
 function showPreviewIFrame() {
-    const preview = $('.preview'), previewIframe = $('.preview-iframe');
+    const preview = $('.preview')
+    const previewIframe = $('.preview-iframe');
     preview.style.display = "block";
-    previewIframe.src = '/swagger/html?' + (new Date().getTime());
+    previewIframe.src = `/swagger/html?${Date.now()}`;
 }
 
 function uploadJSON(file) {
@@ -73,9 +49,8 @@ function uploadJSON(file) {
     fetch('/swagger/json', {
         method: 'POST',
         body: fd,
-    })
-        .then(showPreviewIFrame)
-        .catch(() => alert('上传失败'))
+    }).then(validateResponse)
+    .then(showPreviewIFrame)
 }
 
 function renderJSON(file) {
@@ -146,12 +121,10 @@ function registerDrag(dragArea) {
     )
 }
 
-function registerDownloadFile() {
-    $('.generate').addEventListener('click', () => {
-        const a = document.createElement('a');
-        a.href = "/swagger/word";
-        a.click();
-        a.remove();
+function registerGlobalErrorHandler() {
+    window.addEventListener('unhandledrejection', (e) => {
+        console.error('[unhandledrejection]',e.reason)
+        alert(e.reason.message || '系统异常')
     })
 }
 
@@ -160,5 +133,5 @@ window.onload = () => {
     registerDrag($('.swagger-container'));
     registerFileSelectListener();
     registerParseJsonUrl();
-    registerDownloadFile()
+    registerGlobalErrorHandler()
 };

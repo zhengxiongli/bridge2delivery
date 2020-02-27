@@ -3,7 +3,13 @@
     margin: 31px auto 100px;
     background-color: #00a6f3;
     text-align: center;
+    transition: color .3s;
 }
+
+.swagger-container.drag-area-highlight .swagger-wrap {
+    border-color: #fff;
+}
+
 .swagger-wrap {
     width: 1114px;
     border: 2px dashed #003d97;

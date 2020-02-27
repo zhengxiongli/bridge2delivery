@@ -1,5 +1,4 @@
 package com.thoughtworks.bridge2delivery.controller;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;

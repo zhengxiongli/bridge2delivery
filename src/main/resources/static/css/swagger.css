@@ -3,7 +3,13 @@
     margin: 31px auto 100px;
     background-color: #00a6f3;
     text-align: center;
+    transition: color .3s;
 }
+
+.swagger-container.drag-area-highlight .swagger-wrap {
+    border-color: #fff;
+}
+
 .swagger-wrap {
     width: 1114px;
     border: 2px dashed #003d97;
@@ -138,9 +144,15 @@
     text-align: left;
 }
 
-.preview .preview-head .preview-btns button {
+.preview .preview-head .preview-btns {
+    display: flex;
+    align-items: center;
+}
+.preview .preview-head .preview-btns .btn {
+    display: inline-block;
     outline: none;
     height: 40px;
+    line-height: 40px;
     width: 120px;
     font-size: 14px;
     border: solid 1px #fff;

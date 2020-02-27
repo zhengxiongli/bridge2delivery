@@ -30,6 +30,10 @@ function isValidJSON(fileType) {
     return !(!fileType || fileType !== JSON_FILE_TYPE);
 }
 
+function isURL(value) {
+    return /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/.test(value)
+}
+
 function parseJSON(data) {
     try {
         JSON.parse(data);
@@ -49,7 +53,11 @@ function validateJSON(file) {
 function registerParseJsonUrl() {
     const analysisBtn = $(".analysis");
     analysisBtn.addEventListener('click', () => {
-        const urlInput = $('.url-input'), fd = new FormData();
+        const urlInput = $('.url-input')
+        if(!isURL(urlInput.value)) {
+            return alert('请输入有效的URL')
+        }
+        const fd = new FormData();
         fd.append("url", urlInput.value);
         fetch('/swagger/url', {
             method: "POST",
