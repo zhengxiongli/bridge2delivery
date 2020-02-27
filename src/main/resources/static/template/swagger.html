@@ -74,9 +74,9 @@
             </tr>
             <tr th:each="param : ${path.params}" class="text-center">
                 <td width="10%" th:text="${param.name?: ''}">username</td>
-                <td width="10%" th:text="${param.dataType?: ''}">STRING</td>
+                <td width="10%" th:text="${param.dataType == null ? '' : #strings.toLowerCase(param.dataType)}">STRING</td>
                 <td width="15%"
-                    th:text="${#strings.equals(param.dataType, 'OBJECT') ? param.schema.title : ''}"></td>
+                    th:text="${#strings.equalsIgnoreCase(param.dataType, 'OBJECT') ? param.schema.title : ''}"></td>
                 <td width="15%" th:text="${param.paramType?: ''}">path</td>
                 <td width="15%" th:text="${param.required ? '是' : '否'}">是</td>
                 <td th:text="${param.description}">用户名称</td>
@@ -109,8 +109,8 @@
             </tr>
             <tr th:unless="${path.responses == null}" th:each="response : ${path.responses}" class="text-center">
                 <td width="10%" th:text="${response.status ?: ''}">200</td>
-                <td width="15%" th:text="${response.dataType ?: ''}">STRING</td>
-                <td width="15%" th:text="${#strings.equals(response.dataType, 'OBJECT') ? response.schema.title : ''}">
+                <td width="15%" th:text="${response.dataType == null ? '' : #strings.toLowerCase(response.dataType)}">STRING</td>
+                <td width="15%" th:text="${response.schema != null ? response.schema.refName : ''}">
                     test
                 </td>
                 <td colspan="4" th:text="${response.description}">成功</td>
@@ -120,8 +120,8 @@
     </div>
 </div>
 <h2>Models</h2>
-<div style="margin: 0 2em">
-    <table th:each="model : ${swaggerInfo.models}">
+<div style="margin: 0 2em" th:each="model : ${swaggerInfo.models}">
+    <table>
         <tr>
             <td class="back-color title" colspan="5" th:text="${model.title == null ? '' : model.title}">User</td>
         </tr>
@@ -138,11 +138,12 @@
         </tr>
         <tr th:each="prop : ${model.properties}">
             <td width="10%" class="text-center" th:text="${prop.name}">username</td>
-            <td width="10%" class="text-center" th:text="${prop.type}">STRING</td>
-            <td width="15%" class="text-center" th:switch="${prop.type}">
-                <span th:case="OBJECT" th:text="${prop.title}"></span>
-                <span th:case="REF" th:text="${prop.ref}"></span>
-                <span th:case="ARRAY" th:text="${prop.items}"></span>
+            <td width="10%" class="text-center" th:text="${#strings.toLowerCase(prop.type)}">STRING</td>
+
+            <td width="10%" class="text-center">
+                <span th:text="${#strings.equalsIgnoreCase(prop.type, 'REF') ? prop.ref : ''}">string</span>
+                <span th:text="${#strings.equalsIgnoreCase(prop.type, 'OBJECT') ? prop.title : ''}">string</span>
+                <span th:text="${#strings.equalsIgnoreCase(prop.type, 'ARRAY') ? prop.refName : ''}">string</span>
             </td>
             <td class="text-center" th:text="${prop.description}">用户姓名</td>
         </tr>
