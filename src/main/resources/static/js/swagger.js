@@ -2,6 +2,16 @@ import { $, validateResponse, isURL, validateJSON, parseJSON } from "./utils.js"
 
 const fileInput = $('input[type="file"]');
 
+function onRestDefaultTemplate() {
+    $('.reset-to-default-btn').addEventListener('click',() => {
+
+    fetch('/swagger/default/template', {
+        method: "PUT",
+    })
+        .then(()=> alert('重置成功!'))
+    })
+}
+
 function proxyFileSelect() {
     const selectFileBtn = $('.select-file-button');
     selectFileBtn.addEventListener('click', () => {
@@ -134,4 +144,5 @@ window.onload = () => {
     registerFileSelectListener();
     registerParseJsonUrl();
     registerGlobalErrorHandler()
+    onRestDefaultTemplate()
 };
