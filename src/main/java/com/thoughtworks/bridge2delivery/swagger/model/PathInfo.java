@@ -3,6 +3,7 @@ package com.thoughtworks.bridge2delivery.swagger.model;
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +31,18 @@ public class PathInfo {
         buildParams((List<Map>) pathInfoMap.get("parameters"), models);
         buildResponses(pathInfoMap.get("responses"), models);
         return this;
+    }
+
+    public String getSummary() {
+        return StringUtils.isEmpty(summary) ? pathToSummary() : summary;
+    }
+
+    private String pathToSummary() {
+        if (StringUtils.isEmpty(path)) {
+            return "";
+        }
+        String summary = path.replaceAll("/", " ");
+        return summary.trim();
     }
 
     private void buildParams(List<Map> parameters, Map<String, BaseInfo> models) {
