@@ -12,11 +12,8 @@ import com.thoughtworks.bridge2delivery.utils.ThymeleafUtils;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +28,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,8 +45,7 @@ import java.util.Map;
 @Slf4j
 @Api(description = "swagger导出")
 public class SwaggerController {
-    private static final String DEFAULT_TEMPLATE_PATH = "classpath:static/template/swagger.html";
-    private static final int BUFF_SIZE = 1024;
+    private static final String DEFAULT_TEMPLATE_CLASSPATH = "classpath:static/template/swagger.html";
     private final ThymeleafUtils thymeleafUtils;
 
     public SwaggerController(final ThymeleafUtils thymeleafUtils) {
@@ -81,7 +76,7 @@ public class SwaggerController {
 
     @PostMapping(value = "/template")
     @ApiOperation(value = "上传模板")
-    public ApiResponse uploadTemplate(@RequestParam("swaggerFile")  MultipartFile file, HttpServletRequest request)
+    public ApiResponse uploadTemplate(@RequestParam("swaggerFile") MultipartFile file, HttpServletRequest request)
             throws IOException {
         if (file.isEmpty()) {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
@@ -140,7 +135,7 @@ public class SwaggerController {
 
     private String getPreviewHtml(HttpServletRequest request) {
         SwaggerInfo swaggerInfo = (SwaggerInfo) request.getSession().getAttribute(SessionAttributes.SWAGGER_INFO);
-        return getHtml(request, getPreviewSwaagerInfo(swaggerInfo));
+        return getHtml(request, getPreviewSwaggerInfo(swaggerInfo));
     }
 
     private String getHtml(HttpServletRequest request, SwaggerInfo swaggerInfo) {
@@ -161,16 +156,16 @@ public class SwaggerController {
         }
     }
 
-    private SwaggerInfo getPreviewSwaagerInfo(SwaggerInfo swaggerInfo) {
+    private SwaggerInfo getPreviewSwaggerInfo(SwaggerInfo swaggerInfo) {
         SwaggerInfo previewSwaggerInfo = new SwaggerInfo();
         List<PathTag> tags = new ArrayList<>();
         for (int i = 0; i < 2 && i < swaggerInfo.getTagList().size(); i++) {
-            PathTag orignTag = swaggerInfo.getTagList().get(i);
+            PathTag originTag = swaggerInfo.getTagList().get(i);
             PathTag pathTag = new PathTag();
-            pathTag.setDescription(orignTag.getDescription());
-            pathTag.setName(orignTag.getName());
-            pathTag.setPathList(orignTag.getPathList().size() > 2 ?
-                    orignTag.getPathList().subList(0, 2) : orignTag.getPathList());
+            pathTag.setDescription(originTag.getDescription());
+            pathTag.setName(originTag.getName());
+            pathTag.setPathList(originTag.getPathList().size() > 2 ?
+                    originTag.getPathList().subList(0, 2) : originTag.getPathList());
             tags.add(pathTag);
         }
         previewSwaggerInfo.setTagList(tags);
@@ -185,7 +180,7 @@ public class SwaggerController {
 
     private String getDefaultTemplate() {
         try {
-            File file = ResourceUtils.getFile(DEFAULT_TEMPLATE_PATH);
+            File file = ResourceUtils.getFile(DEFAULT_TEMPLATE_CLASSPATH);
             return Utils.getTextFromInputStream(new FileInputStream(file));
         } catch (IOException e) {
             throw new CustomException(Messages.TEMPLATE_FILE_NOT_FOUND);

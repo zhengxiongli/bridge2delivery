@@ -21,7 +21,7 @@ function registerFileSelectListener() {
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
         validateJSON(file);
-        renderJSON(file)
+        renderJSON(file);
         fileInput.value = '';
     })
 }
@@ -46,7 +46,7 @@ function validateJSON(file) {
     return true
 }
 
-function downloadFile(blob) {
+function downloadFile() {
     const a = document.createElement('a');
     a.href = "/swagger/word";
     a.click();
@@ -81,13 +81,12 @@ function showPreviewIFrame() {
 }
 
 function uploadJSON(file) {
-    const fd = new FormData()
-    fd.append('swaggerFile', file)
+    const fd = new FormData();
+    fd.append('swaggerFile', file);
     fetch('/swagger/json', {
         method: 'POST',
         body: fd,
     })
-        .then(res => {/*res.blob()*/})
         .then(showPreviewIFrame)
         .catch(() => alert('上传失败'))
 }
@@ -163,6 +162,6 @@ function registerDrag(dragArea) {
 window.onload = () => {
     proxyFileSelect();
     registerDrag($('.swagger-container'));
-    registerFileSelectListener()
+    registerFileSelectListener();
     registerParseJsonUrl();
-}
+};
