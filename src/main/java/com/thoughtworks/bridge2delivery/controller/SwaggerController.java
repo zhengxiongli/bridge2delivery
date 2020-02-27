@@ -18,6 +18,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,7 +87,7 @@ public class SwaggerController {
         return ApiResponse.ok(null);
     }
 
-    @PostMapping(value = "/default/template")
+    @PutMapping(value = "/default/template")
     @ApiOperation(value = "恢复为默认模板")
     public ApiResponse resetToDefault(HttpServletRequest request) {
         request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, getDefaultTemplate());
