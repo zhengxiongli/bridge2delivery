@@ -28,4 +28,9 @@ public class RefInfo extends BaseInfo {
     public String getJsonExample() {
         return refInfo.getJsonExample();
     }
+
+    @Override
+    public String getRefName() {
+        return this.refInfo.getRefName();
+    }
 }

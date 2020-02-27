@@ -17,6 +17,7 @@ public class BaseInfo {
     private String example;
     private String description;
     private String format;
+    private String refName;
 
     public void setName(String name) {
         if (StringUtils.isEmpty(name)) {
@@ -37,6 +38,10 @@ public class BaseInfo {
             return;
         }
         this.description = description;
+    }
+
+    public String getRefName() {
+        return this.type.getValue();
     }
 
     public void setFormat(String format) {

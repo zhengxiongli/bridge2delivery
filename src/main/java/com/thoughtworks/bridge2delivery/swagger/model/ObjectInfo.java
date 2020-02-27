@@ -71,4 +71,9 @@ public class ObjectInfo extends BaseInfo {
             this.properties.add(property);
         }
     }
+
+    @Override
+    public String getRefName() {
+        return title;
+    }
 }

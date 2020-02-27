@@ -39,4 +39,9 @@ public class ArrayInfo extends BaseInfo {
             items.fillRef(refMap);
         }
     }
+
+    @Override
+    public String getRefName() {
+        return "List«" + items.getRefName() + "»";
+    }
 }
