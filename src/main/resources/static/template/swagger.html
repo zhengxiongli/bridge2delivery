@@ -7,7 +7,7 @@
         body {
             font-family: Trebuchet MS, sans-serif;
             font-size: 15px;
-            width: 75%;
+            width: 80%;
             margin: auto;
         }
 
@@ -19,13 +19,15 @@
             background-color: lightblue
         }
 
-        .api-title {
-            text-align: left;
+        .title {
+            font-weight: bold;
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
+            word-wrap: break-word;
+            word-break: break-all;
         }
 
         table, th, td {
@@ -42,63 +44,89 @@
     <div style="margin: 0 2em" th:each="path : ${tag.pathList}">
         <table>
             <tr>
-                <th class="back-color api-title" colspan="6" th:text="|${pathStat.count}. ${path.summary}|">1. 接口名称</th>
+                <td class="back-color title" colspan="7" th:text="|${pathStat.count}. ${path.summary}|">1. 接口名称</td>
             </tr>
             <tr>
-                <td class="text-center" width="20%">描述</td>
-                <td colspan="5" th:text="${path.description}">获取用户信息</td>
+                <td class="text-center" width="10%">描述</td>
+                <td colspan="6" th:text="${path.description}">获取用户信息</td>
             </tr>
             <tr>
-                <td class="text-center" width="20%">URL</td>
-                <td colspan="5" th:text="${path.path}">/user/{username}</td>
+                <td class="text-center" width="10%">URL</td>
+                <td colspan="6" th:text="${path.path}">/user/{username}</td>
             </tr>
             <tr>
-                <td class="text-center" width="20%">Method</td>
-                <td colspan="5" th:text="${#strings.toUpperCase(path.method)}">GET</td>
+                <td class="text-center" width="10%">Method</td>
+                <td colspan="6" th:text="${#strings.toUpperCase(path.method)}">GET</td>
             </tr>
-            <tr th:unless="${path.params == null}" class="back-color">
-                <th width="20%">参数名</th>
-                <th width="15%">数据类型</th>
-                <th width="15%">Ref</th>
-                <th width="15%">参数类型</th>
-                <th width="15%">是否必填</th>
-                <th>说明</th>
+            <tr th:unless="${path.params == null}">
+                <td class="text-center" rowspan="2" th:rowspan="${#lists.size(path.params) + 1}" width="10%">Request</td>
+                <th width="10%" class="back-color">参数名</th>
+                <th width="10%" class="back-color">数据类型</th>
+                <th width="15%" class="back-color">引用对象</th>
+                <th width="10%" class="back-color">传递方式</th>
+                <th width="10%" class="back-color">是否必填</th>
+                <th class="back-color">说明</th>
             </tr>
             <tr th:unless="${path.params == null}" th:each="param : ${path.params}" class="text-center">
-                <td width="20%" th:text="${param.name}">username</td>
-                <td width="15%" th:text="${param.dataType}">STRING</td>
-                <td width="15%">
-<!--                    <a th:unless="${param.schema == null}" href="#User" th:text="${param.schema.name}">User</a>-->
-                </td>
+                <td width="10%" th:text="${param.name}">username</td>
+                <td width="10%" th:text="${param.dataType}">STRING</td>
+                <td width="15%" th:text="${#strings.equals(param.dataType, 'OBJECT') ? param.schema.title : ''}"></td>
                 <td width="15%" th:text="${param.paramType}">path</td>
                 <td width="15%" th:text="${param.required ? '是' : '否'}">是</td>
                 <td th:text="${param.description}">用户名称</td>
             </tr>
-            <tr th:unless="${path.responses == null}" class="back-color">
-                <th width="20%">状态码</th>
-                <th width="15%">数据类型</th>
-                <th width="15%">Ref</th>
-                <th colspan="3">说明</th>
+            <tr th:unless="${path.responses == null}">
+                <td class="text-center" rowspan="2" th:rowspan="${#lists.size(path.responses) + 1}" width="10%">Response</td>
+                <th width="20%" class="back-color">状态码</th>
+                <th width="15%" class="back-color">数据类型</th>
+                <th width="15%" class="back-color">引用对象</th>
+                <th colspan="4" class="back-color">说明</th>
             </tr>
             <tr th:unless="${path.responses == null}" th:each="response : ${path.responses}" class="text-center">
-                <td width="20%" th:text="${response.status ?: ''}">200</td>
+                <td width="10%" th:text="${response.status ?: ''}">200</td>
                 <td width="15%" th:text="${response.dataType ?: ''}">STRING</td>
-                <td width="15%" th:text="${response.schema != null ? response.schema.name : ''}">test</td>
-                <td colspan="3" th:text="${response.description}">成功</td>
+                <td width="15%" th:text="${#strings.equals(response.dataType, 'OBJECT') ? response.schema.title : ''}">
+                    test
+                </td>
+                <td colspan="4" th:text="${response.description}">成功</td>
             </tr>
         </table>
         <br/>
     </div>
 </div>
-<h2>Model</h2>
-<ul th:each="model : ${swaggerInfo.models}">
-    <li>
-        <h3><a id="User" th:id="${model.title}"><code th:text="${model.title}">User</code></a></h3>
-        <div th:each="prop : ${model.properties}">
-            <div th:text="${prop.name}">username (required)</div>
-            <div><span class="param-type"><a href="#string" th:text="${prop.type}">String</a></span></div>
-        </div>
-    </li>
-</ul>
+<h2>Models</h2>
+<div style="margin: 0 2em">
+    <table th:each="model : ${swaggerInfo.models}">
+        <tr>
+            <td class="back-color title" colspan="5" th:text="${model.title}">User</td>
+        </tr>
+        <tr>
+            <td class="text-center" width="20%">描述</td>
+            <td colspan="4" th:text="${model.description}">用户实体</td>
+        </tr>
+        <tr>
+            <td class="text-center" rowspan="2" th:rowspan="${#lists.size(model.properties) + 1}" width="10%">属性</td>
+            <th width="10%" class="back-color">名称</th>
+            <th width="10%" class="back-color">类型</th>
+            <th width="15%" class="back-color">引用对象</th>
+            <th class="back-color">说明</th>
+        </tr>
+        <tr th:each="prop : ${model.properties}">
+            <td width="10%" class="text-center" th:text="${prop.name}">username</td>
+            <td width="10%" class="text-center" th:text="${prop.type}">STRING</td>
+            <td width="15%" class="text-center" th:switch="${prop.type}">
+                <span th:case="OBJECT" th:text="${prop.title}"></span>
+                <span th:case="REF" th:text="${prop.ref}"></span>
+                <span th:case="ARRAY" th:text="${prop.items}"></span>
+            </td>
+            <td class="text-center" th:text="${prop.description}">用户姓名</td>
+        </tr>
+        <tr>
+            <td class="text-center" width="20%">示例</td>
+            <td colspan="4" class="text-center" th:text="${model.jsonExample}">{"username" : ""zhangsan"}</td>
+        </tr>
+    </table>
+    <br/>
+</div>
 </body>
 </html>
