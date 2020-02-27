@@ -34,18 +34,26 @@ public class ParamInfo {
 
     private void fillSchema(Map<String, Map> paramInfo, Map<String, BaseInfo> models) {
         Map schema = paramInfo.get("schema");
-        if (this.getDataType() != null || schema == null) {
+        boolean isArray = this.getDataType() != null && this.getDataType() == DataType.ARRAY;
+        if (!isArray && schema == null) {
             return;
         }
-        String ref = JSONUtils.getRef(schema);
-        if (ref != null) {
-            this.schema = models.get(ref);
-            this.setDataType(DataType.OBJECT);
-        } else {
-            BaseInfo baseInfo = BaseInfo.newInstance(schema);
-            this.setSchema(baseInfo.build(schema));
+        if (schema == null) {
+            BaseInfo baseInfo = BaseInfo.newInstance(paramInfo);
+            this.setSchema(baseInfo.build(paramInfo));
             this.setDataType(baseInfo.getType());
             this.getSchema().fillRef(models);
+        } else {
+            String ref = JSONUtils.getRef(schema);
+            if (ref != null) {
+                this.schema = models.get(ref);
+                this.setDataType(DataType.OBJECT);
+            } else {
+                BaseInfo baseInfo = BaseInfo.newInstance(schema);
+                this.setSchema(baseInfo.build(schema));
+                this.setDataType(baseInfo.getType());
+                this.getSchema().fillRef(models);
+            }
         }
     }
 }

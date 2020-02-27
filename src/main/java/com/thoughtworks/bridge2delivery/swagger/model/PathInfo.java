@@ -34,15 +34,7 @@ public class PathInfo {
     }
 
     public String getSummary() {
-        return StringUtils.isEmpty(summary) ? pathToSummary() : summary;
-    }
-
-    private String pathToSummary() {
-        if (StringUtils.isEmpty(path)) {
-            return "";
-        }
-        String summary = path.replaceAll("/", " ");
-        return summary.trim();
+        return StringUtils.isEmpty(summary) ? "" : summary;
     }
 
     private void buildParams(List<Map> parameters, Map<String, BaseInfo> models) {
