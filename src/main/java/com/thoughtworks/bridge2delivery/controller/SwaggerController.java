@@ -59,7 +59,9 @@ public class SwaggerController {
         if (file.isEmpty()) {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
         }
-        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(Utils.getTextFromFile(file));
+        String json = Utils.getTextFromFile(file);
+        Utils.validateJson(json);
+        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
         log.debug("swagger json: " + swaggerInfo);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
         return ApiResponse.ok(null);
@@ -69,7 +71,9 @@ public class SwaggerController {
     @ApiOperation(value = "设置swagger url")
     public ApiResponse setUrl(@RequestParam("url") String url, HttpServletRequest request)
             throws JsonProcessingException {
-        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(Utils.getFromUrl(url));
+        String json = Utils.getFromUrl(url);
+        Utils.validateJson(json);
+        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
         return ApiResponse.ok(null);
     }

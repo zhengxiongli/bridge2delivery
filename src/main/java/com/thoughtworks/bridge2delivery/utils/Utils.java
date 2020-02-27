@@ -1,5 +1,9 @@
 package com.thoughtworks.bridge2delivery.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.bridge2delivery.contents.Messages;
+import com.thoughtworks.bridge2delivery.exception.CustomException;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +65,15 @@ public final class Utils {
             Java2DRenderer renderer = new Java2DRenderer(document, IMAGE_WIDTH, IMAGE_HEIGHT);
             BufferedImage img = renderer.getImage();
             return img;
+        }
+    }
+
+    public static void validateJson(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new CustomException(Messages.INVALID_JSON, e);
         }
     }
 }

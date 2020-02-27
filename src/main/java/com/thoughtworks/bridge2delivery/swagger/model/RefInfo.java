@@ -23,4 +23,9 @@ public class RefInfo extends BaseInfo {
     public void fillRef(Map<String, BaseInfo> refMap) {
         this.refInfo = refMap.get(ref);
     }
+
+    @Override
+    public String getJsonExample() {
+        return refInfo.getJsonExample();
+    }
 }
