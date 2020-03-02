@@ -2,10 +2,9 @@
 const ue = UE.getEditor('editor', {
     focus: true,
     autoHeightEnabled: true,
-    autoFloatEnabled: true,
+    autoFloatEnabled: false,
     toolbars: [
         [
-            'anchor', //锚点
             'undo', //撤销
             'redo', //重做
             'bold', //加粗
@@ -18,7 +17,6 @@ const ue = UE.getEditor('editor', {
             'superscript', //上标
             'formatmatch', //格式刷
             'blockquote', //引用
-            'pasteplain', //纯文本粘贴模式
             'preview', //预览
             'horizontal', //分隔线
             'removeformat', //清除格式
@@ -43,10 +41,7 @@ const ue = UE.getEditor('editor', {
             'edittable', //表格属性
             'edittd', //单元格属性
             'link', //超链接
-            'emotion', //表情
-            'spechars', //特殊字符
             'searchreplace', //查询替换
-            'help', //帮助
             'justifyleft', //居左对齐
             'justifyright', //居右对齐
             'justifycenter', //居中对齐

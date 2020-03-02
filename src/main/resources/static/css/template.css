@@ -1,0 +1,13 @@
+.template-container {
+    display: grid;
+    grid-template-columns: 365px 1fr;
+    min-height: calc(100vh - 66px);
+}
+.template-container .template-container-tree {
+    border: 1px solid red;
+}
+
+.template-container .template-container-editor .edui-editor,.edui-editor-iframeholder {
+    width: 100% !important;
+    height: 100% !important;
+}
