@@ -11,3 +11,31 @@
     width: 100% !important;
     height: 100% !important;
 }
+
+.template-container .template-container-editor .edui-default .edui-editor-toolbarboxouter {
+    background: #fff;
+}
+
+.template-container .edui-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.template-generate-btn-wrapper {
+    text-align: right;
+    flex: 1;
+    padding: 5px;
+}
+.template-container .template-generate-btn {
+    width: 150px;
+    height: 40px;
+    border-radius: 1px;
+    background-color: #5094ed;
+    text-align: center;
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    right: 0;
+    bottom: 0;
+}
