@@ -15,4 +15,9 @@ public class IndexController {
     public String swagger() {
         return "swagger";
     }
+
+    @GetMapping("/template")
+    public String template() {
+        return "template";
+    }
 }

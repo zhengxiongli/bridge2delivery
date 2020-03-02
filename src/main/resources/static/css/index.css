@@ -31,7 +31,7 @@ body {
     margin-left: 28px;
     position: relative;
 }
-.app-header .nav li:before {
+.app-header .nav li.active:before {
     content: "";
     position: absolute;
     left: 50%;
