@@ -1,5 +1,8 @@
 
 const ue = UE.getEditor('editor', {
+    elementPathEnabled: false,
+    wordCount: false,
+    maximumWords: 9999999999,
     focus: true,
     autoHeightEnabled: true,
     autoFloatEnabled: false,
