@@ -32,6 +32,7 @@ function registerParseJsonUrl() {
     const analysisBtn = $(".analysis");
     analysisBtn.addEventListener('click', () => {
         const urlInput = $('.url-input')
+        console.log(urlInput.value, isURL(urlInput.value))
         if(!isURL(urlInput.value)) {
             return alert('请输入有效的URL')
         }

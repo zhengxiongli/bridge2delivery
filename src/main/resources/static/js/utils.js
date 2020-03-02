@@ -22,7 +22,8 @@ export function isValidJSON(fileType) {
 }
 
 export function isURL(value) {
-    return /^((https?):\/\/)?(\w+|-)+(\.[\w-]+)?([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/.test(
+    return !/^\d+$/g.test(value) &&
+        /^((https?):\/\/)?(\w+|-)+((\.[\w-])?)+([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?$/.test(
         value
     )
 }
@@ -32,13 +33,13 @@ export function parseJSON(data) {
         JSON.parse(data);
     } catch (err) {
         console.log('parseJSON:', err.message);
-        throwError('解析 JSON 文件失败')
+        throwError('解析JSON文件失败')
     }
 }
 
 export function validateJSON(file) {
     if (!isValidJSON(file.type)) {
-        throwError('请选择正确的json文件')
+        throwError('请选择正确的JSON文件')
     }
     return true
 }
