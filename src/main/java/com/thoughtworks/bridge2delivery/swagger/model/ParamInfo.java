@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class ParamInfo {
+public class ParamInfo implements TypeInterface {
     private String name;
     private String paramType;
     private String description;
@@ -55,5 +55,13 @@ public class ParamInfo {
                 this.getSchema().fillRef(models);
             }
         }
+    }
+
+    @Override
+    public String getFullType() {
+        if (schema == null && dataType == null) {
+            return "";
+        }
+        return this.schema == null ? dataType.getValue() : this.schema.getFullType();
     }
 }

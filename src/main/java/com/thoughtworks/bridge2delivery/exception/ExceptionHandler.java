@@ -24,7 +24,7 @@ public class ExceptionHandler {
     @ResponseBody
     @org.springframework.web.bind.annotation.ExceptionHandler(value = Throwable.class)
     @Order(2)
-    public ResponseEntity<ApiResponse> handleException(Exception e) {
+    public ResponseEntity<ApiResponse> handleException(Throwable e) {
         log.error("exception", e);
         return new ResponseEntity<ApiResponse>(ApiResponse.error(e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);

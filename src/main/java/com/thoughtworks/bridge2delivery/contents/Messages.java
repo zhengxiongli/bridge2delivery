@@ -7,5 +7,7 @@ public class Messages {
     public static final String FILE_CAN_NOT_BE_NULL = "文件不能为空";
     public static final String TEMPLATE_FILE_NOT_FOUND = "模版文件未找到";
     public static final String PARSE_ERROR = "解析出错";
-    public static final String INVALID_JSON = "请传入正确的json";
+    public static final String INVALID_JSON = "无法识别的内容";
+    public static final String REQUEST_TIMEOUT = "访问超时";
+    public static final String INVALID_URL = "无法识别的URL";
 }

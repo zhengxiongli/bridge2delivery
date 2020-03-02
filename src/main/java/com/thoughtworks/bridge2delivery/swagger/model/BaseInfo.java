@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-public class BaseInfo {
+public class BaseInfo implements TypeInterface {
     private String name;
     private DataType type;
     private String example;
@@ -116,5 +116,10 @@ public class BaseInfo {
             return null;
         }
         return instance;
+    }
+
+    @Override
+    public String getFullType() {
+        return this.getType() == null ? "" : this.getType().getValue();
     }
 }

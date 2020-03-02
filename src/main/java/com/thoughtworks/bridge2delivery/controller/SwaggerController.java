@@ -12,8 +12,8 @@ import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +44,7 @@ import java.util.Map;
 @Slf4j
 @Api(description = "swagger导出")
 public class SwaggerController {
-    private static final String DEFAULT_TEMPLATE_CLASSPATH = "classpath:static/template/swagger.html";
+    private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/swagger.html";
     private final ThymeleafUtils thymeleafUtils;
 
     public SwaggerController(final ThymeleafUtils thymeleafUtils) {
@@ -184,8 +183,10 @@ public class SwaggerController {
 
     private String getDefaultTemplate() {
         try {
-            File file = ResourceUtils.getFile(DEFAULT_TEMPLATE_CLASSPATH);
-            return Utils.getTextFromInputStream(new FileInputStream(file));
+            ClassPathResource resource = new ClassPathResource(DEFAULT_TEMPLATE_CLASSPATH);
+            try (InputStream inputStream = resource.getInputStream()) {
+                return Utils.getTextFromInputStream(inputStream);
+            }
         } catch (IOException e) {
             throw new CustomException(Messages.TEMPLATE_FILE_NOT_FOUND);
         }

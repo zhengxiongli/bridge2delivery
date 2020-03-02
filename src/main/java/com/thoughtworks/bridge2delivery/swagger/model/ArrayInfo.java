@@ -44,4 +44,9 @@ public class ArrayInfo extends BaseInfo {
     public String getRefName() {
         return "List«" + items.getRefName() + "»";
     }
+
+    @Override
+    public String getFullType() {
+        return this.getRefName();
+    }
 }

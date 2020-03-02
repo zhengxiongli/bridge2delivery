@@ -30,11 +30,18 @@ public final class Utils {
     }
 
     public static String getFromUrl(String url) {
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(MAX_WAIT_TIME);
-        requestFactory.setReadTimeout(MAX_WAIT_TIME);
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-        return restTemplate.getForObject(url, String.class);
+        try {
+            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+            requestFactory.setConnectTimeout(MAX_WAIT_TIME);
+            requestFactory.setReadTimeout(MAX_WAIT_TIME);
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            return restTemplate.getForObject(url, String.class);
+        } catch (Exception e) {
+            if (e.getMessage().toLowerCase().contains("sockettimeoutexception")) {
+                throw new CustomException(Messages.REQUEST_TIMEOUT);
+            }
+            throw new CustomException(Messages.INVALID_URL);
+        }
     }
 
     public static String getTextFromFile(MultipartFile file) throws IOException {

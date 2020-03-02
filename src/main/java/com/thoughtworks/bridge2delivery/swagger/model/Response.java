@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class Response {
+public class Response implements TypeInterface {
     private String status;
     private String description;
     private DataType dataType;
@@ -39,5 +39,13 @@ public class Response {
             this.getSchema().fillRef(models);
             this.setDataType(baseInfo.getType());
         }
+    }
+
+    @Override
+    public String getFullType() {
+        if (schema == null && dataType == null) {
+            return "";
+        }
+        return this.getSchema() == null ? dataType.getValue() : this.getSchema().getFullType();
     }
 }

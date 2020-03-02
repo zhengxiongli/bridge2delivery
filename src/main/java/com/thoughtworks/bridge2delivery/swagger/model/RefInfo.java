@@ -33,4 +33,9 @@ public class RefInfo extends BaseInfo {
     public String getRefName() {
         return this.refInfo.getRefName();
     }
+
+    @Override
+    public String getFullType() {
+        return this.refInfo.getFullType();
+    }
 }
