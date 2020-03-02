@@ -37,7 +37,7 @@
 </head>
 <body>
 <h1 class="text-center"
-    th:text="|${swaggerInfo.title}${swaggerInfo.version != null ? '(' +  swaggerInfo.version + ')' : ''}|">
+    th:text="|${swaggerInfo.title}${#bools.isTrue(swaggerInfo.version) ? '(' +  swaggerInfo.version + ')' : ''}|">
     系统名称(版本号)</h1>
 <h3 class="text-center" th:text="${swaggerInfo.description}">文档描述</h3>
 <div th:each="tag : ${swaggerInfo.tagList}">
