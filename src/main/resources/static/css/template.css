@@ -3,6 +3,7 @@
     grid-template-columns: 365px 1fr;
     min-height: calc(100vh - 66px);
 }
+
 .template-container .template-container-tree {
     border: 1px solid red;
 }
@@ -16,18 +17,19 @@
     background: #fff;
 }
 
-.template-container .edui-toolbar {
+.template-container .edui-editor-toolbarboxinner {
     display: flex;
-    flex-wrap: wrap;
 }
 
 .template-generate-btn-wrapper {
-    text-align: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex: 1;
     padding: 5px;
 }
 .template-container .template-generate-btn {
-    width: 150px;
+    width: 120px;
     height: 40px;
     border-radius: 1px;
     background-color: #5094ed;

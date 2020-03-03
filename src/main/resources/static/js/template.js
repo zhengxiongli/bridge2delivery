@@ -10,7 +10,7 @@ function addGenerateButton() {
     button.innerText = '生成'
     button.className = 'template-generate-btn'
     wrapper.append(button)
-    $('.edui-toolbar').append(wrapper)
+    $('.edui-editor-toolbarboxinner').append(wrapper)
 }
 
 
