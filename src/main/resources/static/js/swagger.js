@@ -3,7 +3,9 @@ import { $, validateResponse, isURL, validateJSON, parseJSON } from "./utils.js"
 const fileInput = $('input[type="file"]');
 
 function onRestDefaultTemplate() {
-    $('.reset-to-default-btn').addEventListener('click',() => {
+    const defaultTmp = $('.reset-to-default-btn');
+    if (!defaultTmp) return;
+    defaultTmp.addEventListener('click',() => {
 
     fetch('/swagger/default/template', {
         method: "PUT",
@@ -14,12 +16,14 @@ function onRestDefaultTemplate() {
 
 function proxyFileSelect() {
     const selectFileBtn = $('.select-file-button');
+    if (!selectFileBtn) return;
     selectFileBtn.addEventListener('click', () => {
         fileInput.click()
     })
 }
 
 function registerFileSelectListener() {
+    if (!fileInput) return;
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
         validateJSON(file);
@@ -30,9 +34,10 @@ function registerFileSelectListener() {
 
 function registerParseJsonUrl() {
     const analysisBtn = $(".analysis");
+    if (!analysisBtn) return;
     analysisBtn.addEventListener('click', () => {
-        const urlInput = $('.url-input')
-        console.log(urlInput.value, isURL(urlInput.value))
+        const urlInput = $('.url-input');
+        console.log(urlInput.value, isURL(urlInput.value));
         if(!isURL(urlInput.value)) {
             return alert('请输入有效的URL')
         }
@@ -48,7 +53,7 @@ function registerParseJsonUrl() {
 }
 
 function showPreviewIFrame() {
-    const preview = $('.preview')
+    const preview = $('.preview');
     const previewIframe = $('.preview-iframe');
     preview.style.display = "block";
     previewIframe.src = `/swagger/html?${Date.now()}`;
@@ -91,6 +96,7 @@ function removeDragAreaHighlight(dragArea) {
 }
 
 function registerDrag(dragArea) {
+    if (!dragArea) return;
     dragArea.addEventListener(
         'dragenter',
         (e) => {
@@ -134,7 +140,7 @@ function registerDrag(dragArea) {
 
 function registerGlobalErrorHandler() {
     window.addEventListener('unhandledrejection', (e) => {
-        console.error('[unhandledrejection]',e.reason)
+        console.error('[unhandledrejection]',e.reason);
         alert(e.reason.message || '系统异常')
     })
 }
@@ -144,6 +150,6 @@ window.onload = () => {
     registerDrag($('.swagger-container'));
     registerFileSelectListener();
     registerParseJsonUrl();
-    registerGlobalErrorHandler()
+    registerGlobalErrorHandler();
     onRestDefaultTemplate()
 };
