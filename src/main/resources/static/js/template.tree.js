@@ -10,14 +10,22 @@ config: {
 }
  */
 export function createTemplateTree(config) {
-    const tree = {}, nodeMap = [];
+    const tree = {}, nodeMap = [], treeConfig = config;
     //预览URL
     tree.previewUrl = '';
     //默认模板url
     tree.defaultUrl = '';
 
     tree.focusNode = function(path) {
-
+        const pathStr = path == null || path.length == 0 ? '' : path.join('-');
+        for (let i = 0; i < nodeMap.length; i++) {
+            const node = nodeMap[i];
+            if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
+                node.node.className = node.node.className.replace('disabled', '').trim();
+            } else {
+                node.node.className = node.node.className + ' disabled';
+            }
+        }
     }
 
     function init() {
@@ -44,7 +52,7 @@ export function createTemplateTree(config) {
             throwError("配置错误");
         }
         const nodes = data.templateNodes;
-        const rootNode = buildRootNode(config.root);
+        const rootNode = buildRootNode(treeConfig.root);
         for (let i = 0; i < nodes.length; i++) {
             buildNode(rootNode, nodes[i]);
         }
@@ -54,7 +62,7 @@ export function createTemplateTree(config) {
         const wrapper = document.createElement('div');
         wrapper.className = 'template-tree-wrapper root';
         const node = document.createElement('div');
-        node.className = 'template-tree-node';
+        node.className = 'template-tree-node disabled';
         const name = document.createElement('span');
         name.innerText = root || 'root';
         name.className = 'tree-node-name';
@@ -62,7 +70,7 @@ export function createTemplateTree(config) {
         node['data-path'] = '';
         node.append(name);
         wrapper.append(node);
-        const nodeInfo = {path: '', dom: wrapper};
+        const nodeInfo = {path: '', wrapper: wrapper, node: node};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
                 exapandClick(e, node);
@@ -85,6 +93,9 @@ export function createTemplateTree(config) {
         const name = document.createElement('span');
         name.innerText = config.name + ':';
         name.className = 'tree-node-name';
+        if (config.isArray) {
+            name.innerHTML = config.name + '<span style="color: #ec7375">[array]</span>:';
+        }
         const description = document.createElement('span');
         description.innerText = config.description;
         description.className = 'tree-node-desc';
@@ -93,20 +104,26 @@ export function createTemplateTree(config) {
         node.append(name);
         node.append(description);
         wrapper.append(node);
-        const nodeInfo = {path: path, dom: wrapper, config: config};
+        const nodeInfo = {path: path, wrapper: wrapper, config: config, node: node};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
                 exapandClick(e, node);
                 return;
             }
-            config.click && config.click(e, node, nodeInfo);
+            if (/.*disabled.*/ig.test(node.className)) {
+                return;
+            }
+            treeConfig.click && treeConfig.click(e, nodeInfo);
         });
-        node.addEventListener('dbclick', function (e) {
-            config.dbClick && config.dbClick(e, node, nodeInfo);
+        node.addEventListener('dblclick', function (e) {
+            if (/.*disabled.*/ig.test(node.className)) {
+                return;
+            }
+            treeConfig.dbClick && treeConfig.dbClick(e, nodeInfo);
         });
         nodeMap.push(nodeInfo);
         if (!!parentNode) {
-            parentNode.dom?.append(wrapper);
+            parentNode.wrapper?.append(wrapper);
         } else {
             tree.container.append(wrapper);
         }

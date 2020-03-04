@@ -33,16 +33,25 @@ function initDefaultTemplate() {
         });
 }
 
+function dbClick(e, nodeInfo) {
+    alert('dbclick');
+    console.log(e, nodeInfo);
+}
+
 ue.addListener('ready', () => {
-    const drafts = ue.execCommand('getlocaldata');
-    if (drafts) {
-        ue.execCommand('drafts');
-    } else {
-        initDefaultTemplate();
-    }
-    addGenerateButton();
-    createTemplateTree({
+    window.templateTree = createTemplateTree({
+        root: 'swagger',
         type: "SWAGGER",
-        container: ".template-container-tree"
+        container: '.template-container-tree',
+        dbClick: dbClick
     });
+    if (window.templateTree) {
+        const drafts = ue.execCommand('getlocaldata');
+        if (drafts) {
+            ue.execCommand('drafts');
+        } else {
+            initDefaultTemplate();
+        }
+        addGenerateButton();
+    }
 });

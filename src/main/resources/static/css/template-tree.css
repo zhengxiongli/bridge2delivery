@@ -11,6 +11,11 @@
     -webkit-user-select: none;
 }
 
+.template-tree-wrapper .template-tree-node.disabled .tree-node-name,
+.template-tree-wrapper .template-tree-node.disabled .tree-node-desc {
+    opacity: 0.5;
+}
+
 .template-tree-wrapper .template-tree-node .expand {
     position: absolute;
     left: -10px;
@@ -34,7 +39,7 @@
 }
 
 .template-tree-wrapper .template-tree-node .tree-node-name {
-    color: #ec7375;
+    color: #333;
 }
 
 .template-tree-wrapper .template-tree-node .tree-node-desc {
