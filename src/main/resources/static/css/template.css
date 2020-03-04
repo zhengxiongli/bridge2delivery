@@ -7,11 +7,6 @@
 .template-container .template-container-tree {
 }
 
-.template-container .template-container-editor .edui-editor,.edui-editor-iframeholder {
-    width: 100% !important;
-    height: 100% !important;
-}
-
 .template-container .template-container-editor .edui-default .edui-editor-toolbarboxouter {
     background: #fff;
 }

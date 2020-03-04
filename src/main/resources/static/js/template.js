@@ -20,7 +20,7 @@ function generateTemplate() {
 }
 
 function initDefaultTemplate() {
-    fetch('/template/swagger.html', {
+    fetch('/template/swagger-default-template.html', {
         method: 'GET'
     })
         .then((res) => res.blob())
