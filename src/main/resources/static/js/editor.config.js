@@ -4,8 +4,8 @@ export default {
     wordCount: false,
     maximumWords: 9999999999,
     focus: true,
-    autoHeightEnabled: true,
-    autoFloatEnabled: false,
+    autoHeightEnabled: false,
+    autoFloatEnabled: true,
     toolbars: [
         [
             'undo', //撤销
@@ -64,10 +64,8 @@ export default {
             'lineheight', //行间距
             'edittip ', //编辑提示
             'customstyle', //自定义标题
-            'autotypeset', //自动排版
             'touppercase', //字母大写
             'tolowercase', //字母小写
-            'background', //背景
             'inserttable', //插入表格
             'drafts', // 从草稿箱加载
         ]
