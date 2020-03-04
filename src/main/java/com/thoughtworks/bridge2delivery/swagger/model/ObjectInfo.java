@@ -1,6 +1,7 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class ObjectInfo extends BaseInfo {
+    @Template(description = "标题")
     private String title;
     private String className;
+    @Template(description = "属性列表")
     private List<BaseInfo> properties;
 
     @Override

@@ -1,21 +1,30 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
 public class ParamInfo implements TypeInterface {
+    @Template(description = "参数名")
     private String name;
+    @Template(description = "传递类型")
     private String paramType;
+    @Template(description = "描述")
     private String description;
     private DataType dataType;
+    @Template(description = "默认值")
     private String defaultVal;
+    @Template(description = "是否允许空值")
     private boolean allowEmptyValue;
+    @Template(description = "是否必需")
     private boolean required;
     private String format;
     private BaseInfo schema;
+    @Template(description = "数据类型")
+    private String fullType;
 
     public ParamInfo build(Map<String, Map> paramInfo, Map<String, BaseInfo> models) {
         this.setName(JSONUtils.getMapValueAndToString(paramInfo, "name"));
@@ -62,6 +71,7 @@ public class ParamInfo implements TypeInterface {
         if (schema == null && dataType == null) {
             return "";
         }
-        return this.schema == null ? dataType.getValue() : this.schema.getFullType();
+        return this.schema == null ? (dataType.getValue() + (format != null ? "(" + format + ")" : "")) :
+                this.schema.getFullType();
     }
 }

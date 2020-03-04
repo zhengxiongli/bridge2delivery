@@ -1,6 +1,7 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -12,14 +13,22 @@ import java.util.Map;
 
 @Data
 public class PathInfo {
+    @Template(description = "请求路径")
     private String path;
+    @Template(description = "请求方式")
     private String method;
+    @Template(description = "摘要")
     private String summary;
+    @Template(description = "描述")
     private String description;
     private List<String> tagNames;
+    @Template(description = "返回类型")
     private String produces;
+    @Template(description = "是否不建议使用")
     private boolean deprecated;
+    @Template(description = "请求参数")
     private List<ParamInfo> params;
+    @Template(description = "返回值")
     private List<Response> responses;
 
     public PathInfo fillInfo(Map<String, Map> pathInfoMap, Map<String, BaseInfo> models) {

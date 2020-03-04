@@ -1,16 +1,21 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
 public class Response implements TypeInterface {
+    @Template(description = "状态嘛")
     private String status;
+    @Template(description = "描述")
     private String description;
     private DataType dataType;
     private BaseInfo schema;
+    @Template(description = "数据类型")
+    private String fullType;
 
     public void build(Map<String, Map> map, Map<String, BaseInfo> models) {
         this.setDescription(JSONUtils.getMapValueAndToString(map, "description"));

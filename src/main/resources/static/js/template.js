@@ -1,4 +1,5 @@
-import {$} from "./utils.js";
+import {$, throwError} from "./utils.js";
+import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
 
 const ue = UE.getEditor('editor', EDITOR_CONFIG);
@@ -40,4 +41,8 @@ ue.addListener('ready', () => {
         initDefaultTemplate();
     }
     addGenerateButton();
+    createTemplateTree({
+        type: "SWAGGER",
+        container: ".template-container-tree"
+    });
 });

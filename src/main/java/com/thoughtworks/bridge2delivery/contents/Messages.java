@@ -10,4 +10,5 @@ public class Messages {
     public static final String INVALID_JSON = "无法识别的内容";
     public static final String REQUEST_TIMEOUT = "访问超时";
     public static final String INVALID_URL = "无法识别的URL";
+    public static final String UNREALIZED = "未实现";
 }

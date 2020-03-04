@@ -1,5 +1,6 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PathTag {
+    @Template(description = "名称")
     private String name;
+    @Template(description = "描述")
     private String description;
+    @Template(description = "路径")
     private List<PathInfo> pathList;
 
     public void addPath(PathInfo pathInfo) {

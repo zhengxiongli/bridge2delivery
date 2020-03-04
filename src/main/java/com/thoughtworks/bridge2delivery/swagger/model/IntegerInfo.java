@@ -21,4 +21,9 @@ public class IntegerInfo extends BaseInfo {
         this.setType(DataType.INTEGER);
         return this;
     }
+
+    @Override
+    public String getFullType() {
+        return super.getFullType() + "(" + this.getFormat() + ")";
+    }
 }

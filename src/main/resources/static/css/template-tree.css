@@ -1,0 +1,43 @@
+.template-tree-wrapper {
+    padding-left: 14px;
+}
+
+.template-tree-wrapper .template-tree-node {
+    padding: 2px 0;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.template-tree-wrapper .template-tree-node .expand {
+    position: absolute;
+    left: -10px;
+    top: 8px;
+    float: left;
+    border-width: 4px;
+    border-top-width: 5px;
+    border-style: solid;
+    border-color: #8c8c8c transparent transparent transparent;
+}
+
+.template-tree-wrapper .template-tree-node .collapse {
+    position: absolute;
+    left: -8px;
+    top: 6px;
+    float: left;
+    border-width: 4px;
+    border-left-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #8c8c8c;
+}
+
+.template-tree-wrapper .template-tree-node .tree-node-name {
+    color: #ec7375;
+}
+
+.template-tree-wrapper .template-tree-node .tree-node-desc {
+    padding-left: 4px;
+    color: #72a673;
+}

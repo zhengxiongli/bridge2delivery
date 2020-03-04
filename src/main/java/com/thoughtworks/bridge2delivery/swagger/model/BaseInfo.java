@@ -1,6 +1,7 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +13,19 @@ import java.util.Map;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class BaseInfo implements TypeInterface {
+    @Template(description = "属性名")
     private String name;
     private DataType type;
+    @Template(description = "示列")
     private String example;
+    @Template(description = "描述")
     private String description;
     private String format;
     private String refName;
+    @Template(description = "JSON示列")
+    private String jsonExample;
+    @Template(description = "数据类型")
+    private String fullType;
 
     public void setName(String name) {
         if (StringUtils.isEmpty(name)) {
