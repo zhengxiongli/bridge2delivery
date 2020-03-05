@@ -3,7 +3,6 @@ package com.thoughtworks.bridge2delivery.controller;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
-import com.thoughtworks.bridge2delivery.template.Template;
 import com.thoughtworks.bridge2delivery.template.TemplateInfo;
 import com.thoughtworks.bridge2delivery.template.TemplateManager;
 import com.thoughtworks.bridge2delivery.template.TemplateType;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;

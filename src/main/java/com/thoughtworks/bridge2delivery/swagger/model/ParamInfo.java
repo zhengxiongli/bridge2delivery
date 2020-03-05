@@ -71,7 +71,6 @@ public class ParamInfo implements TypeInterface {
         if (schema == null && dataType == null) {
             return "";
         }
-        return this.schema == null ? (dataType.getValue() + (format != null ? "(" + format + ")" : "")) :
-                this.schema.getFullType();
+        return this.schema == null ? (dataType.getValue() + (format != null ? "(" + format + ")" : "")) : this.schema.getFullType();
     }
 }

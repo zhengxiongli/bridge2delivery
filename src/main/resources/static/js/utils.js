@@ -1,4 +1,5 @@
 export const JSON_FILE_TYPE = 'application/json';
+export const TEMPLATE_FILE_TYPE = 'html/text';
 
 export async function validateResponse(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -39,6 +40,26 @@ export function parseJSON(data) {
 export function validateJSON(file) {
     if (!isValidJSON(file.type)) {
         throwError('请选择正确的JSON文件')
+    }
+    return true
+}
+
+export function isValidTemplate(fileType) {
+    return !(!fileType || fileType !== TEMPLATE_FILE_TYPE);
+}
+
+export function parseTemplate(data) {
+    try {
+    //TODO parse json with new template.
+    }catch (err) {
+        console.log('parseTemplate:', err.message);
+        throwError('解析模板文件失败')
+    }
+}
+
+export function validateTemplate(file) {
+    if (!isValidTemplate(file.type)) {
+        throwError('请选择正确的模板文件')
     }
     return true
 }

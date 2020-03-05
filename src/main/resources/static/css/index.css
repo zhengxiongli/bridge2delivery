@@ -114,3 +114,10 @@ body {
 .app-main .menu .item .cover img {
     width: 100%
 }
+
+.swagger-title img {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin: 0 4px 4px 0;
+}

@@ -4,7 +4,7 @@
     <title>嘀嗒验收小工具</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="short icon" href="/assets/di-da.svg" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/swagger.css" />
@@ -13,7 +13,7 @@
   <body>
   <div th:replace="header::header"></div>
     <main class="app-main">
-      <h2 class="title"><img style="width: 17px; height: 23px; vertical-align: middle" src="/assets/transfer.svg" alt=""> Swagger转Word</h2>
+      <h2 class="title swagger-title"><img src="/assets/convert.svg" alt=""> Swagger转Word</h2>
       <p class="description">接口文档转换</p>
       <section class="swagger-container">
         <div class="swagger-wrap">
@@ -26,7 +26,7 @@
               <button type="button" class="analysis">解析</button>
             </div>
             <p>
-              <input type="file" accept="application/json" hidden/>
+              <input name="select-file-input" type="file" accept="application/json" hidden/>
               <button class="select-file-button">点击选择文件</button>
               或直接拽文件进来
             </p>
@@ -36,7 +36,8 @@
               <div class="preview-title">效果预览</div>
               <div class="preview-btns">
                 <button class="btn reset-to-default-btn">恢复默认模板</button>
-                <button class="btn select-template-btn"onclick="alert('敬请期待')">更换模板</button>
+                <input name="select-template-input" type="file" accept="text/html" hidden/>
+                <button class="btn select-template-btn">更换模板</button>
                 <a href="/swagger/word" class="btn generate">生成</a>
               </div>
             </div>
