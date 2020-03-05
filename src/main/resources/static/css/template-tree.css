@@ -11,6 +11,10 @@
     -webkit-user-select: none;
 }
 
+.template-tree-wrapper .font-strong {
+    font-weight: bolder;
+}
+
 .template-tree-wrapper .template-tree-node.disabled .tree-node-name,
 .template-tree-wrapper .template-tree-node.disabled .tree-node-desc {
     opacity: 0.5;
