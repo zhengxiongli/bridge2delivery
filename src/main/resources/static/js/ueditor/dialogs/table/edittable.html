@@ -8,7 +8,7 @@
 <body>
 <div class="wrapper">
     <div class="left">
-        <div class="section">
+        <div class="section" style="display: none">
             <h3><var id="lang_tableStyle"></var></h3>
             <ul>
                 <li>
@@ -36,6 +36,13 @@
                 </li>
                 <li>
                     <label><input type="radio" id="J_autoSizePage" name="size"/><var id="lang_autoSizePage"></var></label>
+                </li>
+                <li>
+                    <label><input checked type="radio" id="J_setSizePage" name="size" />自定义页面宽度</label>
+                </li>
+                <li>
+                    <input id="J_setText" type="text" style="width:40px;" value="100%" οnchange="SetText(this)"/>
+                    <label id = "J_setCenterLabel"><input id="J_setCenter" type="checkbox">居中</label>
                 </li>
             </ul>
             <div class="clear"></div>

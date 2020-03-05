@@ -19,8 +19,12 @@
     <span><var id="lang_tdBkColor"></var></span>
     <input type="text" id="J_tone"/>
 </div>
+<div class="section" style="padding-left: 20px">
+    <span>宽度:</span>
+    <input type="text" id="J_width">
+</div>
 <script type="text/javascript">
-    var tone = $G("J_tone"),
+    var tone = $G("J_tone"), width = $G('J_width'),
             colorPiker = new UE.ui.ColorPicker({
                 editor:editor
             }),
@@ -43,7 +47,7 @@
         colorPop.hide();
     });
     dialog.onok=function(){
-        editor.execCommand("edittd",tone.value);
+        editor.execCommand("edittd",tone.value, width.value);
     };
 
     var start = editor.selection.getStart(),
@@ -52,6 +56,9 @@
         var color = domUtils.getComputedStyle(cell,'background-color');
         if(/^#/.test(color)){
             tone.value = color
+        }
+        if (!!cell.width) {
+            width.value = cell.width;
         }
 
     }

@@ -12,6 +12,10 @@
         sorttable = $G("J_sorttable"),
         autoSizeContent = $G("J_autoSizeContent"),
         autoSizePage = $G("J_autoSizePage"),
+        setSizePage = $G("J_setSizePage"),
+        setSizeText = $G("J_setText"),
+        setCenter = $G('J_setCenter'),
+        setCenterLabel = $G('J_setCenterLabel'),
         tone = $G("J_tone"),
         me,
         preview = $G("J_preview");
@@ -52,6 +56,9 @@
             domUtils.on(sorttable, "click", me.sorttableHanler);
             domUtils.on(autoSizeContent, "click", me.autoSizeContentHanler);
             domUtils.on(autoSizePage, "click", me.autoSizePageHanler);
+            domUtils.on(setSizePage, "click", me.setSizePageHanler);
+            domUtils.on(setSizeText, 'change', me.setSizeTextHandler);
+            domUtils.on(setCenter, 'click', me.setCenterHandler);
 
             domUtils.on(tone, "click", function () {
                 colorPop.showAnchor(tone);
@@ -67,6 +74,7 @@
                 me.setColor("");
                 colorPop.hide();
             });
+            setSizePage.checked = true;
         },
 
         createTable:function (hasTitle, hasTitleCol, hasCaption) {
@@ -153,6 +161,10 @@
         autoSizeContentHanler:function () {
             var example = $G("J_example");
             example.removeAttribute("width");
+            setSizeText.style.display = 'none';
+            setCenterLabel.style.display = 'none';
+            example.style.margin = '';
+            setCenter.checked = false;
         },
         autoSizePageHanler:function () {
             var example = $G("J_example");
@@ -161,6 +173,36 @@
                 td.removeAttribute("width");
             });
             example.setAttribute('width', '100%');
+            setSizeText.style.display = 'none';
+            setCenterLabel.style.display = 'none';
+            example.style.margin = '';
+            setCenter.checked = false;
+        },
+        setSizePageHanler:function() {
+            var example = $G('J_example');
+            setSizeText.style.display = 'inline-block';
+            setCenterLabel.style.display = 'inline-block';
+            var tds = example.getElementsByTagName(example, "td");
+            utils.each(tds, function (td) {
+                td.removeAttribute("width");
+            });
+            example.setAttribute('width', setSizeText.value);
+        },
+        setSizeTextHandler:function() {
+            if (!setSizePage.checked) {
+                return;
+            }
+            var example = $G('J_example');
+            example.setAttribute('width', setSizeText.value);
+        },
+        setCenterHandler:function() {
+            var example = $G('J_example');
+            if (setCenter.checked) {
+                example.style.margin = '0 auto';
+            } else {
+                example.style.margin = '';
+            }
+
         },
         updateSortSpan: function(){
             var example = $G("J_example"),
@@ -200,8 +242,16 @@
         },
         setAutoSize:function () {
             var me = this;
-            autoSizePage.checked = true;
-            me.autoSizePageHanler();
+            setSizePage.checked = true;
+            var start = editor.selection.getStart(),
+                table = start && domUtils.findParentByTagName(start, ["table"]);
+            debugger;
+            if (table) {
+                setCenter.checked = !!table.getAttribute('align');
+                setSizeText.value = !!table.getAttribute('width') ? table.getAttribute('width') : '100%';
+            }
+            me.setSizePageHanler();
+            me.setCenterHandler();
         }
     };
 
@@ -230,6 +280,7 @@
         editor.execCommand("edittable", tone.value);
         autoSizeContent.checked ?editor.execCommand('adaptbytext') : "";
         autoSizePage.checked ? editor.execCommand("adaptbywindow") : "";
+        setSizePage.checked ? editor.execCommand("settablesize", setSizeText.value, setCenter.checked) : '';
         editor.fireEvent('saveScene');
 
         editor.__hasEnterExecCommand = false;
