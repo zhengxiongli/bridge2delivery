@@ -4,11 +4,11 @@
     <title>嘀嗒验收小工具</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="short icon" href="/assets/di-da.svg" type="image/x-icon">
-    <link rel="stylesheet" href="/css/reset.css" />
-    <link rel="stylesheet" href="/css/index.css" />
-    <link rel="stylesheet" href="/css/template.css" />
-    <link rel="stylesheet" href="/css/template-tree.css">
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" th:href="@{/css/template.css}" />
+    <link rel="stylesheet" th:href="@{/css/template-tree.css}">
 </head>
 <body>
 <div th:replace="header::header"></div>
@@ -17,8 +17,8 @@
     <div class="template-container-editor" id="editor" style="width: 100%;height: calc(100% - 66px)"></div>
 </div>
 </body>
-<script src="/js/template.js" type="module"></script>
-<script src="/js/template.tree.js" type="module"></script>
-<script src="/js/ueditor/ueditor.config.js"></script>
-<script src="/js/ueditor/ueditor.all.min.js"></script>
+<script th:src="@{/js/template.js}" type="module"></script>
+<script th:src="@{/js/template.tree.js}" type="module"></script>
+<script th:src="@{/js/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/js/ueditor/ueditor.all.min.js}"></script>
 </html>

@@ -1,4 +1,4 @@
-import { $, validateResponse, isURL, validateJSON, parseJSON } from "./utils.js";
+import { $, validateResponse, isURL, validateJSON, parseJSON, validateTemplate } from "./utils.js";
 
 const fileInput = $('input[name="select-file-input"]');
 const templateInput = $('input[name="select-template-input"]');
@@ -11,7 +11,7 @@ function onRestDefaultTemplate() {
     fetch('/swagger/default/template', {
         method: "PUT",
     })
-        .then(()=> alert('重置成功!'))
+        .then(()=> alert('重置成功!')).then(showPreviewIFrame);
     })
 }
 
@@ -146,18 +146,7 @@ function registerGlobalErrorHandler() {
     })
 }
 
-// --- Load Template. ---
-function formatWithTemplate(json, file) {
-    const fd = new FormData();
-    fd.append('swaggerFile', file);
-    fetch('/swagger/json', {
-        method: 'POST',
-        body: fd,
-    }).then(validateResponse)
-        .then(showPreviewIFrame)
-}
-
-function renderTemplate(file) {
+function reloadTemplate(file) {
     const reader = new FileReader();
     reader.onprogress = () => {
         console.log('加载中..')
@@ -169,11 +158,17 @@ function renderTemplate(file) {
         alert('[ABORT]:读取模板文件失败!')
     };
     reader.onload = () => {
-        //parseJSON(reader.result);
-        // Load the cached json.
-        formatWithTemplate(json, file);
+        // Validate HTML Template's conten if necessary.
     };
-    reader.readAsText(file, 'utf-8')
+    reader.readAsText(file, 'utf-8');
+
+    const fd = new FormData();
+    fd.append('swaggerFile', file);
+    fetch('/swagger/template', {
+        method: 'POST',
+        body: fd,
+    }).then(validateResponse).then(showPreviewIFrame);
+
 }
 
 function proxyTemplateSelect() {
@@ -189,7 +184,7 @@ function registerTemplateSelectListener() {
     templateInput.addEventListener('change', () => {
         const file = templateInput.files[0];
         validateTemplate(file);
-        renderTemplate(file);
+        reloadTemplate(file);
         templateInput.value = '';
     })
 }

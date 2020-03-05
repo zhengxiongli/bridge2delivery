@@ -4,13 +4,14 @@
     <title>嘀嗒验收小工具</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
 </head>
 <body>
 <header class="app-header" th:fragment="header">
-    <div class="logo"><a href="/"><img src="/assets/di-da.svg" alt="logo"></a></div>
+    <div class="logo"><a href="/"><img th:src="@{/assets/di-da.svg}" alt="logo"></a></div>
     <ul class="nav">
-        <li th:classappend="${#httpServletRequest.getRequestURI() == '/swagger' ? 'active' : ''}"><a href="/swagger">Swagger转Word</a></li>
-        <li th:classappend="${#httpServletRequest.getRequestURI() == '/template' ? 'active' : ''}"><a href="/template">创建新模板</a></li>
+        <li th:classappend="${#httpServletRequest.getRequestURI() == '/swagger' ? 'active' : ''}"><a th:href="@{/swagger}">Swagger转Word</a></li>
+        <li th:classappend="${#httpServletRequest.getRequestURI() == '/template' ? 'active' : ''}"><a th:href="@{/template}">创建新模板</a></li>
     </ul>
 </header>
 </body>
