@@ -84,11 +84,27 @@ export function createTemplateTree(config) {
         return nodeInfo;
     }
 
+    function addNodeHoverStyle(node) {
+        node.className = 'template-tree-node'
+        node.addEventListener('mouseover', function(e) {
+            if (node.classList.contains('disabled')) {
+                return;
+            }
+            node.classList.add('font-strong');
+        });
+        node.addEventListener('mouseout', function(e) {
+            if (node.classList.contains('disabled')) {
+                return;
+            }
+            node.classList.remove('font-strong')
+        });
+    }
+
     function buildNode(parentNode, config) {
         const wrapper = document.createElement('div');
         wrapper.className = 'template-tree-wrapper';
         const node = document.createElement('div');
-        node.className = 'template-tree-node';
+        addNodeHoverStyle(node);
         const name = document.createElement('span');
         name.innerText = config.name + ':';
         name.className = 'tree-node-name';
@@ -104,6 +120,7 @@ export function createTemplateTree(config) {
         node.append(description);
         wrapper.append(node);
         const nodeInfo = {path: path, wrapper: wrapper, config: config, node: node};
+
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
                 expandClick(e, node);
