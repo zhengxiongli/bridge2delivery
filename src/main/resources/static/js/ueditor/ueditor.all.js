@@ -7268,6 +7268,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
 
             }
             return '<html><head>' + (me.options.charset ? '<meta http-equiv="Content-Type" content="text/html; charset=' + me.options.charset + '"/>' : '')
+                + (me.options.head ? me.options.head.join('\n') : '')
                 + (headHtmlForIE9 || me.document.getElementsByTagName('head')[0].innerHTML) + headHtml.join('\n') + '</head>'
                 + '<body ' + (ie && browser.version < 9 ? 'class="view"' : '') + '>' + me.getContent(null, null, true) + '</body></html>';
         },
@@ -18965,12 +18966,12 @@ UE.plugins['video'] = function (){
                 for (var r = 0; r < rowsNum; r++) {
                     html.push('<tr' + (r == 0 ? ' class="firstRow"':'') + '>');
                     for (var c = 0; c < colsNum; c++) {
-                        html.push('<td width="' + tdWidth + '"  vAlign="' + opt.tdvalign + '" >' + (browser.ie && browser.version < 11 ? domUtils.fillChar : '<br/>') + '</td>')
+                        html.push('<td vAlign="' + opt.tdvalign + '" >' + (browser.ie && browser.version < 11 ? domUtils.fillChar : '<br/>') + '</td>')
                     }
                     html.push('</tr>')
                 }
                 //禁止指定table-width
-                return '<table><tbody>' + html.join('') + '</tbody></table>'
+                return '<table width="100%"><tbody>' + html.join('') + '</tbody></table>'
             }
 
             if (!opt) {
@@ -19532,6 +19533,23 @@ UE.plugins['video'] = function (){
                 }
             }
         };
+    UE.commands['settablesize'] = {
+        queryCommandState: function () {
+            return getTableItemsByRange(this).table ? 0 : -1
+        },
+        execCommand: function (cmd, width, center) {
+            var tableItems = getTableItemsByRange(this),
+                table = tableItems.table;
+            if (table) {
+                table.width = width;
+            }
+            if (center) {
+                table.align = 'center';
+            } else {
+                table.removeAttribute('align');
+            }
+        }
+    };
 
     //平均分配各列
     UE.commands['averagedistributecol'] = {
@@ -19749,7 +19767,7 @@ UE.plugins['video'] = function (){
         queryCommandState: function () {
             return getTableItemsByRange(this).table ? 0 : -1
         },
-        execCommand: function (cmd, bkColor) {
+        execCommand: function (cmd, bkColor, width) {
             var me = this,
                 ut = getUETableBySelected(me);
 
@@ -19758,10 +19776,12 @@ UE.plugins['video'] = function (){
                     cell = start && domUtils.findParentByTagName(start, ["td", "th", "caption"], true);
                 if (cell) {
                     cell.style.backgroundColor = bkColor;
+                    !width ? '' : (cell.width = width);
                 }
             } else {
                 utils.each(ut.selectedTds, function (cell) {
                     cell.style.backgroundColor = bkColor;
+                    !width || /null/ig.test(width + '') ? '' : (cell.width = width);
                 });
             }
         }

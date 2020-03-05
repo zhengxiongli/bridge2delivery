@@ -47,37 +47,25 @@ export default {
             //'subscript', //下标
             //'fontborder', //字符边框
             //'superscript', //上标
-
             //'blockquote', //引用
-
             //'horizontal', //分隔线
             //'removeformat', //清除格式
-
             //'mergeright', //右合并单元格
             //'mergedown', //下合并单元格
             //'deleterow', //删除行
             //'deletecol', //删除列
             //'splittorows', //拆分成行
             //'splittocols', //拆分成列
-
             //'deletecaption', //删除表格标题
             //'inserttitle', //插入标题
-
             //'deletetable', //删除表格
             //'cleardoc', //清空文档
             //'insertparagraphbeforetable', //"表格前插入行"
-
-
-
             //'edittable', //表格属性
             //'edittd', //单元格属性
-
             //'searchreplace', //查询替换
-
-
             //'insertorderedlist', //有序列表
             //'insertunorderedlist', //无序列表
-
             //'directionalityltr', //从左向右输入
             //'directionalityrtl', //从右向左输入
             //'rowspacingtop', //段前距
@@ -90,7 +78,7 @@ export default {
             //'customstyle', //自定义标题
             //'touppercase', //字母大写
             //'tolowercase', //字母小写
-
         ]
-    ]
+    ],
+    head: ['<meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>']
 }

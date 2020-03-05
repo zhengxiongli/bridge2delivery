@@ -16,8 +16,14 @@ function addGenerateButton() {
 }
 
 function generateTemplate() {
-     console.log('content:', ue.getContent());
-    console.log(ue.getAllHtml())
+    const html = ue.getAllHtml();
+    const filename = `swagger-template.html`;
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function initDefaultTemplate() {
@@ -35,8 +41,16 @@ function initDefaultTemplate() {
 }
 
 function dbClick(e, nodeInfo) {
-    alert('dbclick');
     console.log(e, nodeInfo);
+    const node = new UE.uNode({
+        type: 'element',
+        tagName: 'span',
+        attrs: {'th:text': '${swaggerInfo.' + nodeInfo.config.name + '}'}
+    });
+    node.innerText(`{` + nodeInfo.config.description + `}`);
+    console.log(ue.selection.getRange())
+    ue.execCommand('inserthtml', node.toHtml(false));
+    console.log(ue.selection.getRange().startContainer)
 }
 
 ue.addListener('ready', () => {
@@ -51,7 +65,7 @@ ue.addListener('ready', () => {
         if (drafts) {
             ue.execCommand('drafts');
         } else {
-            initDefaultTemplate();
+            // initDefaultTemplate();
         }
         addGenerateButton();
     }
