@@ -8,6 +8,7 @@ export default {
     autoFloatEnabled: true,
     toolbars: [
         [
+            'source',//源码
             'undo', //撤销
             'redo', //重做
             'bold', //加粗
