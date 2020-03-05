@@ -57,7 +57,7 @@
         if(/^#/.test(color)){
             tone.value = color
         }
-        if (!!cell.width) {
+        if (!!cell.width && !(/null/ig.test(cell.width + ''))) {
             width.value = cell.width;
         }
 

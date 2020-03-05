@@ -19781,7 +19781,7 @@ UE.plugins['video'] = function (){
             } else {
                 utils.each(ut.selectedTds, function (cell) {
                     cell.style.backgroundColor = bkColor;
-                    !width ? '' : (cell.width = width);
+                    !width || /null/ig.test(width + '') ? '' : (cell.width = width);
                 });
             }
         }
