@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Data
 public class Response implements TypeInterface {
-    @Template(description = "状态嘛")
+    @Template(description = "状态码")
     private String status;
     @Template(description = "描述")
     private String description;

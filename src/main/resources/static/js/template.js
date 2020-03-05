@@ -16,7 +16,8 @@ function addGenerateButton() {
 }
 
 function generateTemplate() {
-    console.log(ue.getContent())
+     console.log('content:', ue.getContent());
+    console.log(ue.getAllHtml())
 }
 
 function initDefaultTemplate() {

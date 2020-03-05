@@ -17,7 +17,7 @@ export function createTemplateTree(config) {
     tree.defaultUrl = '';
 
     tree.focusNode = function(path) {
-        const pathStr = path == null || path.length == 0 ? '' : path.join('-');
+        const pathStr = path == null || path.length === 0 ? '' : path.join('-');
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
             if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
@@ -26,7 +26,7 @@ export function createTemplateTree(config) {
                 node.node.className = node.node.className + ' disabled';
             }
         }
-    }
+    };
 
     function init() {
         if (!config || !config.type || !config.container) {
@@ -48,7 +48,7 @@ export function createTemplateTree(config) {
         tree.previewUrl = data.previewUrl;
         tree.defaultUrl = data.defaultUrl;
         tree.container = $(config.container);
-        if (!data.templateNodes || data.templateNodes.length == 0) {
+        if (!data.templateNodes || data.templateNodes.length === 0) {
             throwError("配置错误");
         }
         const nodes = data.templateNodes;
@@ -73,8 +73,7 @@ export function createTemplateTree(config) {
         const nodeInfo = {path: '', wrapper: wrapper, node: node};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
-                exapandClick(e, node);
-                return;
+                expandClick(e, node);
             }
         });
         nodeMap.push(nodeInfo);
@@ -107,7 +106,7 @@ export function createTemplateTree(config) {
         const nodeInfo = {path: path, wrapper: wrapper, config: config, node: node};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
-                exapandClick(e, node);
+                expandClick(e, node);
                 return;
             }
             if (/.*disabled.*/ig.test(node.className)) {
@@ -123,11 +122,11 @@ export function createTemplateTree(config) {
         });
         nodeMap.push(nodeInfo);
         if (!!parentNode) {
-            parentNode.wrapper?.append(wrapper);
+            parentNode.wrapper.append(wrapper);
         } else {
             tree.container.append(wrapper);
         }
-        if (!config.childNodes || config.childNodes.length == 0) {
+        if (!config.childNodes || config.childNodes.length === 0) {
             return;
         }
         const expand = document.createElement('span');
@@ -141,13 +140,13 @@ export function createTemplateTree(config) {
     function isExpandClick(e) {
         const expandItem = e.target;
         return /span/ig.test(expandItem.tagName) &&
-            (expandItem.className == 'expand' || expandItem.className == 'collapse');
+            (expandItem.className === 'expand' || expandItem.className === 'collapse');
     }
 
-    function exapandClick(e, node) {
+    function expandClick(e, node) {
         const expandItem = e.target;
         const parent = expandItem.parentElement;
-        if (expandItem.className == 'expand') {
+        if (expandItem.className === 'expand') {
             expandItem.className = 'collapse';
             collapseChildren(parent.parentElement);
         } else {
@@ -158,7 +157,7 @@ export function createTemplateTree(config) {
 
     function expandChildren(node) {
         const children = node.children;
-        if (!children || children.length == 0) {
+        if (!children || children.length === 0) {
             return;
         }
         for (let i = 0; i < children.length; i++) {
@@ -171,7 +170,7 @@ export function createTemplateTree(config) {
 
     function collapseChildren(node) {
         const children = node.children;
-        if (!children || children.length == 0) {
+        if (!children || children.length === 0) {
             return;
         }
         for (let i = 0; i < children.length; i++) {
