@@ -245,7 +245,6 @@
             setSizePage.checked = true;
             var start = editor.selection.getStart(),
                 table = start && domUtils.findParentByTagName(start, ["table"]);
-            debugger;
             if (table) {
                 setCenter.checked = !!table.getAttribute('align');
                 setSizeText.value = !!table.getAttribute('width') ? table.getAttribute('width') : '100%';
