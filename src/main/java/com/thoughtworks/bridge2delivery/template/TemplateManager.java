@@ -10,7 +10,8 @@ public final class TemplateManager {
 
     static {
         TEMPLATES.put(TemplateType.SWAGGER, TemplateInfo.builder().templateType(TemplateType.SWAGGER)
-                .templateNodes(TemplateUtils.getTemplateNodes(SwaggerInfo.class)).build());
+                .templateNodes(TemplateUtils.getTemplateNodes(SwaggerInfo.class)).rootName("swaggerInfo")
+                .rootDesc("Swagger属性列表").build());
     }
 
     private TemplateManager() {

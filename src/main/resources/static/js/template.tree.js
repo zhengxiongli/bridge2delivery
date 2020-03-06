@@ -6,18 +6,27 @@ config: {
     click: 点击事件
     dbClick: 双击事件
     container: 容器,
-    root: 根节点描述
+    initCallBack: 初始化完成后回调
 }
  */
 export function createTemplateTree(config) {
     const tree = {}, nodeMap = [], treeConfig = config;
+    let focusPath = '';
     //预览URL
     tree.previewUrl = '';
     //默认模板url
     tree.defaultUrl = '';
+    //root节点
+    tree.rootName = '';
+    //
+    tree.rootDesc = '';
 
     tree.focusNode = function(path) {
         const pathStr = path == null || path.length === 0 ? '' : path.join('-');
+        if (pathStr === focusPath) {
+            return;
+        }
+        focusPath = pathStr;
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
             if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
@@ -32,6 +41,11 @@ export function createTemplateTree(config) {
         const pathStr = path == null || path.length === 0 ? '' : path.join('-');
         for (let i = 0; i < nodeMap.length; i++) {
             if (nodeMap[i].path === pathStr) {
+                return nodeMap[i];
+            }
+        }
+        for (let i = 0; i < nodeMap.length; i++) {
+            if (new RegExp('.*' + pathStr + '-.*', 'ig').test(nodeMap[i].path)) {
                 return nodeMap[i];
             }
         }
@@ -50,13 +64,15 @@ export function createTemplateTree(config) {
             method: 'GET'
         })
             .then(res => res.json())
-            .then(buildTree);
+            .then(buildTree).then(!config.initCallBack || config.initCallBack());
     }
 
     function buildTree(response) {
         const data = response.data;
         tree.previewUrl = data.previewUrl;
         tree.defaultUrl = data.defaultUrl;
+        tree.rootName = data.rootName;
+        tree.rootDesc = data.rootDesc;
         tree.container = $(config.container);
         if (!data.templateNodes || data.templateNodes.length === 0) {
             throwError("配置错误");
@@ -68,19 +84,23 @@ export function createTemplateTree(config) {
         }
     }
 
-    function buildRootNode(root) {
+    function buildRootNode() {
         const wrapper = document.createElement('div');
         wrapper.className = 'template-tree-wrapper root';
         const node = document.createElement('div');
         node.className = 'template-tree-node disabled';
         const name = document.createElement('span');
-        name.innerText = root || 'root';
+        name.innerText = tree.rootName;
         name.className = 'tree-node-name';
         name.style.color = '#333';
-        node['data-path'] = '';
+        node['data-path'] = tree.rootName;
+        const description = document.createElement('span');
+        description.innerText = tree.rootDesc;
+        description.className = 'tree-node-desc';
         node.append(name);
+        node.append(description);
         wrapper.append(node);
-        const nodeInfo = {path: '', wrapper: wrapper, node: node};
+        const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
                 expandClick(e, node);

@@ -14,6 +14,8 @@ import java.util.List;
 public class TemplateInfo {
     private String previewUrl;
     private String defaultUrl;
+    private String rootName;
+    private String rootDesc;
     private List<TemplateNode> templateNodes;
     private TemplateType templateType;
 }

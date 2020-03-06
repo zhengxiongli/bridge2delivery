@@ -1,8 +1,11 @@
 package com.thoughtworks.bridge2delivery.template;
 
+import com.sun.org.apache.xalan.internal.lib.NodeInfo;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +40,28 @@ public final class TemplateUtils {
             node.setName(field.getName());
             node.setDescription(template.description());
             node.setChildNodes(getChildTemplateNodes(node.getIsArray() ? getArrayClassType(field) : field.getType()));
+            if (node.getIsArray()) {
+                if (node.getChildNodes() != null) {
+                    node.getChildNodes().add(0, getArrayIndexNode());
+                } else {
+                    node.setChildNodes(Arrays.asList(getArrayIndexNode()));
+                }
+            }
             templateNodes.add(node);
         }
         if (templateNodes == null) {
             return null;
         }
         return templateNodes.size() == 0 ? null : templateNodes;
+    }
+
+    private static TemplateNode getArrayIndexNode() {
+        TemplateNode node = new TemplateNode();
+        node.setIsArray(false);
+        node.setName("arrayIndex");
+        node.setDescription("序号");
+        node.setNodeType(NodeType.ARRAY_INDEX);
+        return node;
     }
 
     private static Class<?> getArrayClassType(Field field) {

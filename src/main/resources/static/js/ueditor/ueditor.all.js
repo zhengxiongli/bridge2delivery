@@ -9968,7 +9968,7 @@ var LocalStorage = UE.LocalStorage = (function () {
 UE.plugins['defaultfilter'] = function () {
     var me = this;
     me.setOpt({
-        'allowDivTransToP':true,
+        'allowDivTransToP':false,
         'disabledTableInTable':true
     });
     //默认的过滤处理
@@ -9987,6 +9987,7 @@ UE.plugins['defaultfilter'] = function () {
         }
         //进行默认的处理
         root.traversal(function (node) {
+            return;
             if (node.type == 'element') {
                 if (!dtd.$cdata[node.tagName] && me.options.autoClearEmptyNode && dtd.$inline[node.tagName] && !dtd.$empty[node.tagName] && (!node.attrs || utils.isEmptyObject(node.attrs))) {
                     if (!node.firstChild()) node.parentNode.removeChild(node);
