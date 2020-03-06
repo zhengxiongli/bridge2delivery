@@ -24839,24 +24839,37 @@ UE.plugins.xssFilter = function() {
 
 	var config = UEDITOR_CONFIG;
 	var whitList = config.whitList;
+    var allTagWhiteList = whitList['allTag'];
 
 	function filter(node) {
 
 		var tagName = node.tagName;
 		var attrs = node.attrs;
 
+
 		if (!whitList.hasOwnProperty(tagName)) {
 			node.parentNode.removeChild(node);
 			return false;
 		}
-
 		UE.utils.each(attrs, function (val, key) {
 
-			if (whitList[tagName].indexOf(key) === -1) {
+			if (whitList[tagName].indexOf(key) === -1 && !isMacheAllTag) {
 				node.setAttr(key);
 			}
 		});
 	}
+
+	function isMacheAllTag(attr) {
+	    if (!allTagWhiteList) {
+	        return false;
+        }
+	    for (var i = 0; i < allTagWhiteList.length; i++) {
+	        if (allTagWhiteList[i].test(attr)) {
+	            return true;
+            }
+        }
+	    return false;
+    }
 
 	// 添加inserthtml\paste等操作用的过滤规则
 	if (whitList && config.xssFilterRules) {
