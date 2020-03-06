@@ -30,8 +30,8 @@ export function createTemplateTree(config) {
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
             if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
-                node.node.className = node.node.className.replace('disabled', '').trim();
-            } else {
+                node.node.className = node.node.className.replace(/disabled/ig, '').trim();
+            } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
                 node.node.className = node.node.className + ' disabled';
             }
         }

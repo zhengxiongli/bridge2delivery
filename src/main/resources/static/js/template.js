@@ -103,7 +103,7 @@ function getThymeleafVariable(pathList) {
     const parentPaths = pathList.slice(0, pathList.length - 1);
     for (let i = parentPaths.length - 1; i >= 0; i--) {
         const nodeInfo = templateTree.getNode(parentPaths.slice(0, i + 1));
-        if (nodeInfo.config.isArray) {
+        if (nodeInfo.config && nodeInfo.config.isArray) {
             variable = 'item.' + variable;
             break;
         } else {
