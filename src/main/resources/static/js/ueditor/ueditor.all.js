@@ -24853,18 +24853,19 @@ UE.plugins.xssFilter = function() {
 		}
 		UE.utils.each(attrs, function (val, key) {
 
-			if (whitList[tagName].indexOf(key) === -1 && !isMacheAllTag) {
+			if (whitList[tagName].indexOf(key) === -1 && !isMachAllTag(key)) {
 				node.setAttr(key);
 			}
 		});
 	}
 
-	function isMacheAllTag(attr) {
+	function isMachAllTag(attr) {
 	    if (!allTagWhiteList) {
 	        return false;
         }
 	    for (var i = 0; i < allTagWhiteList.length; i++) {
-	        if (allTagWhiteList[i].test(attr)) {
+	        var reg = new RegExp(allTagWhiteList[i]);
+	        if (reg.test(attr)) {
 	            return true;
             }
         }

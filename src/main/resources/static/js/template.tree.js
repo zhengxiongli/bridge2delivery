@@ -28,6 +28,16 @@ export function createTemplateTree(config) {
         }
     };
 
+    tree.getNode = function(path) {
+        const pathStr = path == null || path.length === 0 ? '' : path.join('-');
+        for (let i = 0; i < nodeMap.length; i++) {
+            if (nodeMap[i].path === pathStr) {
+                return nodeMap[i];
+            }
+        }
+        return null;
+    }
+
     function init() {
         if (!config || !config.type || !config.container) {
             throwError("配置错误");
@@ -114,7 +124,7 @@ export function createTemplateTree(config) {
         const description = document.createElement('span');
         description.innerText = config.description;
         description.className = 'tree-node-desc';
-        const path = !!parentNode ? parentNode.path + '-' + config.name : config.name;
+        const path = !!parentNode && !!parentNode.path ? parentNode.path + '-' + config.name : config.name;
         node['data-path'] = path;
         node.append(name);
         node.append(description);
