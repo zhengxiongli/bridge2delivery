@@ -2,7 +2,15 @@ import {$, throwError} from "./utils.js";
 import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
 
-const ue = UE.getEditor('editor', EDITOR_CONFIG);
+const ue = UE.getEditor('editor', EDITOR_CONFIG),
+    exportTamplate = `<!DOCTYPE html>
+                  <html lang="en" xmlns:th="http://www.thymeleaf.org">
+                    <head>
+                    <meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>
+                    <meta name="template-type" content="{templateType}">
+                    </head>
+                    <body>{html}</body>
+                   </html>`;
 const domUtils = UE.dom.domUtils;
 let colorIndex = 1, isPreview = false;
 
@@ -41,8 +49,10 @@ function removeBorder() {
 }
 
 function generateTemplate() {
-    const html = ue.getAllHtml();
-    const filename = `swagger-template.html`;
+    const html = exportTamplate.replace('{templateType}', templateTree.type).replace('{html}',
+        ue.getContent()), date = new Date();
+    date.getFullYear()
+    const filename = `Swagger转doc模板_${date.getFullYear()}${date.getMonth()}${date.getDay()}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
     a.href = url;
@@ -60,13 +70,22 @@ function initDefaultTemplate() {
             const reader = new FileReader();
             reader.readAsText(blob, 'UTF-8');
             reader.onloadend = () => {
-                ue.setContent(reader.result)
+                const bodyStart = '<body>', bodyEnd = '</body>';
+                let html = reader.result.toLowerCase(), index = -1;
+                index = html.indexOf(bodyStart);
+                if (index >= 0) {
+                    html = html.substring(index + bodyStart.length);
+                }
+                index = html.lastIndexOf(bodyEnd);
+                if (index >= 0) {
+                    html = html.substring(0, index);
+                }
+                ue.setContent(html);
             }
         });
 }
 
 function dbClick(e, nodeInfo) {
-    //
     ue.execCommand('inserthtml', getInsertHtml(nodeInfo));
 }
 

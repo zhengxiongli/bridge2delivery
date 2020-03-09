@@ -20,6 +20,7 @@ export function createTemplateTree(config) {
     tree.rootName = '';
     //
     tree.rootDesc = '';
+    tree.type = config.type;
 
     tree.focusNode = function(path, disableOthers = true) {
         const pathStr = path == null || path.length === 0 ? tree.rootName : path.join('-');
