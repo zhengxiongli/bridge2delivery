@@ -4,6 +4,7 @@ import EDITOR_CONFIG from './editor.config.js'
 
 const ue = UE.getEditor('editor', EDITOR_CONFIG);
 const domUtils = UE.dom.domUtils;
+let colorIndex = 1, isPreview = false;
 
 function addGenerateButton() {
     const wrapper = document.createElement('div');
@@ -13,7 +14,30 @@ function addGenerateButton() {
     button.className = 'template-generate-btn';
     button.addEventListener('click', generateTemplate);
     wrapper.append(button);
+    const previewBtn = document.createElement('button');
+    previewBtn.innerText = '去掉表格线';
+    previewBtn.addEventListener('click', removeBorder);
+    previewBtn.className = 'template-generate-btn';
+    previewBtn.style['margin-left'] = '10px';
+    wrapper.append(previewBtn);
     $('.edui-editor-toolbarboxinner').append(wrapper)
+}
+
+function removeBorder() {
+    if (isPreview) {
+        return;
+    }
+    isPreview = true;
+    const localStorageKey = 'template-ueditor-key', html = ue.body.innerHtml;
+    ue.removeClassFile('/js/ueditor/themes/iframe.css');
+    setTimeout(function(){
+        ue.loadClassFile('/js/ueditor/themes/iframe.css');
+        ue.body.innerHtml = html;
+        ue.setEnabled();
+        isPreview = false;
+    }, 10000);
+    ue.setDisabled();
+    ue.setContent(html);
 }
 
 function generateTemplate() {
@@ -55,7 +79,7 @@ function getInsertHtml(nodeInfo, noTip) {
     else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(currentInfo, nodeInfo);
     } else {
-        insertHtml = '<span th:text="${' + variable + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span>&#8203;继续添加</span>';
+        insertHtml = '<span th:text="${' + variable + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span> </span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }
@@ -64,8 +88,8 @@ function getInsertArrayHtml(currentInfo, nodeInfo) {
     const variable = getInsertVariable(nodeInfo);
     let insertHtml = '';
     if (!currentInfo.inTable) {
-        //const tip = `<span>&#8203;在此处添加("${nodeInfo.config.description}")的显示字段</span>`;
-        insertHtml = `<div th:each="item : \${${variable}}" data-path="${nodeInfo.config.name}">{${nodeInfo.config.description}}</div>`;
+        const colorClass = getColorClass();
+        insertHtml = `<div class="template-placeholder ${colorClass}" th:each="item : \${${variable}}" data-path="${nodeInfo.config.name}">{${nodeInfo.config.description}}</div>`;
     } else {
         //表格中添加
     }
@@ -86,7 +110,8 @@ function getInsertParentHtml(nodeInfo, selfHtml) {
         let insertHtml = '';
         selfHtml = selfHtml || '';
         if (parentNode.config.isArray) {
-            insertHtml = `<div th:each="item : \${${variable}}" data-path="${parentNode.config.name}">${selfHtml}</div>`;
+            const colorClass = getColorClass();
+            insertHtml = `<div class="template-placeholder ${colorClass}" th:each="item : \${${variable}}" data-path="${parentNode.config.name}"><br>${selfHtml}<br></div>`;
         } else {
             insertHtml = `<div data-path="${parentNode.config.name}">${selfHtml}</div>`;
         }
@@ -153,6 +178,12 @@ function getThymeleafVariable(pathList) {
 
 function getInsertVariable(insertNode) {
     return getThymeleafVariable(insertNode.path.split('-'));
+}
+
+function getColorClass() {
+    const index = colorIndex;
+    colorIndex = (colorIndex + 1) % 4;
+    return 'color' + index;
 }
 
 ue.addListener('ready', () => {

@@ -21,12 +21,14 @@ export function createTemplateTree(config) {
     //
     tree.rootDesc = '';
 
-    tree.focusNode = function(path, disableOthers = false) {
+    tree.focusNode = function(path, disableOthers = true) {
         const pathStr = path == null || path.length === 0 ? tree.rootName : path.join('-');
         if (pathStr === focusPath) {
             return;
         }
         focusPath = pathStr;
+        const regex = '^(' + pathStr + '-)([a-zA-Z0-9]*)$';
+        //const regex = '.*' + pathStr + '-.*';
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
             if (pathStr !== node.path) {
@@ -35,7 +37,8 @@ export function createTemplateTree(config) {
                 node.node.className = node.node.className + ' focused';
             }
             if (disableOthers) {
-                if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
+
+                if (new RegExp(regex, 'ig').test(node.path)) {
                     node.node.className = node.node.className.replace(/disabled/ig, '').trim();
                 } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
                     node.node.className = node.node.className + ' disabled';

@@ -8032,6 +8032,21 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             } else {
                 return '';
             }
+        },
+        removeClassFile: function(href) {
+            var links = this.document.querySelectorAll('link');
+            for (var i = 0; i < links.length; i++) {
+                if (links[i] && links[i].href && links[i].href.indexOf(href) != -1) {
+                    links[i].parentNode.removeChild(links[i]);
+                }
+            }
+        },
+        loadClassFile: function(href) {
+            var link = this.document.createElement('link');
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('type', 'text/css');
+            link.setAttribute('href', href);
+            this.document.getElementsByTagName("head").item(0).appendChild(link);
         }
     };
     utils.inherits(Editor, EventBase);
@@ -9390,6 +9405,9 @@ var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
         b:1,code:1,i:1,u:1,strike:1,s:1,tt:1,strong:1,q:1,samp:1,em:1,span:1,
         sub:1,img:1,sup:1,font:1,big:1,small:1,iframe:1,a:1,br:1,pre:1
     };
+    if (!htmlstr) {
+        return;
+    }
     htmlstr = htmlstr.replace(new RegExp(domUtils.fillChar, 'g'), '');
     if(!ignoreBlank){
         htmlstr = htmlstr.replace(new RegExp('[\\r\\t\\n'+(ignoreBlank?'':' ')+']*<\/?(\\w+)\\s*(?:[^>]*)>[\\r\\t\\n'+(ignoreBlank?'':' ')+']*','g'), function(a,b){
