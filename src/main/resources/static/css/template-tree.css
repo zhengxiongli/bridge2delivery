@@ -3,7 +3,7 @@
 }
 
 .template-tree-wrapper .template-tree-node {
-    padding: 2px 0;
+    padding: 2.5px 0;
     position: relative;
     cursor: pointer;
     user-select: none;
@@ -20,8 +20,13 @@
 }
 
 .template-tree-wrapper .template-tree-node.disabled .tree-node-name,
+.template-tree-wrapper .template-tree-node.disabled .tree-node-tip,
 .template-tree-wrapper .template-tree-node.disabled .tree-node-desc {
     opacity: 0.5;
+}
+
+.template-tree-wrapper .template-tree-node.focused .tree-node-tip {
+    display: inline-block;
 }
 
 .template-tree-wrapper .template-tree-node .expand {
@@ -48,6 +53,11 @@
 
 .template-tree-wrapper .template-tree-node .tree-node-name {
     color: #333;
+}
+
+.template-tree-wrapper .template-tree-node .tree-node-tip {
+    display: none;
+    margin-left: 5px
 }
 
 .template-tree-wrapper .template-tree-node .tree-node-desc {

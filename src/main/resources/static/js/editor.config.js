@@ -81,5 +81,6 @@ export default {
         ]
     ],
     head: ['<meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>'],
-    enterTag: 'div'
+    enterTag: 'div',
+    retainOnlyLabelPasted: false,  //粘贴只保留标签，去除标签所有属性
 }

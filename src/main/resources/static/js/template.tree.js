@@ -22,14 +22,13 @@ export function createTemplateTree(config) {
     tree.rootDesc = '';
     tree.type = config.type;
 
-    tree.focusNode = function(path, disableOthers = true) {
+    tree.focusNode = function (path, disableOthers = true) {
         const pathStr = path == null || path.length === 0 ? tree.rootName : path.join('-');
-        if (pathStr === focusPath) {
+        if (nodeMap.length === 0 || pathStr === focusPath) {
             return;
         }
         focusPath = pathStr;
-        const regex = '^(' + pathStr + '-)([a-zA-Z0-9]*)$';
-        //const regex = '.*' + pathStr + '-.*';
+
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
             if (pathStr !== node.path) {
@@ -38,7 +37,7 @@ export function createTemplateTree(config) {
                 node.node.className = node.node.className + ' focused';
             }
             if (disableOthers) {
-
+                const regex = '^(' + pathStr + '-)([a-zA-Z0-9]*)$';
                 if (new RegExp(regex, 'ig').test(node.path)) {
                     node.node.className = node.node.className.replace(/disabled/ig, '').trim();
                 } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
@@ -48,7 +47,7 @@ export function createTemplateTree(config) {
         }
     };
 
-    tree.getparentNode = function(nodeInfo) {
+    tree.getParentNode = function (nodeInfo) {
         if (nodeInfo.path === tree.rootName) {
             return null;
         }
@@ -56,7 +55,7 @@ export function createTemplateTree(config) {
         return tree.getNode(parentPath.split('-'));
     }
 
-    tree.getNode = function(path) {
+    tree.getNode = function (path) {
         const pathStr = path == null || path.length === 0 ? '' : path.join('-');
         for (let i = 0; i < nodeMap.length; i++) {
             if (nodeMap[i].path === pathStr) {
@@ -112,15 +111,20 @@ export function createTemplateTree(config) {
         name.innerText = tree.rootName;
         name.className = 'tree-node-name';
         name.style.color = '#333';
-        node['data-path'] = tree.rootName;
+        const tip = document.createElement('span');
+        tip.innerText = tree.rootName;
+        tip.className = 'tree-node-tip';
+        tip.dataset.path = tree.rootName;
+        tip.innerText = '👈';
         const description = document.createElement('span');
         description.innerText = tree.rootDesc;
         description.className = 'tree-node-desc';
         node.append(name);
         node.append(description);
+        node.append(tip);
         wrapper.append(node);
         const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node, config: {name: tree.rootName}};
-        node.addEventListener('click', function(e) {
+        node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
                 expandClick(e, node);
             }
@@ -134,14 +138,14 @@ export function createTemplateTree(config) {
     }
 
     function addNodeHoverStyle(node) {
-        node.className = 'template-tree-node'
-        node.addEventListener('mouseover', function(e) {
+        node.className = 'template-tree-node';
+        node.addEventListener('mouseover', function () {
             if (node.classList.contains('disabled')) {
                 return;
             }
             node.classList.add('font-strong');
         });
-        node.addEventListener('mouseout', function(e) {
+        node.addEventListener('mouseout', function () {
             if (node.classList.contains('disabled')) {
                 return;
             }
@@ -163,14 +167,20 @@ export function createTemplateTree(config) {
         const description = document.createElement('span');
         description.innerText = config.description;
         description.className = 'tree-node-desc';
+        const tip = document.createElement('span');
+        tip.innerText = tree.rootName;
+        tip.className = 'tree-node-tip';
+        tip.dataset.path = tree.rootName;
+        tip.innerText = '👈';
         const path = !!parentNode && !!parentNode.path ? parentNode.path + '-' + config.name : config.name;
-        node['data-path'] = path;
+        node.dataset.path = path;
         node.append(name);
         node.append(description);
+        node.append(tip);
         wrapper.append(node);
         const nodeInfo = {path: path, wrapper: wrapper, config: config, node: node};
 
-        node.addEventListener('click', function(e) {
+        node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
                 expandClick(e, node);
                 return;

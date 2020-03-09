@@ -1,7 +1,5 @@
 package com.thoughtworks.bridge2delivery.template;
 
-import com.sun.org.apache.xalan.internal.lib.NodeInfo;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -17,16 +15,15 @@ public final class TemplateUtils {
 
     public static List<TemplateNode> getTemplateNodes(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return Collections.emptyList();
         }
-        List<TemplateNode> templateNodes = getChildTemplateNodes(clazz);
-        return templateNodes;
+        return getChildTemplateNodes(clazz);
     }
 
     private static List<TemplateNode> getChildTemplateNodes(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return null;
         }
         List<TemplateNode> templateNodes = new ArrayList<>();
@@ -48,9 +45,6 @@ public final class TemplateUtils {
                 }
             }
             templateNodes.add(node);
-        }
-        if (templateNodes == null) {
-            return null;
         }
         return templateNodes.size() == 0 ? null : templateNodes;
     }
