@@ -36,52 +36,85 @@ function initDefaultTemplate() {
             const reader = new FileReader();
             reader.readAsText(blob, 'UTF-8');
             reader.onloadend = () => {
-                debugger;
                 ue.setContent(reader.result)
             }
         });
 }
 
 function dbClick(e, nodeInfo) {
-    console.log(e, nodeInfo);
-    const node = new UE.uNode({
-        type: 'element',
-        tagName: 'span',
-        attrs: {'th:text': '${swaggerInfo.' + nodeInfo.config.name + '}'}
-    });
-    node.innerText(`{` + nodeInfo.config.description + `}`);
-    console.log(ue.selection.getRange())
-    ue.execCommand('inserthtml', node.toHtml(false));
-    console.log(ue.selection.getRange().startContainer)
-    getCurrentUEInfo();
+    //
+    ue.execCommand('inserthtml', getInsertHtml(nodeInfo));
+}
+
+function getInsertHtml(nodeInfo, noTip) {
+    const currentInfo = getCurrentUEInfo(), variable = getInsertVariable(nodeInfo);
+    let insertHtml = '';
+    if (!nodeInfo.config.name == templateTree.rootName) {
+        insertHtml = `<div data-path="${nodeInfo.config.name}"></div>`
+    }
+    else if (nodeInfo.config.isArray) {
+        insertHtml = getInsertArrayHtml(currentInfo, nodeInfo);
+    } else {
+        insertHtml = '<span th:text="${' + variable + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span>&#8203;继续添加</span>';
+    }
+    return getInsertParentHtml(nodeInfo, insertHtml);
+}
+
+function getInsertArrayHtml(currentInfo, nodeInfo) {
+    const variable = getInsertVariable(nodeInfo);
+    let insertHtml = '';
+    if (!currentInfo.inTable) {
+        //const tip = `<span>&#8203;在此处添加("${nodeInfo.config.description}")的显示字段</span>`;
+        insertHtml = `<div th:each="item : \${${variable}}" data-path="${nodeInfo.config.name}">{${nodeInfo.config.description}}</div>`;
+    } else {
+        //表格中添加
+    }
+    return insertHtml;
+}
+
+function getInsertParentHtml(nodeInfo, selfHtml) {
+    const parentNode = templateTree.getparentNode(nodeInfo);
+    if (parentNode == null) {
+        return selfHtml;
+    }
+    const selectItem = ue.selection.getStart();
+    const parent = domUtils.findParent(selectItem, function(node){
+        return !!node.dataset && node.dataset['path'] == parentNode.config.name;
+    }, true);
+    if (parent == null) {
+        const variable = getInsertVariable(parentNode);
+        let insertHtml = '';
+        selfHtml = selfHtml || '';
+        if (parentNode.config.isArray) {
+            insertHtml = `<div th:each="item : \${${variable}}" data-path="${parentNode.config.name}">${selfHtml}</div>`;
+        } else {
+            insertHtml = `<div data-path="${parentNode.config.name}">${selfHtml}</div>`;
+        }
+        return getInsertParentHtml(parentNode, insertHtml);
+    }
+    return selfHtml;
 }
 
 /**
  * 获取当前输入位置的信息
- * @returns {{path: [], variableName: string, inTable: boolean}}
+ * @returns {{path: [], inTable: boolean}}
  */
 function getCurrentUEInfo() {
     const info = {
         inTable: false,//是否在table中
         path: [],//路径
-        variableName: ''//thymeleaf需要使用名字
     };
     const selectItem = ue.selection.getStart();
     info.inTable = !!domUtils.findParentByTagName(selectItem, ["table"], true);
     const parents = domUtils.findParents(selectItem, true, function(node){
-        return !!node.dataset['path'];
+        return !!node.dataset && !!node.dataset['path'];
     });
     for (let i = 0; i < parents.length; i++) {
         info.path.push(parents[i].dataset['path']);
     }
-    const variable = getThymeleafVariable(info.path.slice(0, info.path.length - 1));
     const nodeInfo = templateTree.getNode(info.path);
-    info.variableName = getThymeleafVariable(info.path);
     if (info.path == null || info.path.length == 0) {
         info.path = [templateTree.rootName];
-    }
-    if (!info.variableName) {
-        info.variableName = templateTree.rootName;
     }
     return info;
 }
@@ -92,7 +125,7 @@ function getCurrentUEInfo() {
  * @returns {string|*}
  */
 function getThymeleafVariable(pathList) {
-    var variable = templateTree.previewUrl;
+    var variable = '';
     if (pathList == null || pathList.length == 0) {
         return variable;
     }
@@ -104,18 +137,22 @@ function getThymeleafVariable(pathList) {
     for (let i = parentPaths.length - 1; i >= 0; i--) {
         const nodeInfo = templateTree.getNode(parentPaths.slice(0, i + 1));
         if (nodeInfo.config && nodeInfo.config.isArray) {
-            variable = 'item.' + variable;
+            variable = 'item.';
             break;
         } else {
             variable = nodeInfo.path + '.' + variable;
         }
     }
-    if (currentNodeInfo.nodeType === 'ARRAY_INDEX') {
-        variable += 'count';
+    if (currentNodeInfo.config.nodeType === 'ARRAY_INDEX') {
+        variable = variable.replace(/(item\.)$/, '') + 'itemStat.count';
     } else {
-        variable += currentNodeInfo.name;
+        variable += currentNodeInfo.config.name;
     }
-    return variable;
+    return variable.replace(/^\./, '').replace(/(\.)$/, '');
+}
+
+function getInsertVariable(insertNode) {
+    return getThymeleafVariable(insertNode.path.split('-'));
 }
 
 ue.addListener('ready', () => {

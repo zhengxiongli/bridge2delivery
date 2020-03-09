@@ -21,21 +21,36 @@ export function createTemplateTree(config) {
     //
     tree.rootDesc = '';
 
-    tree.focusNode = function(path) {
-        const pathStr = path == null || path.length === 0 ? '' : path.join('-');
+    tree.focusNode = function(path, disableOthers = false) {
+        const pathStr = path == null || path.length === 0 ? tree.rootName : path.join('-');
         if (pathStr === focusPath) {
             return;
         }
         focusPath = pathStr;
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
-            if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
-                node.node.className = node.node.className.replace(/disabled/ig, '').trim();
-            } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
-                node.node.className = node.node.className + ' disabled';
+            if (pathStr !== node.path) {
+                node.node.className = node.node.className.replace(/focused/ig, '').trim();
+            } else if (!node.node.className || node.node.className.indexOf('focused') < 0) {
+                node.node.className = node.node.className + ' focused';
+            }
+            if (disableOthers) {
+                if (new RegExp('.*' + pathStr + '-.*', 'ig').test(node.path)) {
+                    node.node.className = node.node.className.replace(/disabled/ig, '').trim();
+                } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
+                    node.node.className = node.node.className + ' disabled';
+                }
             }
         }
     };
+
+    tree.getparentNode = function(nodeInfo) {
+        if (nodeInfo.path === tree.rootName) {
+            return null;
+        }
+        const parentPath = nodeInfo.path.replace(new RegExp('(-' + nodeInfo.config.name + ')$'), '');
+        return tree.getNode(parentPath.split('-'));
+    }
 
     tree.getNode = function(path) {
         const pathStr = path == null || path.length === 0 ? '' : path.join('-');
@@ -100,7 +115,7 @@ export function createTemplateTree(config) {
         node.append(name);
         node.append(description);
         wrapper.append(node);
-        const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node};
+        const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node, config: {name: tree.rootName}};
         node.addEventListener('click', function(e) {
             if (isExpandClick(e)) {
                 expandClick(e, node);

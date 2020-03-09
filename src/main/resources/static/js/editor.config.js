@@ -80,5 +80,6 @@ export default {
             //'tolowercase', //字母小写
         ]
     ],
-    head: ['<meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>']
+    head: ['<meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>'],
+    enterTag: 'div'
 }

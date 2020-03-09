@@ -11,6 +11,10 @@
     -webkit-user-select: none;
 }
 
+.template-tree-wrapper .template-tree-node.focused {
+    font-weight: bold;
+}
+
 .template-tree-wrapper .font-strong {
     font-weight: bolder;
 }
