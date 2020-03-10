@@ -126,7 +126,7 @@ function getInsertArrayHtml(nodeInfo, innerText) {
         titleTr.appendChild(rowSpan);
         const childNodes = nodeInfo.config.childNodes;
         for (let i = 0; i < childNodes.length; i++) {
-            if (childNodes[i].childNodes) {
+            if (childNodes[i].childNodes || childNodes[i].nodeType == 'ARRAY_INDEX') {
                 continue;
             }
             const titleTd = document.createElement('td');
