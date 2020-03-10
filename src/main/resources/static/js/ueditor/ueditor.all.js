@@ -5565,7 +5565,18 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                         domUtils.clearEmptySibling(elm);
                     }
                     //去除子节点相同的
-                    domUtils.mergeChild(elm, attrs);
+                    var isThNode = false;
+                    if (current.attributes) {
+                        for (var i = 0; i < current.attributes.length; i++) {
+                            if (/th:.*/ig.test(current.attributes[i].name)) {
+                                isThNode = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isThNode) {
+                        domUtils.mergeChild(elm, attrs);
+                    }
                     current = domUtils.getNextDomNode(elm, false, filterFn);
                     domUtils.mergeToParent(elm);
                     if (node === end) {
@@ -8067,7 +8078,7 @@ UE.Editor.defaultOptions = function(editor){
         textarea: 'editorValue',
         focus: false,
         focusInEnd: true,
-        autoClearEmptyNode: true,
+        autoClearEmptyNode: false,
         fullscreen: false,
         readonly: false,
         zIndex: 999,
@@ -11521,6 +11532,15 @@ UE.plugins['font'] = function () {
 
     }
     function mergeChild(rng,cmdName,value){
+        function isThNode(node) {
+            if (node.attributes) {
+                for (var i = 0; i < node.attributes.length; i++) {
+                    if (/th:.*/ig.test(node.attributes[i].name)) {
+                        return true;
+                    }
+                }
+            }
+        }
         if(needSetChild[cmdName]){
             rng.adjustmentBoundary();
             if(!rng.collapsed && rng.startContainer.nodeType == 1){
@@ -11529,6 +11549,7 @@ UE.plugins['font'] = function () {
                     var bk = rng.createBookmark();
                     utils.each(domUtils.getElementsByTagName(start, 'span'), function (span) {
                         if (!span.parentNode || domUtils.isBookmarkNode(span))return;
+                        if (isThNode(span)) return;
                         if(cmdName == 'backcolor' && domUtils.getComputedStyle(span,'background-color').toLowerCase() === value){
                             return;
                         }
@@ -11567,9 +11588,18 @@ UE.plugins['font'] = function () {
             if (/border/i.test(span.style.cssText) && span.parentNode.tagName == 'SPAN' && /border/i.test(span.parentNode.style.cssText)) {
                 span.style.cssText = span.style.cssText.replace(/border[^:]*:[^;]+;?/gi, '');
             }
+            function isThNode(node) {
+                if (node.attributes) {
+                    for (var i = 0; i < node.attributes.length; i++) {
+                        if (/th:.*/ig.test(node.attributes[i].name)) {
+                            return true;
+                        }
+                    }
+                }
+            }
             if(!(cmdName=='fontborder' && value=='none')){
                 var next = span.nextSibling;
-                while (next && next.nodeType == 1 && next.tagName == 'SPAN' ) {
+                while (next && next.nodeType == 1 && next.tagName == 'SPAN' && !isThNode(next)) {
                     if(domUtils.isBookmarkNode(next) && cmdName == 'fontborder') {
                         span.appendChild(next);
                         next = span.nextSibling;
@@ -11584,9 +11614,9 @@ UE.plugins['font'] = function () {
                     next = span.nextSibling;
                 }
             }
-
-
-            mergeWithParent(span);
+            if (!isThNode(span)) {
+                mergeWithParent(span);
+            }
             if(browser.ie && browser.version > 8 ){
                 //拷贝父亲们的特别的属性,这里只做背景颜色的处理
                 var parent = domUtils.findParent(span,function(n){return n.tagName == 'SPAN' && /background-color/.test(n.style.cssText)});
