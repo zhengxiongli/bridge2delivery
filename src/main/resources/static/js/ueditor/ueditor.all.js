@@ -12551,6 +12551,24 @@ UE.commands['indent'] = {
 
 };
 
+/**
+ * 去掉自定义边框
+ * @example
+ * ```javascript
+ * editor.execCommand( 'dropcustomborder' );
+ * ```
+ */
+UE.commands['dropcustomborder'] = {
+    execCommand : function() {
+        var me = this;
+        me.removeClassFile('/js/ueditor/themes/iframe.css');
+        setTimeout(function(){
+            me.loadClassFile('/js/ueditor/themes/iframe.css');
+            me.setEnabled();
+        }, 10000);
+        me.setDisabled();
+    }
+};
 
 // plugins/print.js
 /**
@@ -20049,7 +20067,8 @@ UE.plugins['table'] = function () {
         "insertparagraph":1,
         "insertparagraphbeforetable":1,
         "averagedistributecol":1,
-        "averagedistributerow":1
+        "averagedistributerow":1,
+        "dropcustomborder":1,
     };
     me.ready(function () {
         utils.cssRule('table',
@@ -27915,7 +27934,7 @@ UE.ui = baidu.editor.ui = {};
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print','horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts','generate'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts','generate','dropcustomborder'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();

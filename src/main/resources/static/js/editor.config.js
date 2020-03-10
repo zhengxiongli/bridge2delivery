@@ -42,7 +42,8 @@ export default {
             '|', //分隔符
             'drafts', // 从草稿箱加载
             '|', //分隔符
-            'fullscreen' //全屏
+            'fullscreen', //全屏
+            'dropcustomborder', //去掉边框
             //'strikethrough', //删除线
             //'subscript', //下标
             //'fontborder', //字符边框
