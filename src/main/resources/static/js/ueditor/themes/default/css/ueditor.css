@@ -631,6 +631,10 @@ div.edui-box {
     background-position: -726px -77px;
 }
 
+.edui-default  .edui-for-dropcustomborder .edui-icon {
+    background-position: -744px -77px;
+}
+
 .edui-default  .edui-for-insertframe .edui-icon {
     background-position: -240px -40px;
 }
@@ -1360,6 +1364,12 @@ div.edui-box {
 
 /*image-dialog*/
 .edui-default .edui-for-insertimage .edui-dialog-content {
+    width: 650px;
+    height: 400px;
+    overflow: hidden;
+}
+
+.edui-default .edui-for-dropcustomborder .edui-dialog-content {
     width: 650px;
     height: 400px;
     overflow: hidden;

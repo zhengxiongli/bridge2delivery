@@ -12,7 +12,7 @@ const ue = UE.getEditor('editor', EDITOR_CONFIG),
                     <body>{html}</body>
                    </html>`;
 const domUtils = UE.dom.domUtils;
-let colorIndex = 1, isPreview = false;
+let colorIndex = 1;
 
 function addGenerateButton() {
     const wrapper = document.createElement('div');
@@ -22,12 +22,6 @@ function addGenerateButton() {
     button.className = 'template-generate-btn';
     button.addEventListener('click', generateTemplate);
     wrapper.append(button);
-    const previewBtn = document.createElement('button');
-    previewBtn.innerText = '去掉表格线';
-    previewBtn.addEventListener('click', removeBorder);
-    previewBtn.className = 'template-generate-btn';
-    previewBtn.style['margin-left'] = '10px';
-    wrapper.append(previewBtn);
     $('.edui-editor-toolbarboxinner').append(wrapper)
 }
 

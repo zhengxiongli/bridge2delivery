@@ -45,6 +45,7 @@ import java.util.Map;
 @Api(description = "swagger导出")
 public class SwaggerController {
     private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/swagger.html";
+    private static final String SWAGGER_KEYWORD = "${swaggerInfo.";
     private final ThymeleafUtils thymeleafUtils;
 
     public SwaggerController(final ThymeleafUtils thymeleafUtils) {
@@ -85,8 +86,16 @@ public class SwaggerController {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
         }
         String template = Utils.getTextFromFile(file);
-        request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
-        return ApiResponse.ok(null);
+
+        String scriptRegex="<script[^>]*?>[\\s\\S]*?<\\/script>";
+        template = template.replaceAll(scriptRegex, "");
+
+        if(template.indexOf(SWAGGER_KEYWORD) != -1){
+            request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
+            return ApiResponse.ok(null);
+        }else{
+            throw new CustomException(Messages.SWAGGER_TEMPLATE_INVALID);
+        }
     }
 
     @PutMapping(value = "/default/template")
