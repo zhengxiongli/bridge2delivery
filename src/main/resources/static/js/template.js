@@ -98,7 +98,7 @@ function getInsertHtml(nodeInfo, noTip) {
     } else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
-        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span> </span>';
+        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span>&nbsp;</span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }
