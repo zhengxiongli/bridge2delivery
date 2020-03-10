@@ -3,7 +3,7 @@ import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
 
 const ue = UE.getEditor('editor', EDITOR_CONFIG),
-    exportTamplate = `<!DOCTYPE html>
+    exportTemplate = `<!DOCTYPE html>
                   <html lang="en" xmlns:th="http://www.thymeleaf.org">
                     <head>
                     <meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>
@@ -49,9 +49,10 @@ function removeBorder() {
 }
 
 function generateTemplate() {
-    const html = exportTamplate.replace('{templateType}', templateTree.type).replace('{html}',
-        ue.getContent()), date = new Date();
-    date.getFullYear()
+    // const html = exportTemplate.replace('{templateType}', templateTree.type).replace('{html}',
+    //     ue.getContent()),
+    const date = new Date();
+    const html = ue.getAllHtml();
     const filename = `Swagger转doc模板_${date.getFullYear()}${date.getMonth()}${date.getDay()}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
@@ -97,7 +98,7 @@ function getInsertHtml(nodeInfo, noTip) {
     } else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
-        insertHtml = '<span th:text="${' + variable + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span> </span>';
+        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span> </span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }
@@ -118,7 +119,7 @@ function getInsertArrayHtml(nodeInfo, innerText) {
         domUtils.setAttributes(valueTr, {'th:each':`item: \${${variable}}`});
         domUtils.setAttributes(valueTr, {'data-path':`${nodeInfo.config.name}`});
         const rowSpan = document.createElement('td');
-        domUtils.setAttributes(rowSpan, {'th:rowspan': `\${#lists.size(${variable})) + 1}`, 'rowspan': '2'});
+        domUtils.setAttributes(rowSpan, {'th:rowspan': `\${(${variable} == null ? 1 : #lists.size(${variable})) + 1}`, 'rowspan': '2'});
         rowSpan.innerText = nodeInfo.config.description;
         titleTr.appendChild(rowSpan);
         const childNodes = nodeInfo.config.childNodes;
@@ -131,7 +132,8 @@ function getInsertArrayHtml(nodeInfo, innerText) {
             titleTd.innerText = childNodes[i].description;
             let fullPath = nodeInfo.path.split('-');
             fullPath.push(childNodes[i].name);
-            valueTd.innerHTML = '<span th:text="${' + getThymeleafVariable(fullPath) +
+            let variable = getThymeleafVariable(fullPath);
+            valueTd.innerHTML = '<span th:text="${' + wrapperEmptyHandle(variable) +
                 '}" data-path="' + childNodes[i].name + '">{' + childNodes[i].description + '}</span>';
             titleTr.appendChild(titleTd);
             valueTr.appendChild(valueTd);
@@ -141,6 +143,9 @@ function getInsertArrayHtml(nodeInfo, innerText) {
         domUtils.insertAfter(titleTr, valueTr);
     }
     return insertHtml;
+}
+function wrapperEmptyHandle(target) {
+    return `${target} == null ? '' : ${target}`;
 }
 
 function getInsertParentHtml(nodeInfo, selfHtml) {
@@ -247,7 +252,6 @@ ue.addListener('ready', () => {
             addGenerateButton();
             ue.addListener('selectionchange', function () {
                 let info = getCurrentUEInfo();
-                console.log(info.path)
                 templateTree.focusNode(info.path, true);
             });
         }
