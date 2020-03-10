@@ -85,6 +85,10 @@ public class SwaggerController {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
         }
         String template = Utils.getTextFromFile(file);
+
+        String scriptRegex="<script[^>]*?>[\\s\\S]*?<\\/script>";
+        template = template.replaceAll(scriptRegex, "");
+        
         request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
         return ApiResponse.ok(null);
     }
