@@ -22,6 +22,8 @@ public class ObjectInfo extends BaseInfo {
     private String className;
     @Template(description = "属性列表")
     private List<BaseInfo> properties;
+    @Template(description = "描述")
+    private String description;
 
     @Override
     public String getJsonExample() {

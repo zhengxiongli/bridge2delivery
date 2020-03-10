@@ -12708,7 +12708,6 @@ UE.plugins['paragraph'] = function() {
                     return   node.nodeType == 1 ? node.tagName.toLowerCase() != 'br' &&  !domUtils.isBookmarkNode(node) : !domUtils.isWhitespace( node );
                 },
                 para;
-
             range.enlarge( true );
             var bookmark2 = range.createBookmark(),
                 current = domUtils.getNextDomNode( bookmark2.start, false, filterFn ),
@@ -12742,8 +12741,17 @@ UE.plugins['paragraph'] = function() {
                     tmpRange.insertNode( para );
 
                     var parent = para.parentNode;
+                    function isThNode(node) {
+                        if (node.attributes) {
+                            for (var i = 0; i < node.attributes.length; i++) {
+                                if (/th:.*/ig.test(node.attributes[i].name)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                     //如果para上一级是一个block元素且不是body,td就删除它
-                    if ( block( parent ) && !domUtils.isBody( para.parentNode ) && utils.indexOf(notExchange,parent.tagName)==-1) {
+                    if ( block( parent ) && !isThNode(parent) && !domUtils.isBody( para.parentNode ) && utils.indexOf(notExchange,parent.tagName)==-1) {
                         //存储dir,style
                         if(!(sourceCmdName && sourceCmdName == 'customstyle')){
                             parent.getAttribute('dir') && para.setAttribute('dir',parent.getAttribute('dir'));
@@ -16624,29 +16632,29 @@ UE.plugins['enterkey'] = function() {
                     return;
                 }
             }
-            if (tag == 'p') {
+
+            if (tag == 'p' || tag == 'div') {
 
 
                 if (!browser.ie) {
 
-                    start = domUtils.findParentByTagName(range.startContainer, ['ol','ul','p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6','blockquote','caption'], true);
+                    start = domUtils.findParentByTagName(range.startContainer, ['ol','ul','p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6','blockquote','caption', 'div'], true);
 
                     //opera下执行formatblock会在table的场景下有问题，回车在opera原生支持很好，所以暂时在opera去掉调用这个原生的command
                     //trace:2431
                     if (!start && !browser.opera) {
-
-                        me.document.execCommand('formatBlock', false, '<p>');
+                        me.document.execCommand('formatBlock', false, tag == 'p' ? '<p>' : 'div');
 
                         if (browser.gecko) {
                             range = me.selection.getRange();
-                            start = domUtils.findParentByTagName(range.startContainer, 'p', true);
+                            start = domUtils.findParentByTagName(range.startContainer, tag, true);
                             start && domUtils.removeDirtyAttr(start);
                         }
 
 
                     } else {
                         hTag = start.tagName;
-                        start.tagName.toLowerCase() == 'p' && browser.gecko && domUtils.removeDirtyAttr(start);
+                        (hTag.toLowerCase() == 'p' || hTag.toLowerCase() == 'div') && browser.gecko && domUtils.removeDirtyAttr(start);
                     }
 
                 }

@@ -77,8 +77,8 @@
                 <td width="10%" th:text="${param.dataType == null ? '' : #strings.toLowerCase(param.dataType)}">STRING</td>
                 <td width="15%"
                     th:text="${param.schema != null ? param.schema.refName : ''}"></td>
-                <td width="15%" th:text="${param.paramType?: ''}">path</td>
-                <td width="15%" th:text="${param.required ? '是' : '否'}">是</td>
+                <td width="15%" th:text="${param.paramType?: '&nbsp;'}">path</td>
+                <td width="15%" th:text="${param.required == null ? '&nbsp;' : (param.required ? '是' : '否')}">是</td>
                 <td th:text="${param.description}">用户名称</td>
             </tr>
             <tr th:if="${path.params == null}" class="text-center">

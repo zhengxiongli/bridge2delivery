@@ -48,6 +48,11 @@ function removeBorder() {
     ue.setContent(html);
 }
 
+function formatDateAndMonth(number) {
+    const value = '00' + number;
+    return value.substring(value.length - 2, value.length);
+}
+
 function generateTemplate() {
     // const html = exportTemplate.replace('{templateType}', templateTree.type).replace('{html}',
     //     ue.getContent()),
@@ -55,7 +60,7 @@ function generateTemplate() {
     ue.removeClassFile('/js/ueditor/themes/iframe.css');
     const html = ue.getAllHtml();
     ue.loadClassFile('/js/ueditor/themes/iframe.css');
-    const filename = `Swagger转doc模板_${date.getFullYear()}${date.getMonth()}${date.getDay()}.html`;
+    const filename = `Swagger转doc模板_${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
     a.href = url;
@@ -65,7 +70,7 @@ function generateTemplate() {
 }
 
 function initDefaultTemplate() {
-    fetch('/template/swagger.html', {
+    fetch('/template/swagger-default-template.html', {
         method: 'GET'
     })
         .then((res) => res.blob())
@@ -74,7 +79,7 @@ function initDefaultTemplate() {
             reader.readAsText(blob, 'UTF-8');
             reader.onloadend = () => {
                 const bodyStart = '<body>', bodyEnd = '</body>';
-                let html = reader.result.toLowerCase(), index = -1;
+                let html = reader.result, index = -1;
                 index = html.indexOf(bodyStart);
                 if (index >= 0) {
                     html = html.substring(index + bodyStart.length);
@@ -83,7 +88,7 @@ function initDefaultTemplate() {
                 if (index >= 0) {
                     html = html.substring(0, index);
                 }
-                ue.setContent(html);
+                ue.execCommand('inserthtml', html, false);
             }
         });
 }
@@ -100,7 +105,8 @@ function getInsertHtml(nodeInfo, noTip) {
     } else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
-        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span>&nbsp;';
+        const dot = nodeInfo.config.nodeType === 'ARRAY_INDEX' ? '.' : '';
+        insertHtml = '<span><span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span>' + dot + '&nbsp;</span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }
@@ -165,7 +171,7 @@ function getInsertParentHtml(nodeInfo, selfHtml) {
         if (parentNode.config.isArray) {
             insertHtml = getInsertArrayHtml(parentNode, `<br>${selfHtml}<br>`);
         } else {
-            insertHtml = `<div data-path="${parentNode.config.name}">${selfHtml}</div>`;
+            insertHtml = `<div data-path="${parentNode.config.name}"><div>${selfHtml}</div></div>`;
         }
         return getInsertParentHtml(parentNode, insertHtml);
     }
@@ -192,6 +198,11 @@ function getCurrentUEInfo() {
     const nodeInfo = templateTree.getNode(info.path);
     if (info.path == null || info.path.length === 0) {
         info.path = [templateTree.rootName];
+    }
+    if (info.path && info.path.length > 0) {
+        if (info.path[0] != templateTree.rootName) {
+            info.path.unshift(templateTree.rootName);
+        }
     }
     return info;
 }

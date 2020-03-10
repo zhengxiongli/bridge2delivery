@@ -18,9 +18,9 @@ public class ParamInfo implements TypeInterface {
     @Template(description = "默认值")
     private String defaultVal;
     @Template(description = "是否允许空值")
-    private boolean allowEmptyValue;
+    private Boolean allowEmptyValue;
     @Template(description = "是否必需")
-    private boolean required;
+    private Boolean required;
     private String format;
     private BaseInfo schema;
     @Template(description = "数据类型")

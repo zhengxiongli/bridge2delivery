@@ -83,5 +83,5 @@ export default {
     head: ['<meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>'],
     enterTag: 'div',
     retainOnlyLabelPasted: false,  //粘贴只保留标签，去除标签所有属性
-    initialStyle: 'span{line-height: 1.6} td span {line-height: 1.4}'
+    //initialStyle: 'span{line-height: 1.6} td span {line-height: 1.4}'
 }

@@ -7,6 +7,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,20 @@ public class PathInfo {
 
     public String getSummary() {
         return StringUtils.isEmpty(summary) ? "" : summary;
+    }
+
+    public List<ParamInfo> getParams() {
+        if (!CollectionUtils.isEmpty(params)) {
+            return params;
+        }
+        return Arrays.asList(new ParamInfo());
+    }
+
+    public List<Response> getResponses() {
+        if (!CollectionUtils.isEmpty(responses)) {
+            return responses;
+        }
+        return Arrays.asList(new Response());
     }
 
     private void buildParams(List<Map> parameters, Map<String, BaseInfo> models) {
