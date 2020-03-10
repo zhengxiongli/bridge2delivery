@@ -2984,8 +2984,17 @@ var domUtils = dom.domUtils = {
      */
     mergeChild:function (node, tagName, attrs) {
         var list = domUtils.getElementsByTagName(node, node.tagName.toLowerCase());
+        function isThNode(node) {
+            if (node.attributes) {
+                for (var i = 0; i < node.attributes.length; i++) {
+                    if (/th:.*/ig.test(node.attributes[i].name)) {
+                        return true;
+                    }
+                }
+            }
+        }
         for (var i = 0, ci; ci = list[i++];) {
-            if (!ci.parentNode || domUtils.isBookmarkNode(ci)) {
+            if (!ci.parentNode || domUtils.isBookmarkNode(ci) || isThNode(ci)) {
                 continue;
             }
             //span单独处理
@@ -10016,7 +10025,7 @@ UE.plugins['defaultfilter'] = function () {
         }
         //进行默认的处理
         root.traversal(function (node) {
-            return;
+            //return;
             if (node.type == 'element') {
                 if (!dtd.$cdata[node.tagName] && me.options.autoClearEmptyNode && dtd.$inline[node.tagName] && !dtd.$empty[node.tagName] && (!node.attrs || utils.isEmptyObject(node.attrs))) {
                     if (!node.firstChild()) node.parentNode.removeChild(node);

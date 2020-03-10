@@ -43,7 +43,7 @@ function removeBorder() {
         ue.body.innerHtml = html;
         ue.setEnabled();
         isPreview = false;
-    }, 10000);
+    }, 5000);
     ue.setDisabled();
     ue.setContent(html);
 }
@@ -52,7 +52,9 @@ function generateTemplate() {
     // const html = exportTemplate.replace('{templateType}', templateTree.type).replace('{html}',
     //     ue.getContent()),
     const date = new Date();
+    ue.removeClassFile('/js/ueditor/themes/iframe.css');
     const html = ue.getAllHtml();
+    ue.loadClassFile('/js/ueditor/themes/iframe.css');
     const filename = `Swagger转doc模板_${date.getFullYear()}${date.getMonth()}${date.getDay()}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
@@ -87,7 +89,7 @@ function initDefaultTemplate() {
 }
 
 function dbClick(e, nodeInfo) {
-    ue.execCommand('inserthtml', getInsertHtml(nodeInfo));
+    ue.execCommand('inserthtml', getInsertHtml(nodeInfo), false);
 }
 
 function getInsertHtml(nodeInfo, noTip) {
@@ -98,7 +100,7 @@ function getInsertHtml(nodeInfo, noTip) {
     } else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
-        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span><span> </span>';
+        insertHtml = '<span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span>&nbsp;';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }

@@ -22,7 +22,7 @@
 .template-tree-wrapper .template-tree-node.disabled .tree-node-name,
 .template-tree-wrapper .template-tree-node.disabled .tree-node-tip,
 .template-tree-wrapper .template-tree-node.disabled .tree-node-desc {
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 .template-tree-wrapper .template-tree-node.focused .tree-node-tip {
