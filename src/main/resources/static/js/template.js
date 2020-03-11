@@ -1,16 +1,8 @@
-import {$} from "./utils.js";
+import {$, getSessionData, META_KEY, removeSessionData, TEMPLATE_TYPE} from "./utils.js";
 import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
 
-const ue = UE.getEditor('editor', EDITOR_CONFIG),
-    exportTemplate = `<!DOCTYPE html>
-                  <html lang="en" xmlns:th="http://www.thymeleaf.org">
-                    <head>
-                    <meta charset="UTF-8" http-equiv="Content-Type" content="application/msword"/>
-                    <meta name="template-type" content="{templateType}">
-                    </head>
-                    <body>{html}</body>
-                   </html>`;
+const ue = UE.getEditor('editor', EDITOR_CONFIG);
 const domUtils = UE.dom.domUtils;
 let colorIndex = 1;
 
@@ -25,34 +17,15 @@ function addGenerateButton() {
     $('.edui-editor-toolbarboxinner').append(wrapper)
 }
 
-function removeBorder() {
-    if (isPreview) {
-        return;
-    }
-    isPreview = true;
-    const localStorageKey = 'template-ueditor-key', html = ue.body.innerHtml;
-    ue.removeClassFile('/js/ueditor/themes/iframe.css');
-    setTimeout(function(){
-        ue.loadClassFile('/js/ueditor/themes/iframe.css');
-        ue.body.innerHtml = html;
-        ue.setEnabled();
-        isPreview = false;
-    }, 5000);
-    ue.setDisabled();
-    ue.setContent(html);
-}
-
 function formatDateAndMonth(number) {
     const value = '00' + number;
     return value.substring(value.length - 2, value.length);
 }
 
 function generateTemplate() {
-    // const html = exportTemplate.replace('{templateType}', templateTree.type).replace('{html}',
-    //     ue.getContent()),
     const date = new Date();
     ue.removeClassFile('/js/ueditor/themes/iframe.css');
-    ue.addMeta('template-type', templateTree.type);
+    ue.addMeta(META_KEY, templateTree.type);
     const html = ue.getAllHtml();
     ue.loadClassFile('/js/ueditor/themes/iframe.css');
     const filename = `Swagger转doc模板_${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
@@ -72,20 +45,21 @@ function initDefaultTemplate() {
         .then((blob) => {
             const reader = new FileReader();
             reader.readAsText(blob, 'UTF-8');
-            reader.onloadend = () => {
-                const bodyStart = '<body>', bodyEnd = '</body>';
-                let html = reader.result, index = -1;
-                index = html.indexOf(bodyStart);
-                if (index >= 0) {
-                    html = html.substring(index + bodyStart.length);
-                }
-                index = html.lastIndexOf(bodyEnd);
-                if (index >= 0) {
-                    html = html.substring(0, index);
-                }
-                ue.execCommand('inserthtml', html, false);
-            }
+            reader.onloadend = () => insertBodyFromHtml(reader.result);
         });
+}
+
+export function insertBodyFromHtml(html) {
+    const bodyStart = '<body>', bodyEnd = '</body>';
+    let index = html.indexOf(bodyStart);
+    if (index >= 0) {
+        html = html.substring(index + bodyStart.length);
+    }
+    index = html.lastIndexOf(bodyEnd);
+    if (index >= 0) {
+        html = html.substring(0, index);
+    }
+    ue.execCommand('inserthtml', html, false);
 }
 
 function dbClick(e, nodeInfo) {
@@ -120,15 +94,18 @@ function getInsertArrayHtml(nodeInfo, innerText) {
         const tr = getInsertTr(selectItem);
         const titleTr = document.createElement('tr');
         const valueTr = document.createElement('tr');
-        domUtils.setAttributes(valueTr, {'th:each':`item: \${${variable}}`});
-        domUtils.setAttributes(valueTr, {'data-path':`${nodeInfo.config.name}`});
+        domUtils.setAttributes(valueTr, {'th:each': `item: \${${variable}}`});
+        domUtils.setAttributes(valueTr, {'data-path': `${nodeInfo.config.name}`});
         const rowSpan = document.createElement('td');
-        domUtils.setAttributes(rowSpan, {'th:rowspan': `\${(${variable} == null ? 1 : #lists.size(${variable})) + 1}`, 'rowspan': '2'});
+        domUtils.setAttributes(rowSpan, {
+            'th:rowspan': `\${(${variable} == null ? 1 : #lists.size(${variable})) + 1}`,
+            'rowspan': '2'
+        });
         rowSpan.innerText = nodeInfo.config.description;
         titleTr.appendChild(rowSpan);
         const childNodes = nodeInfo.config.childNodes;
         for (let i = 0; i < childNodes.length; i++) {
-            if (childNodes[i].childNodes || childNodes[i].nodeType == 'ARRAY_INDEX') {
+            if (childNodes[i].childNodes || childNodes[i].nodeType === 'ARRAY_INDEX') {
                 continue;
             }
             const titleTd = document.createElement('td');
@@ -151,8 +128,8 @@ function getInsertArrayHtml(nodeInfo, innerText) {
 
 function getInsertTr(selectItem) {
     const selectTd = domUtils.findParentByTagName(selectItem, ['td'], true),
-          selectTr = domUtils.findParentByTagName(selectItem, ['tr'], true),
-          rowSpan = selectItem.rowSpan;
+        selectTr = domUtils.findParentByTagName(selectItem, ['tr'], true),
+        rowSpan = selectItem.rowSpan;
     let retTr = selectTr;
     for (let i = 1; i < rowSpan; i++) {
         retTr = domUtils.getNextDomNode(retTr, false);
@@ -170,7 +147,7 @@ function getInsertParentHtml(nodeInfo, selfHtml) {
         return selfHtml;
     }
     const selectItem = ue.selection.getStart();
-    const parent = domUtils.findParent(selectItem, function(node){
+    const parent = domUtils.findParent(selectItem, function (node) {
         return !!node.dataset && node.dataset['path'] === parentNode.config.name;
     }, true);
     if (parent == null) {
@@ -203,12 +180,11 @@ function getCurrentUEInfo() {
     for (let i = 0; i < parents.length; i++) {
         info.path.push(parents[i].dataset['path']);
     }
-    const nodeInfo = templateTree.getNode(info.path);
     if (info.path == null || info.path.length === 0) {
         info.path = [templateTree.rootName];
     }
     if (info.path && info.path.length > 0) {
-        if (info.path[0] != templateTree.rootName) {
+        if (info.path[0] !== templateTree.rootName) {
             info.path.unshift(templateTree.rootName);
         }
     }
@@ -260,13 +236,16 @@ function getColorClass() {
 ue.addListener('ready', () => {
     window.templateTree = createTemplateTree({
         root: 'swagger',
-        type: "SWAGGER",
+        type: TEMPLATE_TYPE,
         container: '.template-container-tree',
         dbClick: dbClick,
         initCallBack: function () {
             ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
-            const drafts = ue.execCommand('getlocaldata');
-            if (drafts) {
+            const uploadTemplate = getSessionData('uploadTemplate');
+            if (uploadTemplate) {
+                insertBodyFromHtml(uploadTemplate);
+                removeSessionData('uploadTemplate');
+            } else if (ue.execCommand('getlocaldata')) {
                 ue.execCommand('drafts');
             } else {
                 initDefaultTemplate();

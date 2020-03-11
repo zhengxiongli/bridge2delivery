@@ -1,4 +1,13 @@
-import { $, validateResponse, isURL, validateJSON, parseJSON, validateTemplate } from "./utils.js";
+import {
+    $,
+    getReader,
+    isURL,
+    parseJSON,
+    validateJSON,
+    validateResponse,
+    validateTemplate,
+    validateTemplateMeta
+} from "./utils.js";
 
 const fileInput = $('input[name="select-file-input"]');
 const templateInput = $('input[name="select-template-input"]');
@@ -6,12 +15,12 @@ const templateInput = $('input[name="select-template-input"]');
 function onRestDefaultTemplate() {
     const defaultTmp = $('.reset-to-default-btn');
     if (!defaultTmp) return;
-    defaultTmp.addEventListener('click',() => {
+    defaultTmp.addEventListener('click', () => {
 
-    fetch('/swagger/default/template', {
-        method: "PUT",
-    })
-        .then(()=> alert('重置成功!')).then(showPreviewIFrame);
+        fetch('/swagger/default/template', {
+            method: "PUT",
+        })
+            .then(() => alert('重置成功!')).then(showPreviewIFrame);
     })
 }
 
@@ -38,8 +47,7 @@ function registerParseJsonUrl() {
     if (!analysisBtn) return;
     analysisBtn.addEventListener('click', () => {
         const urlInput = $('.url-input');
-        console.log(urlInput.value, isURL(urlInput.value));
-        if(!isURL(urlInput.value)) {
+        if (!isURL(urlInput.value)) {
             return alert('请输入有效的URL')
         }
         const fd = new FormData();
@@ -67,24 +75,14 @@ function uploadJSON(file) {
         method: 'POST',
         body: fd,
     }).then(validateResponse)
-    .then(showPreviewIFrame)
+        .then(showPreviewIFrame)
 }
 
 function renderJSON(file) {
-    const reader = new FileReader();
-    reader.onprogress = () => {
-        console.log('loading..')
-    };
-    reader.onerror = () => {
-        alert('[ERROR]:读取JSON文件失败!')
-    };
-    reader.onabort = () => {
-        alert('[ABORT]:读取JSON文件失败!')
-    };
-    reader.onload = () => {
+    const reader = getReader('JSON', () => {
         parseJSON(reader.result);
         uploadJSON(file)
-    };
+    });
     reader.readAsText(file, 'utf-8')
 }
 
@@ -141,25 +139,15 @@ function registerDrag(dragArea) {
 
 function registerGlobalErrorHandler() {
     window.addEventListener('unhandledrejection', (e) => {
-        console.error('[unhandledrejection]',e.reason);
+        console.error('[unhandledrejection]', e.reason);
         alert(e.reason.message || '系统异常')
     })
 }
 
 function reloadTemplate(file) {
-    const reader = new FileReader();
-    reader.onprogress = () => {
-        console.log('加载中..')
-    };
-    reader.onerror = () => {
-        alert('[ERROR]:读取模板文件失败!')
-    };
-    reader.onabort = () => {
-        alert('[ABORT]:读取模板文件失败!')
-    };
-    reader.onload = () => {
-        // Validate HTML Template's conten if necessary.
-    };
+    const reader = getReader('模版', () => {
+        validateTemplateMeta(reader.result);
+    });
     reader.readAsText(file, 'utf-8');
 
     const fd = new FormData();
@@ -168,7 +156,6 @@ function reloadTemplate(file) {
         method: 'POST',
         body: fd,
     }).then(validateResponse).then(showPreviewIFrame);
-
 }
 
 function proxyTemplateSelect() {

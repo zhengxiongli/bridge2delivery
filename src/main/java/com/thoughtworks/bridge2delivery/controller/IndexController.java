@@ -20,4 +20,9 @@ public class IndexController {
     public String template() {
         return "template";
     }
+
+    @GetMapping("/template-portal")
+    public String templatePortal() {
+        return "template-portal";
+    }
 }
