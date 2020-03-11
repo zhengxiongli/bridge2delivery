@@ -64,7 +64,7 @@ function generateTemplate() {
 }
 
 function initDefaultTemplate() {
-    fetch('/template/swagger-default-template.html', {
+    fetch('/template/swagger.html', {
         method: 'GET'
     })
         .then((res) => res.blob())
@@ -250,6 +250,7 @@ ue.addListener('ready', () => {
         container: '.template-container-tree',
         dbClick: dbClick,
         initCallBack: function () {
+            ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
             const drafts = ue.execCommand('getlocaldata');
             if (drafts) {
                 ue.execCommand('drafts');

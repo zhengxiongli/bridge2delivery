@@ -7290,7 +7290,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             return '<html><head>' + (me.options.charset ? '<meta http-equiv="Content-Type" content="text/html; charset=' + me.options.charset + '"/>' : '')
                 + (me.options.head ? me.options.head.join('\n') : '')
                 + (headHtmlForIE9 || me.document.getElementsByTagName('head')[0].innerHTML) + headHtml.join('\n') + '</head>'
-                + '<body ' + (ie && browser.version < 9 ? 'class="view"' : '') + '>' + me.getContent(null, null, true) + '</body></html>';
+                + '<body' + (ie && browser.version < 9 ? ' class="view"' : '') + '>' + me.getContent(null, null, true) + '</body></html>';
         },
 
         /**
@@ -8067,6 +8067,15 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             link.setAttribute('type', 'text/css');
             link.setAttribute('href', href);
             this.document.getElementsByTagName("head").item(0).appendChild(link);
+        },
+        removeItems: function(itemIds) {
+            if (!itemIds || itemIds.length == 0) {
+                return;
+            }
+            var nodes = this.document.querySelectorAll(itemIds);
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].parentNode.removeChild(nodes[i]);
+            }
         }
     };
     utils.inherits(Editor, EventBase);

@@ -9,6 +9,7 @@ public final class JSONUtils {
     public static final String JSON_LIST_END = "]";
     public static final String JSON_QUOTE = "\"";
     public static final String JSON_COLON = ":";
+    public static final String WHITE_SPACE = " ";
 
     private JSONUtils() {
 

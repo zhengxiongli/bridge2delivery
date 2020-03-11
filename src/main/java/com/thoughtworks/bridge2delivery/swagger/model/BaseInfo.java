@@ -72,6 +72,7 @@ public class BaseInfo implements TypeInterface {
         builder.append(name);
         builder.append(JSONUtils.JSON_QUOTE);
         builder.append(JSONUtils.JSON_COLON);
+        builder.append(JSONUtils.WHITE_SPACE);
         return builder.toString();
     }
 

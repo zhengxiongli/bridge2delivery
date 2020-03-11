@@ -33,7 +33,7 @@ public class ObjectInfo extends BaseInfo {
             return builder.toString();
         }
         builder.append(JSONUtils.JSON_OBJ_START);
-        String propertiesStr = properties.stream().map(p -> p.getJsonExample()).collect(Collectors.joining(","));
+        String propertiesStr = properties.stream().map(p -> p.getJsonExample()).collect(Collectors.joining(", "));
         builder.append(propertiesStr);
         builder.append(JSONUtils.JSON_OBJ_END);
         return builder.toString();
