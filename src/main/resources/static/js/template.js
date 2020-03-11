@@ -111,7 +111,7 @@ function getInsertArrayHtml(nodeInfo, innerText) {
     let insertHtml = '';
     if (!currentInfo.inTable) {
         const colorClass = getColorClass();
-        insertHtml = `<div class="template-placeholder ${colorClass}" th:each="item : \${${variable}}" data-path="${nodeInfo.config.name}">${innerText}</div>`;
+        insertHtml = `<div class="template-placeholder ${colorClass}" th:each="item : \${${variable}}" data-path="${nodeInfo.config.name}"><p>${innerText}</p></div>`;
     } else {
         //表格中添加
         const selectItem = ue.selection.getStart();
