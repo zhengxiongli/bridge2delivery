@@ -8061,6 +8061,15 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 }
             }
         },
+        hasClassFile: function(href) {
+            var links = this.document.querySelectorAll('link');
+            for (var i = 0; i < links.length; i++) {
+                if (links[i] && links[i].href && links[i].href.indexOf(href) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         loadClassFile: function(href) {
             var link = this.document.createElement('link');
             link.setAttribute('rel', 'stylesheet');
@@ -12570,22 +12579,31 @@ UE.commands['indent'] = {
 };
 
 /**
- * 去掉自定义边框
+ * 去掉自定义边框--参考线
  * @example
  * ```javascript
  * editor.execCommand( 'dropcustomborder' );
  * ```
  */
 UE.commands['dropcustomborder'] = {
-    execCommand : function() {
+    queryCommandState : function() {
         var me = this;
-        me.removeClassFile('/js/ueditor/themes/iframe.css');
-        setTimeout(function(){
-            me.loadClassFile('/js/ueditor/themes/iframe.css');
+        var borderClassFile = '/js/ueditor/themes/iframe.css';
+        return me.hasClassFile(borderClassFile) ?  0 : 1;
+    },
+    execCommand : function() {
+        var editorui = baidu.editor.ui;
+        var borderClassFile = '/js/ueditor/themes/iframe.css';
+        var me = this;
+        if(me.hasClassFile(borderClassFile)) {
+            me.removeClassFile(borderClassFile);
+            me.setDisabled('dropcustomborder');
+        } else {
+            me.loadClassFile(borderClassFile);
             me.setEnabled();
-        }, 10000);
-        me.setDisabled();
-    }
+        }
+    },
+    notNeedUndo : 1
 };
 
 // plugins/print.js
