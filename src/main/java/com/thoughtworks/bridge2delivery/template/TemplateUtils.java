@@ -58,6 +58,7 @@ public final class TemplateUtils {
         node.setIsArray(false);
         node.setName("arrayIndex");
         node.setDescription("序号");
+        node.setOrder(-1);
         node.setNodeType(NodeType.ARRAY_INDEX);
         return node;
     }
