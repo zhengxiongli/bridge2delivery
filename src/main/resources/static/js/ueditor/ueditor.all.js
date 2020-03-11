@@ -18863,7 +18863,7 @@ UE.plugins['video'] = function (){
             }
             //框选时插入不触发contentchange，需要手动更新索引
             this.update();
-            this.updateWidth(backWidth, defaultValue || {tdPadding:10, tdBorder:1});
+            //this.updateWidth(backWidth, defaultValue || {tdPadding:10, tdBorder:1});
         },
         updateWidth:function (width, defaultValue) {
             var table = this.table,
@@ -19912,7 +19912,7 @@ UE.plugins['video'] = function (){
             } else {
                 utils.each(ut.selectedTds, function (cell) {
                     cell.style.backgroundColor = bkColor;
-                    !width || /null/ig.test(width + '') ? '' : (cell.width = width);
+                    !width || /null/ig.test(width + '') ? (cell.width = '') : (cell.width = width);
                 });
             }
         }
