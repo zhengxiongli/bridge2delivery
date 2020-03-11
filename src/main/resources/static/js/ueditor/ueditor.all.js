@@ -18066,7 +18066,13 @@ UE.plugins['video'] = function (){
         //去掉宽高
         !keepPro && domUtils.removeAttributes(tmpCell,'width height');
         !keepPro && domUtils.removeAttributes(tmpCell,'style');
-
+        var thAttrs = tmpCell.attributes, removeAttrs = '';
+        for (var i = 0; i < thAttrs.length; i++) {
+            if (/th:.*/ig.test(thAttrs[i].name)) {
+                removeAttrs += thAttrs[i].name + ' ';
+            }
+        }
+        domUtils.removeAttributes(tmpCell, removeAttrs);
         tmpCell.style.borderLeftStyle = "";
         tmpCell.style.borderTopStyle = "";
         tmpCell.style.borderLeftColor = cell.style.borderRightColor;
@@ -18865,7 +18871,9 @@ UE.plugins['video'] = function (){
                 }
                 rowIndex += cellInfo.rowSpan || 1;
             }
-            this.table.setAttribute("width", backTableWidth - backTdWidth);
+            if (!this.table.getAttribute('width')) {
+                this.table.setAttribute("width", backTableWidth - backTdWidth);
+            }
             this.update();
         },
         splitToCells:function (cell) {
@@ -22394,7 +22402,6 @@ UE.plugins['contextmenu'] = function () {
     var uiUtils = UE.ui.uiUtils;
 
     me.addListener( 'contextmenu', function ( type, evt ) {
-
         var offset = uiUtils.getViewportOffsetByEvent( evt );
         me.fireEvent( 'beforeselectionchange' );
         if ( menu ) {
@@ -23264,6 +23271,7 @@ UE.plugins['customstyle'] = function() {
             return  parent ? parent.getAttribute('label') : '';
         }
     };
+
     //当去掉customstyle是，如果是块元素，用p代替
     me.addListener('keyup', function(type, evt) {
         var keyCode = evt.keyCode || evt.which;
