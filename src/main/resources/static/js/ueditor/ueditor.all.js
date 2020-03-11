@@ -11875,7 +11875,7 @@ UE.plugins['font'] = function () {
                         while (tmpNode && !domUtils.isBlockElm(tmpNode) && !domUtils.isBody(tmpNode)) {
                             if (tmpNode.nodeType == 1) {
                                 value = domUtils.getComputedStyle(tmpNode, style);
-                                if (value != 'none') {
+                                if (value.indexOf('none') < 0) {
                                     return value;
                                 }
                             }
