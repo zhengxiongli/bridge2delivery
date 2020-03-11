@@ -8085,6 +8085,18 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             for (var i = 0; i < nodes.length; i++) {
                 nodes[i].parentNode.removeChild(nodes[i]);
             }
+        },
+        addMeta: function(name, value) {
+            var meta = this.document.querySelector('meta[name=' + name + ']');
+            if (!meta) {
+                meta = this.document.createElement('meta');
+                meta.setAttribute('name', name);
+                meta.setAttribute('value', value);
+                this.document.getElementsByTagName("head").item(0).appendChild(meta);
+            } else {
+                meta.setAttribute('value', value);
+            }
+
         }
     };
     utils.inherits(Editor, EventBase);

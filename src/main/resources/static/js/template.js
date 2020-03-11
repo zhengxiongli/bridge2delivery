@@ -52,6 +52,7 @@ function generateTemplate() {
     //     ue.getContent()),
     const date = new Date();
     ue.removeClassFile('/js/ueditor/themes/iframe.css');
+    ue.addMeta('template-type', templateTree.type);
     const html = ue.getAllHtml();
     ue.loadClassFile('/js/ueditor/themes/iframe.css');
     const filename = `Swagger转doc模板_${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
@@ -115,7 +116,8 @@ function getInsertArrayHtml(nodeInfo, innerText) {
     } else {
         //表格中添加
         const selectItem = ue.selection.getStart();
-        const tr = domUtils.findParentByTagName(selectItem, ['tr'], true);
+        const selectTd = domUtils.findParentByTagName(selectItem, ['td'], true);
+        const tr = getInsertTr(selectItem);
         const titleTr = document.createElement('tr');
         const valueTr = document.createElement('tr');
         domUtils.setAttributes(valueTr, {'th:each':`item: \${${variable}}`});
@@ -140,12 +142,24 @@ function getInsertArrayHtml(nodeInfo, innerText) {
             titleTr.appendChild(titleTd);
             valueTr.appendChild(valueTd);
         }
-
+        debugger;
         domUtils.insertAfter(tr, titleTr);
         domUtils.insertAfter(titleTr, valueTr);
     }
     return insertHtml;
 }
+
+function getInsertTr(selectItem) {
+    const selectTd = domUtils.findParentByTagName(selectItem, ['td'], true),
+          selectTr = domUtils.findParentByTagName(selectItem, ['tr'], true),
+          rowSpan = selectItem.rowSpan;
+    let retTr = selectTr;
+    for (let i = 1; i < rowSpan; i++) {
+        retTr = domUtils.getNextDomNode(retTr, false);
+    }
+    return retTr;
+}
+
 function wrapperEmptyHandle(target) {
     return `${target} == null ? '' : ${target}`;
 }
