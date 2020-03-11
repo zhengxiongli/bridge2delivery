@@ -14,11 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PathTag {
-    @Template(description = "名称")
+    @Template(description = "名称", order = 0)
     private String name;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 1)
     private String description;
-    @Template(description = "路径")
+    @Template(description = "路径", order = 2)
     private List<PathInfo> pathList;
 
     public void addPath(PathInfo pathInfo) {

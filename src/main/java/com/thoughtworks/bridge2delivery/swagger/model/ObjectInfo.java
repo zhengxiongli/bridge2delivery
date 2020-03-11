@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class ObjectInfo extends BaseInfo {
-    @Template(description = "标题")
+    @Template(description = "标题", order = 0)
     private String title;
     private String className;
-    @Template(description = "属性列表")
+    @Template(description = "属性列表", order = 2)
     private List<BaseInfo> properties;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 1)
     private String description;
 
     @Override

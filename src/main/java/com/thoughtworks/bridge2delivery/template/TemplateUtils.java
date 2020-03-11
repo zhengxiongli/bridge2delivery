@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TemplateUtils {
     private TemplateUtils() {
@@ -36,6 +38,7 @@ public final class TemplateUtils {
             node.setIsArray(Collection.class.isAssignableFrom(field.getType()));
             node.setName(field.getName());
             node.setDescription(template.description());
+            node.setOrder(template.order());
             node.setChildNodes(getChildTemplateNodes(node.getIsArray() ? getArrayClassType(field) : field.getType()));
             if (node.getIsArray()) {
                 if (node.getChildNodes() != null) {
@@ -46,7 +49,8 @@ public final class TemplateUtils {
             }
             templateNodes.add(node);
         }
-        return templateNodes.size() == 0 ? null : templateNodes;
+        return templateNodes.size() == 0 ? null : templateNodes.stream()
+                .sorted(Comparator.comparing(t -> t.getOrder())).collect(Collectors.toList());
     }
 
     private static TemplateNode getArrayIndexNode() {

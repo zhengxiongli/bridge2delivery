@@ -16,4 +16,7 @@ public @interface Template {
 
     @AliasFor("value")
     String description() default "";
+
+    //数字越小越靠前
+    int order() default 0;
 }

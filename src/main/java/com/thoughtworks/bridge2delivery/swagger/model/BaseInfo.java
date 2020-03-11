@@ -13,18 +13,18 @@ import java.util.Map;
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
 public class BaseInfo implements TypeInterface {
-    @Template(description = "属性名")
+    @Template(description = "属性名", order = 0)
     private String name;
     private DataType type;
-    @Template(description = "示列")
+    @Template(description = "示列", order = 3)
     private String example;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 2)
     private String description;
     private String format;
     private String refName;
-    @Template(description = "JSON示列")
+    @Template(description = "JSON示列", order = 4)
     private String jsonExample;
-    @Template(description = "数据类型")
+    @Template(description = "数据类型", order = 1)
     private String fullType;
 
     public void setName(String name) {

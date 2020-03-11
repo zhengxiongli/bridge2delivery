@@ -11,4 +11,5 @@ public class TemplateNode {
     private Boolean isArray;
     private NodeType nodeType;
     private List<TemplateNode> childNodes;
+    private Integer order;
 }

@@ -14,22 +14,22 @@ import java.util.Map;
 
 @Data
 public class PathInfo {
-    @Template(description = "请求路径")
+    @Template(description = "请求路径", order = 0)
     private String path;
-    @Template(description = "请求方式")
+    @Template(description = "请求方式", order = 2)
     private String method;
-    @Template(description = "摘要")
+    @Template(description = "摘要", order = 1)
     private String summary;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 3)
     private String description;
     private List<String> tagNames;
-    @Template(description = "返回类型")
+    @Template(description = "返回类型", order = 4)
     private String produces;
-    @Template(description = "是否不建议使用")
+    @Template(description = "是否不建议使用", order = 5)
     private boolean deprecated;
-    @Template(description = "请求参数")
+    @Template(description = "请求参数", order = 6)
     private List<ParamInfo> params;
-    @Template(description = "返回值")
+    @Template(description = "返回值", order = 7)
     private List<Response> responses;
 
     public PathInfo fillInfo(Map<String, Map> pathInfoMap, Map<String, BaseInfo> models) {

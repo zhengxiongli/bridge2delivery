@@ -8,13 +8,13 @@ import java.util.Map;
 
 @Data
 public class Response implements TypeInterface {
-    @Template(description = "状态码")
+    @Template(description = "状态码", order = 0)
     private String status;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 2)
     private String description;
     private DataType dataType;
     private BaseInfo schema;
-    @Template(description = "数据类型")
+    @Template(description = "数据类型", order = 1)
     private String fullType;
 
     public void build(Map<String, Map> map, Map<String, BaseInfo> models) {

@@ -8,22 +8,22 @@ import java.util.Map;
 
 @Data
 public class ParamInfo implements TypeInterface {
-    @Template(description = "参数名")
+    @Template(description = "参数名", order = 0)
     private String name;
-    @Template(description = "传递类型")
+    @Template(description = "传递类型", order = 3)
     private String paramType;
-    @Template(description = "描述")
+    @Template(description = "描述", order = 2)
     private String description;
     private DataType dataType;
-    @Template(description = "默认值")
+    @Template(description = "默认值", order = 4)
     private String defaultVal;
-    @Template(description = "是否允许空值")
+    @Template(description = "是否允许空值", order = 6)
     private Boolean allowEmptyValue;
-    @Template(description = "是否必需")
+    @Template(description = "是否必需", order = 5)
     private Boolean required;
     private String format;
     private BaseInfo schema;
-    @Template(description = "数据类型")
+    @Template(description = "数据类型", order = 1)
     private String fullType;
 
     public ParamInfo build(Map<String, Map> paramInfo, Map<String, BaseInfo> models) {
@@ -71,6 +71,6 @@ public class ParamInfo implements TypeInterface {
         if (schema == null && dataType == null) {
             return "";
         }
-        return this.schema == null ? (dataType.getValue() + (format != null ? "(" + format + ")" : "")) : this.schema.getFullType();
+        return this.schema == null ? (format != null ? format : dataType.getValue()) : this.schema.getFullType();
     }
 }
