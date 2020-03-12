@@ -25,9 +25,11 @@ function formatDateAndMonth(number) {
 function generateTemplate() {
     const date = new Date();
     ue.removeClassFile('/js/ueditor/themes/iframe.css');
+    ue.removeClassFile('/js/ueditor/themes/iframe-preview.css');
     ue.addMeta(META_KEY, templateTree.type);
     const html = ue.getAllHtml();
     ue.loadClassFile('/js/ueditor/themes/iframe.css');
+    ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
     const filename = `Swagger转doc模板_${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
@@ -254,6 +256,7 @@ ue.addListener('ready', () => {
         dbClick: dbClick,
         initCallBack: function () {
             ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
+            ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
             const uploadTemplate = getSessionData('uploadTemplate');
             if (uploadTemplate) {
                 insertBodyFromHtml(uploadTemplate);

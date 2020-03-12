@@ -21397,7 +21397,7 @@ UE.plugins['table'] = function () {
         me.document.body.style.webkitUserSelect = '';
         //拖拽状态下的mouseUP
         if ( onDrag && dragTd ) {
-
+            debugger;
             me.selection.getNative()[browser.ie9below ? 'empty' : 'removeAllRanges']();
 
             singleClickState = 0;
@@ -21503,7 +21503,7 @@ UE.plugins['table'] = function () {
     }
 
     function changeColWidth(cell, changeValue) {
-
+        debugger;
         var ut = getUETable(cell);
         if (ut) {
 
@@ -21516,7 +21516,7 @@ UE.plugins['table'] = function () {
 
             //修正改变量
             changeValue = correctChangeValue( changeValue, cell, cells );
-
+            debugger;
             if (cell.nextSibling) {
 
                 var i=0;
