@@ -53,7 +53,6 @@
             sorttable.checked = !!(enablesortState < 0 && disablesortState >=0);
             sorttable.disabled = !!(enablesortState < 0 && disablesortState < 0);
             sorttable.title = enablesortState < 0 && disablesortState < 0 ? lang.errorMsg:'';
-            debugger;
             me.createTable(title.checked, titleCol.checked, caption.checked);
             me.setAutoSize();
             me.setColor(me.getColor());

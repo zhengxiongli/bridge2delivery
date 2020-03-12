@@ -4,7 +4,7 @@ import EDITOR_CONFIG from './editor.config.js'
 
 const ue = UE.getEditor('editor', EDITOR_CONFIG);
 const domUtils = UE.dom.domUtils;
-let colorIndex = 1;
+let colorIndex = 1, timeOutId;;
 
 function addGenerateButton() {
     const wrapper = document.createElement('div');
@@ -233,6 +233,18 @@ function getColorClass() {
     return 'color' + index;
 }
 
+function appendPToBody() {
+    clearTimeout(timeOutId);
+    timeOutId = setTimeout(function(){
+        const lastChild = ue.body.lastChild;
+        if (lastChild.tagName != 'P') {
+            const node = ue.document.createElement("p");
+            node.innerHTML = '&#8203;<br>';
+            ue.body.append(node)
+        }
+    }, 500)
+}
+
 ue.addListener('ready', () => {
     window.templateTree = createTemplateTree({
         root: 'swagger',
@@ -255,6 +267,12 @@ ue.addListener('ready', () => {
                 let info = getCurrentUEInfo();
                 templateTree.focusNode(info.path, true);
             });
+            setInterval(function() {
+                appendPToBody();
+            }, 2000);
+            ue.addListener('contentChange', function() {
+                appendPToBody();
+            })
         }
     });
 });
