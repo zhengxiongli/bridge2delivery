@@ -17,6 +17,7 @@
         setCenter = $G('J_setCenter'),
         setCenterLabel = $G('J_setCenterLabel'),
         tone = $G("J_tone"),
+        backTone = $G("J_back_tone"),
         me,
         preview = $G("J_preview");
 
@@ -32,6 +33,13 @@
                 colorPop = new UE.ui.Popup({
                     editor:editor,
                     content:colorPiker
+                }),
+                backColorPiker = new UE.ui.ColorPicker({
+                    editor:editor
+                }),
+                backColorPop = new UE.ui.Popup({
+                    editor:editor,
+                    content:backColorPiker
                 });
 
             title.checked = editor.queryCommandState("inserttitle") == -1;
@@ -45,10 +53,11 @@
             sorttable.checked = !!(enablesortState < 0 && disablesortState >=0);
             sorttable.disabled = !!(enablesortState < 0 && disablesortState < 0);
             sorttable.title = enablesortState < 0 && disablesortState < 0 ? lang.errorMsg:'';
-
+            debugger;
             me.createTable(title.checked, titleCol.checked, caption.checked);
             me.setAutoSize();
             me.setColor(me.getColor());
+            me.setBackground(me.getBackGroundColor());
 
             domUtils.on(title, "click", me.titleHanler);
             domUtils.on(titleCol, "click", me.titleColHanler);
@@ -74,6 +83,21 @@
                 me.setColor("");
                 colorPop.hide();
             });
+            domUtils.on(backTone, 'click', function() {
+                backColorPop.showAnchor(backTone);
+            });
+            domUtils.on(document, 'mousedown', function() {
+                backColorPop.hide();
+            });
+            backColorPiker.addListener("pickcolor", function () {
+                me.setBackground(arguments[1]);
+                backColorPop.hide();
+            });
+            backColorPiker.addListener("picknocolor", function () {
+                me.setBackground("");
+                colorPop.hide();
+            });
+
             setSizePage.checked = true;
         },
 
@@ -227,6 +251,13 @@
             if (!color)  color = "#DDDDDD";
             return color;
         },
+        getBackGroundColor: function() {
+            var start = editor.selection.getStart(), color,
+                table = domUtils.findParentByTagName(start, ["table"], true);
+            color = table && domUtils.getComputedStyle(table, "background-color");
+            if (!color) color = '';
+            return color;
+        },
         setColor:function (color) {
             var example = $G("J_example"),
                 arr = domUtils.getElementsByTagName(example, "td").concat(
@@ -239,6 +270,11 @@
                 node.style.borderColor = color;
             });
 
+        },
+        setBackground: function(color) {
+            var example = $G('J_example');
+            backTone.value = color;
+            example.style.backgroundColor = color;
         },
         setAutoSize:function () {
             var me = this;
@@ -276,7 +312,7 @@
             }
         }
 
-        editor.execCommand("edittable", tone.value);
+        editor.execCommand("edittable", tone.value, backTone.value);
         autoSizeContent.checked ?editor.execCommand('adaptbytext') : "";
         autoSizePage.checked ? editor.execCommand("adaptbywindow") : "";
         setSizePage.checked ? editor.execCommand("settablesize", setSizeText.value, setCenter.checked) : '';

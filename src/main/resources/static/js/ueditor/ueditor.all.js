@@ -19879,7 +19879,7 @@ UE.plugins['video'] = function (){
         queryCommandState: function () {
             return getTableItemsByRange(this).table ? 0 : -1
         },
-        execCommand: function (cmd, color) {
+        execCommand: function (cmd, color, backGroundColr) {
             var rng = this.selection.getRange(),
                 table = domUtils.findParentByTagName(rng.startContainer, 'table');
             if (table) {
@@ -19890,6 +19890,7 @@ UE.plugins['video'] = function (){
                 utils.each(arr, function (node) {
                     node.style.borderColor = color;
                 });
+                table.style.backgroundColor = backGroundColr || '';
             }
         }
     };
@@ -19901,18 +19902,25 @@ UE.plugins['video'] = function (){
         execCommand: function (cmd, bkColor, width) {
             var me = this,
                 ut = getUETableBySelected(me);
-
             if (!ut) {
                 var start = me.selection.getStart(),
                     cell = start && domUtils.findParentByTagName(start, ["td", "th", "caption"], true);
                 if (cell) {
-                    cell.style.backgroundColor = bkColor;
-                    !width ? '' : (cell.width = width);
+                    if (bkColor != null) {
+                        cell.style.backgroundColor = bkColor;
+                    }
+                    if (width != null) {
+                        cell.width = width;
+                    }
                 }
             } else {
                 utils.each(ut.selectedTds, function (cell) {
-                    cell.style.backgroundColor = bkColor;
-                    !width || /null/ig.test(width + '') ? (cell.width = '') : (cell.width = width);
+                    if (bkColor != null) {
+                        cell.style.backgroundColor = bkColor;
+                    }
+                    if (width != null) {
+                        cell.width = width;
+                    }
                 });
             }
         }
