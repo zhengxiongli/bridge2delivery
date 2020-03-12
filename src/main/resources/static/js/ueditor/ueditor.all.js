@@ -21511,8 +21511,8 @@ UE.plugins['table'] = function () {
             var table = ut.table,
                 cells = getCellsByMoveBorder( cell, table );
 
-            table.style.width = "";
-            table.removeAttribute("width");
+            //table.style.width = "";
+            //table.removeAttribute("width");
 
             //修正改变量
             changeValue = correctChangeValue( changeValue, cell, cells );
@@ -21524,7 +21524,7 @@ UE.plugins['table'] = function () {
                 utils.each( cells, function( cellGroup ){
 
                     cellGroup.left.width = (+cellGroup.left.width)+changeValue;
-                    cellGroup.right && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
+                    //cellGroup.right && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
 
                 } );
 
