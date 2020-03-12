@@ -47,7 +47,7 @@
 
 .selected-step {
     border-radius: 20px;
-    box-shadow: 2px 4px 3px 3px #e0e0e0;
+    box-shadow: 3px 4px 3px 0px #e0e0e0;
     color: #00a0e9;
 }
 
@@ -74,4 +74,8 @@
 
 .category div img {
     width: 100px;
+}
+
+.category div p {
+    margin-bottom: 0;
 }

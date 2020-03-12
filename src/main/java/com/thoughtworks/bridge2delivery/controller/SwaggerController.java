@@ -90,7 +90,7 @@ public class SwaggerController {
         String scriptRegex="<script[^>]*?>[\\s\\S]*?<\\/script>";
         template = template.replaceAll(scriptRegex, "");
 
-        if(template.indexOf(SWAGGER_KEYWORD) != -1){
+        if(template.contains(SWAGGER_KEYWORD)){
             request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
             return ApiResponse.ok(null);
         }else{
