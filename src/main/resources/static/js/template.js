@@ -59,7 +59,8 @@ export function insertBodyFromHtml(html) {
     if (index >= 0) {
         html = html.substring(0, index);
     }
-    ue.execCommand('inserthtml', html, false);
+    const afterFilterJsCode = html.split(new RegExp('<script[^>]*?>[\\s\\S]*?<\\/script>')).join('');
+    ue.execCommand('inserthtml', afterFilterJsCode, false);
 }
 
 function dbClick(e, nodeInfo) {
