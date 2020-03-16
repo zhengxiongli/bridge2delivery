@@ -1,4 +1,4 @@
-package com.thoughtworks.bridge2delivery.swagger.exception;
+package com.thoughtworks.bridge2delivery.exception;
 
 public class TypeNotFoundException extends RuntimeException {
     public TypeNotFoundException() {

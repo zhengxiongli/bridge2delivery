@@ -1,4 +1,4 @@
-package com.thoughtworks.bridge2delivery.swagger.utils;
+package com.thoughtworks.bridge2delivery.utils;
 
 import java.util.Map;
 

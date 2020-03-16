@@ -9,7 +9,7 @@ import com.thoughtworks.bridge2delivery.swagger.model.ObjectInfo;
 import com.thoughtworks.bridge2delivery.swagger.model.PathInfo;
 import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
-import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 

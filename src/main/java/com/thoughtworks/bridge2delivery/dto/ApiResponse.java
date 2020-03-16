@@ -7,15 +7,19 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public static ApiResponse error(String message) {
-        ApiResponse response = new ApiResponse();
+    public static ApiResponse<String> error(String message) {
+        ApiResponse<String> response = new ApiResponse<>();
         response.setMessage(message);
         return response;
     }
 
-    public static <T> ApiResponse ok(T data) {
-        ApiResponse apiResponse = new ApiResponse();
+    public static <T> ApiResponse<T> ok(T data) {
+        ApiResponse<T> apiResponse = new ApiResponse<>();
         apiResponse.setData(data);
         return apiResponse;
+    }
+
+    public static ApiResponse<?> ok() {
+        return ok(null);
     }
 }

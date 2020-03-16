@@ -1,4 +1,5 @@
 package com.thoughtworks.bridge2delivery.controller;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
@@ -7,7 +8,7 @@ import com.thoughtworks.bridge2delivery.exception.CustomException;
 import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
 import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
-import com.thoughtworks.bridge2delivery.utils.ThymeleafUtils;
+import com.thoughtworks.bridge2delivery.service.ThymeleafService;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,19 +43,19 @@ import java.util.Map;
 @RestController
 @RequestMapping("/swagger")
 @Slf4j
-@Api(description = "swagger导出")
+@Api(tags = {"Swagger Resource"})
 public class SwaggerController {
     private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/swagger.html";
     private static final String SWAGGER_KEYWORD = "${swaggerInfo.";
-    private final ThymeleafUtils thymeleafUtils;
+    private final ThymeleafService thymeleafService;
 
-    public SwaggerController(final ThymeleafUtils thymeleafUtils) {
-        this.thymeleafUtils = thymeleafUtils;
+    public SwaggerController(final ThymeleafService thymeleafService) {
+        this.thymeleafService = thymeleafService;
     }
 
     @PostMapping(value = "/json")
     @ApiOperation(value = "上传swagger文件")
-    public ApiResponse upload(@RequestParam("swaggerFile") MultipartFile file, HttpServletRequest request)
+    public ApiResponse<?> upload(@RequestParam("swaggerFile") MultipartFile file, HttpServletRequest request)
             throws IOException {
         if (file.isEmpty()) {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
@@ -64,35 +65,35 @@ public class SwaggerController {
         SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
         log.debug("swagger json: " + swaggerInfo);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
-        return ApiResponse.ok(null);
+        return ApiResponse.ok();
     }
 
     @PostMapping(value = "/url")
     @ApiOperation(value = "设置swagger url")
-    public ApiResponse setUrl(@RequestParam("url") String url, HttpServletRequest request)
+    public ApiResponse<?> setUrl(@RequestParam("url") String url, HttpServletRequest request)
             throws JsonProcessingException {
         String json = Utils.getFromUrl(url);
         Utils.validateJson(json);
         SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
-        return ApiResponse.ok(null);
+        return ApiResponse.ok();
     }
 
     @PostMapping(value = "/template")
     @ApiOperation(value = "上传模板")
-    public ApiResponse uploadTemplate(@RequestParam("swaggerFile") MultipartFile file, HttpServletRequest request)
+    public ApiResponse<?> uploadTemplate(@RequestParam("swaggerFile") MultipartFile file, HttpServletRequest request)
             throws IOException {
         if (file.isEmpty()) {
             throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
         }
         String template = Utils.getTextFromFile(file);
 
-        String scriptRegex = "<script[^>]*?>[\\s\\S]*?<\\/script>";
+        String scriptRegex = "<script[^>]*?>[\\s\\S]*?</script>";
         template = template.replaceAll(scriptRegex, "");
 
         if (template.contains(SWAGGER_KEYWORD)) {
             request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
-            return ApiResponse.ok(null);
+            return ApiResponse.ok();
         } else {
             throw new CustomException(Messages.SWAGGER_TEMPLATE_INVALID);
         }
@@ -100,9 +101,9 @@ public class SwaggerController {
 
     @PutMapping(value = "/default/template")
     @ApiOperation(value = "恢复为默认模板")
-    public ApiResponse resetToDefault(HttpServletRequest request) {
+    public ApiResponse<?> resetToDefault(HttpServletRequest request) {
         request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, getDefaultTemplate());
-        return ApiResponse.ok(null);
+        return ApiResponse.ok();
     }
 
     @GetMapping(value = "word")
@@ -162,7 +163,7 @@ public class SwaggerController {
         Map<String, Object> map = new HashMap<>();
         map.put("swaggerInfo", swaggerInfo);
         try {
-            return thymeleafUtils.renderTemplate(template, map);
+            return thymeleafService.renderTemplate(template, map);
         } catch (Exception e) {
             throw new CustomException(Messages.PARSE_ERROR);
         }

@@ -50,7 +50,7 @@ public final class TemplateUtils {
             templateNodes.add(node);
         }
         return templateNodes.size() == 0 ? null : templateNodes.stream()
-                .sorted(Comparator.comparing(t -> t.getOrder())).collect(Collectors.toList());
+                .sorted(Comparator.comparing(TemplateNode::getOrder)).collect(Collectors.toList());
     }
 
     private static TemplateNode getArrayIndexNode() {

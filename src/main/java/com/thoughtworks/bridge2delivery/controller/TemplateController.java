@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @RestController
-@Api(description = "自定义模板")
+@Api(tags = {"Template Resource"})
 @RequestMapping("/template")
 public class TemplateController {
 
