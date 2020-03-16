@@ -20149,7 +20149,7 @@ UE.plugins['table'] = function () {
                 'table.noBorderTable td,table.noBorderTable th,table.noBorderTable caption{border:1px dashed #ddd !important}' +
                 //插入的表格的默认样式
                 'table{margin-bottom:10px;border-collapse:collapse;display:table;}' +
-                'td,th{padding: 5px 10px;border: 1px solid #DDD;}' +
+                'td,th{padding: 5px 5px;border: 1px solid #DDD;}' +
                 'caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}' +
                 'th{border-top:1px solid #BBB;background-color:#F7F7F7;}' +
                 'table tr.firstRow th{border-top-width:2px;}' +
@@ -21397,7 +21397,6 @@ UE.plugins['table'] = function () {
         me.document.body.style.webkitUserSelect = '';
         //拖拽状态下的mouseUP
         if ( onDrag && dragTd ) {
-            debugger;
             me.selection.getNative()[browser.ie9below ? 'empty' : 'removeAllRanges']();
 
             singleClickState = 0;
@@ -21503,7 +21502,6 @@ UE.plugins['table'] = function () {
     }
 
     function changeColWidth(cell, changeValue) {
-        debugger;
         var ut = getUETable(cell);
         if (ut) {
 
@@ -21513,10 +21511,8 @@ UE.plugins['table'] = function () {
 
             //table.style.width = "";
             //table.removeAttribute("width");
-
             //修正改变量
             changeValue = correctChangeValue( changeValue, cell, cells );
-            debugger;
             if (cell.nextSibling) {
 
                 var i=0;
@@ -21524,7 +21520,7 @@ UE.plugins['table'] = function () {
                 utils.each( cells, function( cellGroup ){
 
                     cellGroup.left.width = (+cellGroup.left.width)+changeValue;
-                    //cellGroup.right && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
+                    // cellGroup.right && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
 
                 } );
 
@@ -21700,7 +21696,9 @@ UE.plugins['table'] = function () {
         width = width < 0 ? 0 : width;
 
         try {
-            cell.width = width;
+            if (!!cell.nextSibling) {
+                cell.width = width;
+            }
         } catch(e) {
         }
 
