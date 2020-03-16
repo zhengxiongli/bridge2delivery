@@ -52,7 +52,7 @@ public final class Utils {
 
     public static String getTextFromInputStream(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
-        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8")) {
             try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
                 String line = null;
                 while ((line = reader.readLine()) != null) {

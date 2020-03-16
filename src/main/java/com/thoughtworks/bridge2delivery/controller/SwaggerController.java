@@ -87,13 +87,13 @@ public class SwaggerController {
         }
         String template = Utils.getTextFromFile(file);
 
-        String scriptRegex="<script[^>]*?>[\\s\\S]*?<\\/script>";
+        String scriptRegex = "<script[^>]*?>[\\s\\S]*?<\\/script>";
         template = template.replaceAll(scriptRegex, "");
 
-        if(template.contains(SWAGGER_KEYWORD)){
+        if (template.contains(SWAGGER_KEYWORD)) {
             request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
             return ApiResponse.ok(null);
-        }else{
+        } else {
             throw new CustomException(Messages.SWAGGER_TEMPLATE_INVALID);
         }
     }
