@@ -9,13 +9,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,5 +82,21 @@ class SwaggerControllerTest {
         String template = (String) Objects.requireNonNull(request.getSession())
                 .getAttribute(SessionAttributes.SWAGGER_TEMPLATE);
         Assertions.assertFalse(template.contains("<script>"));
+    }
+
+    @Test
+    public void should_preview_successful() throws IOException {
+        // given
+        Path filePath = Paths.get("src","test","resources","swagger-info.json");
+        MockMultipartFile file = new MockMultipartFile("swaggerFile", Files.readAllBytes(filePath));
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        controller.upload(file, request);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // when
+        String content = controller.htmlPreview(request, response);
+
+        // then
+        Assertions.assertTrue(content.contains("嘀哒验收小工具swagger测试程序"));
     }
 }
