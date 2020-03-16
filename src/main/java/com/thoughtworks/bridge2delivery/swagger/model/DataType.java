@@ -1,6 +1,6 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.swagger.exception.TypeNotFoundException;
+import com.thoughtworks.bridge2delivery.exception.TypeNotFoundException;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;

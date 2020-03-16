@@ -1,4 +1,4 @@
-package com.thoughtworks.bridge2delivery.utils;
+package com.thoughtworks.bridge2delivery.service;
 
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
@@ -11,9 +11,9 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 import java.util.Map;
 
 @Component
-public class ThymeleafUtils {
+public class ThymeleafService {
     private final SpringTemplateEngine stringTemplateEngine;
-    private ThymeleafUtils() {
+    private ThymeleafService() {
         this.stringTemplateEngine = getStringTemplateEngine();
     }
 

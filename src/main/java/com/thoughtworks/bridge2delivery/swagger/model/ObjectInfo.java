@@ -1,6 +1,6 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.swagger.utils.JSONUtils;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
