@@ -68,6 +68,7 @@ task installGitHooks(type: Copy) {
     into {
         new File(rootProject.rootDir, '.git/hooks')
     }
+
     fileMode 0755
 }
 
