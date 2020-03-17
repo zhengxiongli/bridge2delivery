@@ -1,8 +1,9 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
-import lombok.Data;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -12,7 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 public class PathInfo {
     @Template(description = "请求路径", order = 0)
     private String path;

@@ -1,16 +1,16 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
@@ -33,16 +33,19 @@ public class ObjectInfo extends BaseInfo {
             return builder.toString();
         }
         builder.append(JSONUtils.JSON_OBJ_START);
-        String propertiesStr = properties.stream().map(p -> p.getJsonExample()).collect(Collectors.joining(", "));
+        String propertiesStr = properties.stream()
+                .filter(it -> Objects.equals(it.getRefName(), title))
+                .map(BaseInfo::getJsonExample).collect(Collectors.joining(", "));
         builder.append(propertiesStr);
         builder.append(JSONUtils.JSON_OBJ_END);
         return builder.toString();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public BaseInfo build(Map<String, Map> map) {
         super.build(map);
-        this.setTitle(getMapValueAndToString(map, "title"));
+        this.setTitle(JSONUtils.getMapValueAndToString(map, "title"));
         this.setClassName(getClassNames(this.getTitle(), 0));
         this.setType(DataType.OBJECT);
         buildProperties(map.get("properties"));
@@ -58,14 +61,13 @@ public class ObjectInfo extends BaseInfo {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void buildProperties(Map<String, Map> propertyMap) {
         if (CollectionUtils.isEmpty(propertyMap)) {
             return;
         }
         this.properties = new ArrayList<>(propertyMap.size());
-        Iterator<Map.Entry<String, Map>> iterator = propertyMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Map> entry = iterator.next();
+        for (Map.Entry<String, Map> entry : propertyMap.entrySet()) {
             Map<String, Map> propertyInfo = entry.getValue();
             BaseInfo property = newInstance(propertyInfo);
             if (property == null) {

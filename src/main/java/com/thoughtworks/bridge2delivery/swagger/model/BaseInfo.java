@@ -1,17 +1,17 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @Slf4j
-@EqualsAndHashCode(callSuper = false)
 public class BaseInfo implements TypeInterface {
     @Template(description = "属性名", order = 0)
     private String name;
@@ -76,11 +76,12 @@ public class BaseInfo implements TypeInterface {
         return builder.toString();
     }
 
+    @SuppressWarnings({"rawtypes"})
     public BaseInfo build(Map<String, Map> map) {
-        this.setName(getMapValueAndToString(map, "name"));
-        this.setDescription(getMapValueAndToString(map, "description"));
-        this.setFormat(getMapValueAndToString(map, "format"));
-        this.setExample(getMapValueAndToString(map, "example"));
+        this.setName(JSONUtils.getMapValueAndToString(map, "name"));
+        this.setDescription(JSONUtils.getMapValueAndToString(map, "description"));
+        this.setFormat(JSONUtils.getMapValueAndToString(map, "format"));
+        this.setExample(JSONUtils.getMapValueAndToString(map, "example"));
         return this;
     }
 
@@ -97,10 +98,6 @@ public class BaseInfo implements TypeInterface {
             return classNames[index];
         }
         return null;
-    }
-
-    protected  <T> String getMapValueAndToString(Map<T, Map> map, T key) {
-        return JSONUtils.getMapValueAndToString(map, key);
     }
 
     protected String getRef(Map<String, Map> map) {
