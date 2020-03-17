@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 # From gist at https://gist.github.com/chadmaughan/5889802
-echo "will exec pre-commit"
+
 # run the tests with the gradle wrapper
 ./gradlew clean build
 
