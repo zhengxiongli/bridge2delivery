@@ -2,8 +2,8 @@ package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.template.Template;
 import com.thoughtworks.bridge2delivery.utils.JSONUtils;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 @Slf4j
-@EqualsAndHashCode(callSuper = false)
 public class ObjectInfo extends BaseInfo {
     @Template(description = "标题", order = 0)
     private String title;
@@ -46,7 +46,7 @@ public class ObjectInfo extends BaseInfo {
     public BaseInfo build(Map<String, Map> map) {
         super.build(map);
         this.setTitle(JSONUtils.getMapValueAndToString(map, "title"));
-        this.setClassName(getClassNames(this.getTitle(), 0));
+        this.setClassName(getClassNames(this.getTitle()));
         this.setType(DataType.OBJECT);
         buildProperties(map.get("properties"));
         return this;

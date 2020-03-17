@@ -31,7 +31,7 @@ class GlobalExceptionHandlerTest {
         final ResponseEntity<ApiResponse<String>> result = globalExceptionHandlerUnderTest.handleCustomException(exception);
 
         // then
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult.getStatusCode(), result.getStatusCode());
     }
 
     @Test
@@ -48,6 +48,6 @@ class GlobalExceptionHandlerTest {
         final ResponseEntity<ApiResponse<String>> result = globalExceptionHandlerUnderTest.handleException(e);
 
         // then
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult.getStatusCode(), result.getStatusCode());
     }
 }

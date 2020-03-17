@@ -1,14 +1,16 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
-import lombok.Data;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 public class Response implements TypeInterface {
-    @Template(description = "状态码", order = 0)
+    @Template(description = "状态码")
     private String status;
     @Template(description = "描述", order = 2)
     private String description;
@@ -17,6 +19,7 @@ public class Response implements TypeInterface {
     @Template(description = "数据类型", order = 1)
     private String fullType;
 
+    @SuppressWarnings("rawtypes")
     public void build(Map<String, Map> map, Map<String, BaseInfo> models) {
         this.setDescription(JSONUtils.getMapValueAndToString(map, "description"));
         this.fillSchema(map, models);
@@ -29,6 +32,7 @@ public class Response implements TypeInterface {
         return schema.getRefName();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void fillSchema(Map<String, Map> map, Map<String, BaseInfo> models) {
         Map schema = map.get("schema");
         if (schema == null) {
@@ -40,9 +44,9 @@ public class Response implements TypeInterface {
             this.setDataType(DataType.OBJECT);
         } else {
             BaseInfo baseInfo = BaseInfo.newInstance(schema);
-            this.setSchema(baseInfo.build(schema));
+            this.setSchema(baseInfo != null ? baseInfo.build(schema) : null);
             this.getSchema().fillRef(models);
-            this.setDataType(baseInfo.getType());
+            this.setDataType(baseInfo != null ? baseInfo.getType() : null);
         }
     }
 

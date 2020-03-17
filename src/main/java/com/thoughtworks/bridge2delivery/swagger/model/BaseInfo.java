@@ -8,12 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Slf4j
 public class BaseInfo implements TypeInterface {
-    @Template(description = "属性名", order = 0)
+    @Template(description = "属性名")
     private String name;
     private DataType type;
     @Template(description = "示列", order = 3)
@@ -67,13 +68,11 @@ public class BaseInfo implements TypeInterface {
         if (StringUtils.isEmpty(name)) {
             return "";
         }
-        StringBuilder builder = new StringBuilder();
-        builder.append(JSONUtils.JSON_QUOTE);
-        builder.append(name);
-        builder.append(JSONUtils.JSON_QUOTE);
-        builder.append(JSONUtils.JSON_COLON);
-        builder.append(JSONUtils.WHITE_SPACE);
-        return builder.toString();
+        return JSONUtils.JSON_QUOTE +
+                name +
+                JSONUtils.JSON_QUOTE +
+                JSONUtils.JSON_COLON +
+                JSONUtils.WHITE_SPACE;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -89,17 +88,18 @@ public class BaseInfo implements TypeInterface {
 
     }
 
-    protected String getClassNames(String title, int index) {
+    protected String getClassNames(String title) {
         if (StringUtils.isEmpty(title)) {
             return null;
         }
         String[] classNames = title.replaceAll("»", "").split("«");
-        if (index < classNames.length) {
-            return classNames[index];
+        if (0 < classNames.length) {
+            return classNames[0];
         }
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     protected String getRef(Map<String, Map> map) {
         if (map.get("$ref") == null) {
             return null;
@@ -108,6 +108,7 @@ public class BaseInfo implements TypeInterface {
         return ref.toString().replaceFirst("#/definitions/", "");
     }
 
+    @SuppressWarnings("rawtypes")
     public static BaseInfo newInstance(Map<String, Map> map) {
         String typeStr = JSONUtils.getMapValueAndToString(map, "type");
         DataType type = typeStr == null ? DataType.REF : DataType.fromValue(typeStr);
@@ -116,7 +117,7 @@ public class BaseInfo implements TypeInterface {
         }
         BaseInfo instance;
         try {
-            instance = type.getClazz().newInstance();
+            instance = Objects.requireNonNull(type).getClazz().newInstance();
         } catch (Exception e) {
             log.error("new instance error with type:" + typeStr, e);
             return null;

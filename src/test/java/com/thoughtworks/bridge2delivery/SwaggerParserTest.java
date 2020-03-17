@@ -3,18 +3,18 @@ package com.thoughtworks.bridge2delivery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
-import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
+import com.thoughtworks.bridge2delivery.swagger.SwaggerParser;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SwaggerUtilsTest {
+public class SwaggerParserTest {
     private final static String VERSION = "1.0.0";
     private final static String TITLE = "Order Aggregation Server";
 
     @Test
     public void should_parse_swagger_info_to_object() throws JsonProcessingException {
-        SwaggerInfo info = SwaggerUtils.parseSwaggerJson(jsonString());
+        SwaggerInfo info = SwaggerParser.parse(jsonString());
 
         Assertions.assertEquals(info.getTitle(), TITLE);
         Assertions.assertEquals(info.getVersion(), VERSION);
@@ -24,7 +24,7 @@ public class SwaggerUtilsTest {
     public void should_throw_exception_when_json_invalid() {
         String json = "{\"swagger\": \"2.0\"}";
 
-        Assertions.assertThrows(CustomException.class, () -> SwaggerUtils.parseSwaggerJson(json),
+        Assertions.assertThrows(CustomException.class, () -> SwaggerParser.parse(json),
                 Messages.INVALID_SWAGGER_JSON);
     }
 

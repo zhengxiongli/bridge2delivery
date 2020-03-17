@@ -11,13 +11,12 @@ import java.util.Map;
 public class StringInfo extends BaseInfo {
     @Override
     public String getJsonExample() {
-        StringBuilder builder = new StringBuilder(super.getJsonExample());
-        builder.append(JSONUtils.JSON_QUOTE);
-        builder.append("string");
-        builder.append(JSONUtils.JSON_QUOTE);
-        return builder.toString();
+        return super.getJsonExample() + JSONUtils.JSON_QUOTE +
+                "string" +
+                JSONUtils.JSON_QUOTE;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public BaseInfo build(Map<String, Map> map) {
         super.build(map);

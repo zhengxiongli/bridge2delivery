@@ -25,6 +25,7 @@ public class ArrayInfo extends BaseInfo {
         return builder.toString();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public BaseInfo build(Map<String, Map> map) {
         super.build(map);

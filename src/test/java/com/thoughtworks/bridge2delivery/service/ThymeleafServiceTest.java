@@ -1,16 +1,10 @@
 package com.thoughtworks.bridge2delivery.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thoughtworks.bridge2delivery.service.ThymeleafService;
-import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
+import com.thoughtworks.bridge2delivery.swagger.SwaggerParser;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +35,7 @@ public class ThymeleafServiceTest {
     @Test
     public void should_parse_thymeleaf_template_successful() throws JsonProcessingException {
         Map<String, Object> map = new HashMap<>();
-        map.put("swaggerInfo", SwaggerUtils.parseSwaggerJson(SWAGGER_JSON));
+        map.put("swaggerInfo", SwaggerParser.parse(SWAGGER_JSON));
         String html = thymeleafService.renderTemplate(TEMPLATE, map);
         assertNotNull(html);
     }

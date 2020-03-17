@@ -19,15 +19,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class SwaggerUtils {
+public final class SwaggerParser {
     private static final String[] CHECK_ITEMS = {"paths", "definitions", "swagger", "info", "tags"};
 
-    private SwaggerUtils() {
-
+    private SwaggerParser() {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static SwaggerInfo parseSwaggerJson(String swaggerJson) throws JsonProcessingException {
+    public static SwaggerInfo parse(String swaggerJson) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = objectMapper.readValue(swaggerJson, new TypeReference<Map<String, Object>>() {
         });
