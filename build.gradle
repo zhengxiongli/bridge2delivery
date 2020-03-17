@@ -63,6 +63,16 @@ dependencyManagement {
     }
 }
 
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, 'pre-commit')
+    into {
+        new File(rootProject.rootDir, '.git/hooks')
+    }
+    fileMode 0755
+}
+
+build.dependsOn installGitHooks
+
 test {
     useJUnitPlatform()
 }
