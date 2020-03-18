@@ -5,10 +5,10 @@ import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
-import com.thoughtworks.bridge2delivery.swagger.SwaggerUtils;
+import com.thoughtworks.bridge2delivery.service.ThymeleafService;
+import com.thoughtworks.bridge2delivery.swagger.SwaggerParser;
 import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
-import com.thoughtworks.bridge2delivery.service.ThymeleafService;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,7 +62,7 @@ public class SwaggerController {
         }
         String json = Utils.getTextFromFile(file);
         Utils.validateJson(json);
-        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
+        SwaggerInfo swaggerInfo = SwaggerParser.parse(json);
         log.debug("swagger json: " + swaggerInfo);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
         return ApiResponse.ok();
@@ -74,7 +74,7 @@ public class SwaggerController {
             throws JsonProcessingException {
         String json = Utils.getFromUrl(url);
         Utils.validateJson(json);
-        SwaggerInfo swaggerInfo = SwaggerUtils.parseSwaggerJson(json);
+        SwaggerInfo swaggerInfo = SwaggerParser.parse(json);
         request.getSession().setAttribute(SessionAttributes.SWAGGER_INFO, swaggerInfo);
         return ApiResponse.ok();
     }

@@ -20,21 +20,26 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public final class Utils {
     private static final int MAX_WAIT_TIME = 10 * 1000;
     private static final int IMAGE_WIDTH = 800;
     private static final int IMAGE_HEIGHT = 1000;
+    private static RestTemplate restTemplate;
+
+    static {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(MAX_WAIT_TIME);
+        requestFactory.setReadTimeout(MAX_WAIT_TIME);
+        restTemplate = new RestTemplate(requestFactory);
+    }
 
     private Utils() {
     }
 
     public static String getFromUrl(String url) {
         try {
-            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-            requestFactory.setConnectTimeout(MAX_WAIT_TIME);
-            requestFactory.setReadTimeout(MAX_WAIT_TIME);
-            RestTemplate restTemplate = new RestTemplate(requestFactory);
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
             if (e.getMessage().toLowerCase().contains("sockettimeoutexception")) {
@@ -52,9 +57,9 @@ public final class Utils {
 
     public static String getTextFromInputStream(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
-        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8")) {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
@@ -70,8 +75,7 @@ public final class Utils {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(bin);
             Java2DRenderer renderer = new Java2DRenderer(document, IMAGE_WIDTH, IMAGE_HEIGHT);
-            BufferedImage img = renderer.getImage();
-            return img;
+            return renderer.getImage();
         }
     }
 

@@ -1,12 +1,12 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 public class FileInfo extends BaseInfo {
     @Override
     public String getJsonExample() {

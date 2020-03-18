@@ -1,6 +1,7 @@
 package com.thoughtworks.bridge2delivery.swagger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
@@ -14,22 +15,21 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class SwaggerUtils {
+public final class SwaggerParser {
     private static final String[] CHECK_ITEMS = {"paths", "definitions", "swagger", "info", "tags"};
 
-    private SwaggerUtils() {
-
+    private SwaggerParser() {
     }
 
-    public static SwaggerInfo parseSwaggerJson(String swaggerJson) throws JsonProcessingException {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static SwaggerInfo parse(String swaggerJson) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> map = objectMapper.readValue(swaggerJson, HashMap.class);
+        Map<String, Object> map = objectMapper.readValue(swaggerJson, new TypeReference<Map<String, Object>>() {
+        });
         validate(map);
         SwaggerInfo swaggerInfo = new SwaggerInfo();
         Map<String, Map> info = (Map<String, Map>) map.get("info");
@@ -42,17 +42,14 @@ public final class SwaggerUtils {
         return swaggerInfo;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static List<PathTag> parsePathTag(Map<String, Map> pathMap, List<Map> tagList,
                                               Map<String, BaseInfo> models) {
         List<PathTag> pathTags = parseTagList(tagList);
         Map<String, PathTag> tagMap = pathTags.stream().collect(Collectors.toMap(PathTag::getName, tag -> tag));
-        Iterator<Map.Entry<String, Map>> iterator = pathMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Map> entry = iterator.next();
+        for (Map.Entry<String, Map> entry : pathMap.entrySet()) {
             Map<String, Map> methodMap = entry.getValue();
-            Iterator<Map.Entry<String, Map>> mIterator = methodMap.entrySet().iterator();
-            while (mIterator.hasNext()) {
-                Map.Entry<String, Map> mEntry = mIterator.next();
+            for (Map.Entry<String, Map> mEntry : methodMap.entrySet()) {
                 PathInfo pathInfo = new PathInfo();
                 pathInfo.setPath(entry.getKey());
                 pathInfo.setMethod(mEntry.getKey());
@@ -74,6 +71,7 @@ public final class SwaggerUtils {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static List<PathTag> parseTagList(List<Map> tagList) {
         List<PathTag> tags = new ArrayList<>(tagList.size());
         for (Map<String, String> map : tagList) {
@@ -82,17 +80,17 @@ public final class SwaggerUtils {
         return tags;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static List<ObjectInfo> parseModels(Map<String, Map> definitions) {
         List<ObjectInfo> modelInfos = new ArrayList<>(definitions.size());
-        Iterator<Map.Entry<String, Map>> iterator = definitions.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Map> entry = iterator.next();
+        for (Map.Entry<String, Map> entry : definitions.entrySet()) {
             modelInfos.add(parseModel(entry.getKey(), entry.getValue()));
         }
         fillRefModels(modelInfos);
         return modelInfos;
     }
 
+    @SuppressWarnings("rawtypes")
     private static ObjectInfo parseModel(String title, Map<String, Map> modelInfo) {
         ObjectInfo model = new ObjectInfo();
         model.build(modelInfo);
@@ -102,15 +100,14 @@ public final class SwaggerUtils {
         return model;
     }
 
-    private static List<ObjectInfo> fillRefModels(List<ObjectInfo> models) {
+    private static void fillRefModels(List<ObjectInfo> models) {
         if (CollectionUtils.isEmpty(models)) {
-            return models;
+            return;
         }
         Map<String, BaseInfo> modelMap = models.stream().collect(Collectors.toMap(ObjectInfo::getTitle, info -> info));
         for (ObjectInfo objectInfo : models) {
             objectInfo.fillRef(modelMap);
         }
-        return models;
     }
 
     private static void validate(Map<String, Object> map) {

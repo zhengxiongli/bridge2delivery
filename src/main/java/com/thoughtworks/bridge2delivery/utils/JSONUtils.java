@@ -15,7 +15,8 @@ public final class JSONUtils {
 
     }
 
-    public static <T> String getMapValueAndToString(Map<T, Map> map, T key) {
+    @SuppressWarnings("rawtypes")
+    public static String getMapValueAndToString(Map<String, Map> map, String key) {
         if (map == null) {
             return null;
         }

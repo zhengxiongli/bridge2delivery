@@ -1,13 +1,13 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
 import com.thoughtworks.bridge2delivery.utils.JSONUtils;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 public class ArrayInfo extends BaseInfo {
     private BaseInfo items;
 
@@ -25,6 +25,7 @@ public class ArrayInfo extends BaseInfo {
         return builder.toString();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public BaseInfo build(Map<String, Map> map) {
         super.build(map);

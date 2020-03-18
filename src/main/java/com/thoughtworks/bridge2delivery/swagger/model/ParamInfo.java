@@ -1,12 +1,14 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
-import lombok.Data;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 public class ParamInfo implements TypeInterface {
     @Template(description = "参数名", order = 0)
     private String name;

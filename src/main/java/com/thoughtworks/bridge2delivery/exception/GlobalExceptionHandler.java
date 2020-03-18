@@ -6,27 +6,28 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
-public class ExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ResponseBody
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = CustomException.class)
+    @ExceptionHandler(value = CustomException.class)
     @Order(1)
-    public ResponseEntity<ApiResponse> handleCustomException(CustomException exception) {
+    public ResponseEntity<ApiResponse<String>> handleCustomException(CustomException exception) {
         log.error("custom error", exception);
-        return new ResponseEntity<ApiResponse>(ApiResponse.error(exception.getMessage()),
+        return new ResponseEntity<>(ApiResponse.error(exception.getMessage()),
                 HttpStatus.FORBIDDEN);
     }
 
     @ResponseBody
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = Throwable.class)
+    @ExceptionHandler(value = Throwable.class)
     @Order(2)
-    public ResponseEntity<ApiResponse> handleException(Throwable e) {
+    public ResponseEntity<ApiResponse<String>> handleException(Throwable e) {
         log.error("exception", e);
-        return new ResponseEntity<ApiResponse>(ApiResponse.error(e.getMessage()),
+        return new ResponseEntity<>(ApiResponse.error(e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

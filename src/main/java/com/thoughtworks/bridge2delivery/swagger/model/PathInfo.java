@@ -1,18 +1,19 @@
 package com.thoughtworks.bridge2delivery.swagger.model;
 
-import com.thoughtworks.bridge2delivery.utils.JSONUtils;
 import com.thoughtworks.bridge2delivery.template.Template;
-import lombok.Data;
+import com.thoughtworks.bridge2delivery.utils.JSONUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 public class PathInfo {
     @Template(description = "请求路径", order = 0)
     private String path;
@@ -32,6 +33,7 @@ public class PathInfo {
     @Template(description = "返回值", order = 7)
     private List<Response> responses;
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public PathInfo fillInfo(Map<String, Map> pathInfoMap, Map<String, BaseInfo> models) {
         this.tagNames = (List<String>) pathInfoMap.get("tags");
         this.setSummary(JSONUtils.getMapValueAndToString(pathInfoMap, "summary"));
@@ -61,6 +63,7 @@ public class PathInfo {
         return Arrays.asList(new Response());
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void buildParams(List<Map> parameters, Map<String, BaseInfo> models) {
         if (CollectionUtils.isEmpty(parameters)) {
             return;
@@ -74,14 +77,13 @@ public class PathInfo {
         this.setParams(paramInfos);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void buildResponses(Map<String, Map> resMap, Map<String, BaseInfo> models) {
         if (CollectionUtils.isEmpty(resMap)) {
             return;
         }
         List<Response> responses = new ArrayList<>();
-        Iterator<Map.Entry<String, Map>> iterator = resMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Map> entry = iterator.next();
+        for (Map.Entry<String, Map> entry : resMap.entrySet()) {
             Response res = new Response();
             res.setStatus(entry.getKey());
             res.build(entry.getValue(), models);
