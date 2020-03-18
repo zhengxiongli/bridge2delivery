@@ -126,7 +126,7 @@ export function newModal(config) {
     modal.close = function() {
         modal.window.style.display = 'none';
         modal.window.parentNode.removeChild(modal.window);
-        modal.window == null;
+        modal.window = null;
     };
 
     return modal;
