@@ -76,6 +76,14 @@ build.dependsOn installGitHooks
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "failed"
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            logger.quiet "Test Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+        }
+    }
 }
 
 defaultTasks 'build'
