@@ -96,6 +96,9 @@ export function newModal(config) {
     }
 
     modal.show = function() {
+        if (modal.window) {
+            modal.close();
+        }
         loadModalCss();
         const modalWindow = document.createElement('div'), container = document.createElement('div'),
                 content = document.createElement('div');
@@ -123,6 +126,7 @@ export function newModal(config) {
     modal.close = function() {
         modal.window.style.display = 'none';
         modal.window.parentNode.removeChild(modal.window);
+        modal.window == null;
     }
 
     return modal;

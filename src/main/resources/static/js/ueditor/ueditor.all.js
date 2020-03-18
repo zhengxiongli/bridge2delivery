@@ -6940,7 +6940,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     '.view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n' +
                     //设置默认字体和字号
                     //font-family不能呢随便改，在safari下fillchar会有解析问题
-                    'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
+                    'body{margin:8px;font-family:微软雅黑, \'Microsoft YaHei\';font-size:12px;}' +
                     //设置段落间距
                     'p{margin:5px 0;}</style>' +
                     ( options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '' ) +
@@ -20148,7 +20148,7 @@ UE.plugins['table'] = function () {
             '.selectTdClass{background-color:#edf5fa !important}' +
                 'table.noBorderTable td,table.noBorderTable th,table.noBorderTable caption{border:1px dashed #ddd !important}' +
                 //插入的表格的默认样式
-                'table{margin-bottom:10px;border-collapse:collapse;display:table;}' +
+                'table{margin-bottom:10px;border-collapse:collapse;display:table;font-size:12px}' +
                 'td,th{padding: 5px 5px;border: 1px solid #DDD;}' +
                 'caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}' +
                 'th{border-top:1px solid #BBB;background-color:#F7F7F7;}' +
