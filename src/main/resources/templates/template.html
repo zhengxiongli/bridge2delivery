@@ -14,12 +14,16 @@
 <div th:replace="header::header"></div>
 <span th:text="${message}"></span>
 <div class="template-container">
-    <div class="template-container-tree"></div>
+    <div class="template-container-left">
+        <div class="template-container-tree"></div>
+        <div class="template-instruction"><a href="javascript:">如何使用？</a></div>
+    </div>
     <div class="template-container-editor" id="editor" style="width: 100%;height: calc(100% - 66px)"></div>
 </div>
 </body>
 <script th:src="@{/js/template.js}" type="module"></script>
 <script th:src="@{/js/template.tree.js}" type="module"></script>
+<script th:src="@{/js/modal/modal.js}" type="module"></script>
 <script th:src="@{/js/ueditor/ueditor.config.js}"></script>
 <script th:src="@{/js/ueditor/ueditor.all.js}"></script>
 </html>

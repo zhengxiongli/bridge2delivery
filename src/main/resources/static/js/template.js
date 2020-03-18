@@ -1,10 +1,11 @@
 import {$, getSessionData, META_KEY, removeSessionData, TEMPLATE_TYPE} from "./utils.js";
 import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
+import {newModal} from "./modal/modal.js"
 
 const ue = UE.getEditor('editor', EDITOR_CONFIG);
-const domUtils = UE.dom.domUtils;
-let colorIndex = 1, timeOutId;;
+const domUtils = UE.dom.domUtils, notAutoShowInstruction = 'notAutoShowInstruction';
+let colorIndex = 1, timeOutId;
 
 function addGenerateButton() {
     const wrapper = document.createElement('div');
@@ -248,6 +249,47 @@ function appendPToBody() {
     }, 500)
 }
 
+function autoShowInstruction() {
+    if (localStorage.getItem(notAutoShowInstruction)) {
+        return;
+    }
+    showInstruction();
+}
+
+function showInstruction() {
+    const modal = newModal({
+        title: '如何使用',
+        contentWidth: '320px',
+        buttons: [{
+            text: '不再自动弹出',
+            type: 'check',
+            align: 'left',
+            id: 'auto-show'
+        }, {
+            text: '确定',
+            type: 'button',
+            align: 'right',
+            onClick: function() {
+                if ($('#auto-show').checked) {
+                    localStorage.setItem(notAutoShowInstruction, true);
+                } else {
+                    localStorage.removeItem(notAutoShowInstruction);
+                }
+                modal.close();
+            }
+        }],
+        content: `1. 在右侧富文本编辑器内，可任意输入文本<br>
+                  2. 双击左侧菜单条目，可在右侧编辑器内插入占位符<br>
+                  3. 有[array]标志的占位符，在编辑模板时会显示方框，并在使用模板生成内容时产生多个内容（<a href="/assets/instruction.pdf" target="_blank">查看示例</a>）<br>
+                  4. 建议将表格插入在PathList层级内，并保留表格后的换行<br>
+                  5. 使用“切换HTML代码”按钮，可以直接编辑模板源码<br>`,
+        beforeShow: function() {
+            $('#auto-show').checked = !!localStorage.getItem(notAutoShowInstruction);
+        }
+    });
+    modal.show();
+}
+
 ue.addListener('ready', () => {
     window.templateTree = createTemplateTree({
         root: 'swagger',
@@ -255,6 +297,7 @@ ue.addListener('ready', () => {
         container: '.template-container-tree',
         dbClick: dbClick,
         initCallBack: function () {
+            autoShowInstruction();
             ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
             ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
             const uploadTemplate = getSessionData('uploadTemplate');
@@ -276,6 +319,9 @@ ue.addListener('ready', () => {
             }, 2000);
             ue.addListener('contentChange', function() {
                 appendPToBody();
+            });
+            $('.template-instruction a').addEventListener('click', function() {
+                showInstruction();
             })
         }
     });
