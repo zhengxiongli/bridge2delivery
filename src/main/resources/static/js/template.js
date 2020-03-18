@@ -70,9 +70,9 @@ function dbClick(e, nodeInfo) {
     ue.execCommand('inserthtml', getInsertHtml(nodeInfo), false);
 }
 
-function getInsertHtml(nodeInfo, noTip) {
+function getInsertHtml(nodeInfo) {
     const variable = getInsertVariable(nodeInfo);
-    let insertHtml = '';
+    let insertHtml;
     if (!nodeInfo.config.name === templateTree.rootName) {
         insertHtml = `<div data-path="${nodeInfo.config.name}"></div>`
     } else if (nodeInfo.config.isArray) {
@@ -94,7 +94,6 @@ function getInsertArrayHtml(nodeInfo, innerText) {
     } else {
         //表格中添加
         const selectItem = ue.selection.getStart();
-        const selectTd = domUtils.findParentByTagName(selectItem, ['td'], true);
         const tr = getInsertTr(selectItem);
         const titleTr = document.createElement('tr');
         const valueTr = document.createElement('tr');
@@ -123,7 +122,6 @@ function getInsertArrayHtml(nodeInfo, innerText) {
             titleTr.appendChild(titleTd);
             valueTr.appendChild(valueTd);
         }
-        debugger;
         domUtils.insertAfter(tr, titleTr);
         domUtils.insertAfter(titleTr, valueTr);
     }
@@ -131,8 +129,7 @@ function getInsertArrayHtml(nodeInfo, innerText) {
 }
 
 function getInsertTr(selectItem) {
-    const selectTd = domUtils.findParentByTagName(selectItem, ['td'], true),
-        selectTr = domUtils.findParentByTagName(selectItem, ['tr'], true),
+    const selectTr = domUtils.findParentByTagName(selectItem, ['tr'], true),
         rowSpan = selectItem.rowSpan;
     let retTr = selectTr;
     for (let i = 1; i < rowSpan; i++) {
@@ -155,7 +152,7 @@ function getInsertParentHtml(nodeInfo, selfHtml) {
         return !!node.dataset && node.dataset['path'] === parentNode.config.name;
     }, true);
     if (parent == null) {
-        let insertHtml = '';
+        let insertHtml;
         selfHtml = selfHtml || '';
         if (parentNode.config.isArray) {
             insertHtml = getInsertArrayHtml(parentNode, `<br>${selfHtml}<br>`);
@@ -201,7 +198,7 @@ function getCurrentUEInfo() {
  * @returns {string|*}
  */
 function getThymeleafVariable(pathList) {
-    var variable = '';
+    let variable = '';
     if (pathList == null || pathList.length === 0) {
         return variable;
     }
@@ -241,7 +238,7 @@ function appendPToBody() {
     clearTimeout(timeOutId);
     timeOutId = setTimeout(function(){
         const lastChild = ue.body.lastChild;
-        if (lastChild.tagName != 'P') {
+        if (lastChild.tagName !== 'P') {
             const node = ue.document.createElement("p");
             node.innerHTML = '&#8203;<br>';
             ue.body.append(node)

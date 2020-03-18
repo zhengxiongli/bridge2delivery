@@ -22,7 +22,6 @@ function registerFileSelectListener() {
 
 function loadTemplate(file) {
     const reader = getReader('模版', () => {
-        // validate head
         const content = reader.result;
         validateTemplateMeta(content);
         setSessionData('uploadTemplate', content);
