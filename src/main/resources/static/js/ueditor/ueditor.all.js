@@ -2984,17 +2984,9 @@ var domUtils = dom.domUtils = {
      */
     mergeChild:function (node, tagName, attrs) {
         var list = domUtils.getElementsByTagName(node, node.tagName.toLowerCase());
-        function isThNode(node) {
-            if (node.attributes) {
-                for (var i = 0; i < node.attributes.length; i++) {
-                    if (/th:.*/ig.test(node.attributes[i].name)) {
-                        return true;
-                    }
-                }
-            }
-        }
+
         for (var i = 0, ci; ci = list[i++];) {
-            if (!ci.parentNode || domUtils.isBookmarkNode(ci) || isThNode(ci)) {
+            if (!ci.parentNode || domUtils.isBookmarkNode(ci) || domUtils.isThNode(ci)) {
                 continue;
             }
             //span单独处理
@@ -4273,6 +4265,16 @@ var domUtils = dom.domUtils = {
             }
         }
         return true;
+    },
+    isThNode: function(node) {
+        if (node.attributes) {
+            for (var i = 0; i < node.attributes.length; i++) {
+                if (/th:.*/ig.test(node.attributes[i].name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     },
     fillHtml :  browser.ie11below ? '&nbsp;' : '<br/>'
 };
@@ -5574,15 +5576,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                         domUtils.clearEmptySibling(elm);
                     }
                     //去除子节点相同的
-                    var isThNode = false;
-                    if (current.attributes) {
-                        for (var i = 0; i < current.attributes.length; i++) {
-                            if (/th:.*/ig.test(current.attributes[i].name)) {
-                                isThNode = true;
-                                break;
-                            }
-                        }
-                    }
+                    var isThNode = domUtils.isThNode(current);
                     if (!isThNode) {
                         domUtils.mergeChild(elm, attrs);
                     }
@@ -11571,15 +11565,6 @@ UE.plugins['font'] = function () {
 
     }
     function mergeChild(rng,cmdName,value){
-        function isThNode(node) {
-            if (node.attributes) {
-                for (var i = 0; i < node.attributes.length; i++) {
-                    if (/th:.*/ig.test(node.attributes[i].name)) {
-                        return true;
-                    }
-                }
-            }
-        }
         if(needSetChild[cmdName]){
             rng.adjustmentBoundary();
             if(!rng.collapsed && rng.startContainer.nodeType == 1){
@@ -11588,7 +11573,7 @@ UE.plugins['font'] = function () {
                     var bk = rng.createBookmark();
                     utils.each(domUtils.getElementsByTagName(start, 'span'), function (span) {
                         if (!span.parentNode || domUtils.isBookmarkNode(span))return;
-                        if (isThNode(span)) return;
+                        if (domUtils.isThNode(span)) return;
                         if(cmdName == 'backcolor' && domUtils.getComputedStyle(span,'background-color').toLowerCase() === value){
                             return;
                         }
@@ -11627,18 +11612,10 @@ UE.plugins['font'] = function () {
             if (/border/i.test(span.style.cssText) && span.parentNode.tagName == 'SPAN' && /border/i.test(span.parentNode.style.cssText)) {
                 span.style.cssText = span.style.cssText.replace(/border[^:]*:[^;]+;?/gi, '');
             }
-            function isThNode(node) {
-                if (node.attributes) {
-                    for (var i = 0; i < node.attributes.length; i++) {
-                        if (/th:.*/ig.test(node.attributes[i].name)) {
-                            return true;
-                        }
-                    }
-                }
-            }
+
             if(!(cmdName=='fontborder' && value=='none')){
                 var next = span.nextSibling;
-                while (next && next.nodeType == 1 && next.tagName == 'SPAN' && !isThNode(next)) {
+                while (next && next.nodeType == 1 && next.tagName == 'SPAN' && !domUtils.isThNode(next)) {
                     if(domUtils.isBookmarkNode(next) && cmdName == 'fontborder') {
                         span.appendChild(next);
                         next = span.nextSibling;
@@ -11653,7 +11630,7 @@ UE.plugins['font'] = function () {
                     next = span.nextSibling;
                 }
             }
-            if (!isThNode(span)) {
+            if (!domUtils.isThNode(span)) {
                 mergeWithParent(span);
             }
             if(browser.ie && browser.version > 8 ){
@@ -12798,17 +12775,9 @@ UE.plugins['paragraph'] = function() {
                     tmpRange.insertNode( para );
 
                     var parent = para.parentNode;
-                    function isThNode(node) {
-                        if (node.attributes) {
-                            for (var i = 0; i < node.attributes.length; i++) {
-                                if (/th:.*/ig.test(node.attributes[i].name)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+
                     //如果para上一级是一个block元素且不是body,td就删除它
-                    if ( block( parent ) && !isThNode(parent) && !domUtils.isBody( para.parentNode ) && utils.indexOf(notExchange,parent.tagName)==-1) {
+                    if ( block( parent ) && !domUtils.isThNode(parent) && !domUtils.isBody( para.parentNode ) && utils.indexOf(notExchange,parent.tagName)==-1) {
                         //存储dir,style
                         if(!(sourceCmdName && sourceCmdName == 'customstyle')){
                             parent.getAttribute('dir') && para.setAttribute('dir',parent.getAttribute('dir'));

@@ -240,8 +240,10 @@ function appendPToBody() {
         const lastChild = ue.body.lastChild;
         if (lastChild.tagName !== 'P') {
             const node = ue.document.createElement("p");
-            node.innerHTML = '&#8203;<br>';
+            node.innerHTML = '&#8203;';
             ue.body.append(node)
+        } else if (!lastChild.innerHTML) {
+            lastChild.innerHTML = '&#8203;';
         }
     }, 500)
 }
@@ -287,6 +289,31 @@ function showInstruction() {
     modal.show();
 }
 
+function initUEEditor() {
+    ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
+    ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
+    const uploadTemplate = getSessionData('uploadTemplate');
+    if (uploadTemplate) {
+        insertBodyFromHtml(uploadTemplate);
+        removeSessionData('uploadTemplate');
+    } else if (ue.execCommand('getlocaldata')) {
+        ue.execCommand('drafts');
+    } else {
+        initDefaultTemplate();
+    }
+    addGenerateButton();
+}
+
+function addUEEditorListener() {
+    ue.addListener('selectionchange', function () {
+        let info = getCurrentUEInfo();
+        templateTree.focusNode(info.path, true);
+    });
+    ue.addListener('contentChange', function() {
+        appendPToBody();
+    });
+}
+
 ue.addListener('ready', () => {
     window.templateTree = createTemplateTree({
         root: 'swagger',
@@ -294,32 +321,15 @@ ue.addListener('ready', () => {
         container: '.template-container-tree',
         dbClick: dbClick,
         initCallBack: function () {
-            autoShowInstruction();
-            ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
-            ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
-            const uploadTemplate = getSessionData('uploadTemplate');
-            if (uploadTemplate) {
-                insertBodyFromHtml(uploadTemplate);
-                removeSessionData('uploadTemplate');
-            } else if (ue.execCommand('getlocaldata')) {
-                ue.execCommand('drafts');
-            } else {
-                initDefaultTemplate();
-            }
-            addGenerateButton();
-            ue.addListener('selectionchange', function () {
-                let info = getCurrentUEInfo();
-                templateTree.focusNode(info.path, true);
-            });
+            initUEEditor();
+            addUEEditorListener();
             setInterval(function() {
                 appendPToBody();
             }, 2000);
-            ue.addListener('contentChange', function() {
-                appendPToBody();
-            });
             $('.template-instruction a').addEventListener('click', function() {
                 showInstruction();
-            })
+            });
+            autoShowInstruction();
         }
     });
 });
