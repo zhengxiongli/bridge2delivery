@@ -14,6 +14,9 @@
 .modal-window .modal-container {
     background-color: white;
     border-radius: 4px;
+    padding-top: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .modal-window .modal-header {
