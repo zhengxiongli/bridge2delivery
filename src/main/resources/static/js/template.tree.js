@@ -53,7 +53,7 @@ export function createTemplateTree(config) {
         }
         const parentPath = nodeInfo.path.replace(new RegExp('(-' + nodeInfo.config.name + ')$'), '');
         return tree.getNode(parentPath.split('-'));
-    }
+    };
 
     tree.getNode = function (path) {
         const pathStr = path == null || path.length === 0 ? '' : path.join('-');
@@ -68,7 +68,7 @@ export function createTemplateTree(config) {
             }
         }
         return null;
-    }
+    };
 
     function init() {
         if (!config || !config.type || !config.container) {
@@ -126,7 +126,7 @@ export function createTemplateTree(config) {
         const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node, config: {name: tree.rootName}};
         node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
-                expandClick(e, node);
+                expandClick(e);
             }
         });
         nodeMap.push(nodeInfo);
@@ -182,7 +182,7 @@ export function createTemplateTree(config) {
 
         node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
-                expandClick(e, node);
+                expandClick(e);
                 return;
             }
             if (/.*disabled.*/ig.test(node.className)) {
@@ -219,7 +219,7 @@ export function createTemplateTree(config) {
             (expandItem.className === 'expand' || expandItem.className === 'collapse');
     }
 
-    function expandClick(e, node) {
+    function expandClick(e) {
         const expandItem = e.target;
         const parent = expandItem.parentElement;
         if (expandItem.className === 'expand') {

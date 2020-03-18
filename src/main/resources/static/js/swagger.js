@@ -16,7 +16,6 @@ function onRestDefaultTemplate() {
     const defaultTmp = $('.reset-to-default-btn');
     if (!defaultTmp) return;
     defaultTmp.addEventListener('click', () => {
-
         fetch('/swagger/default/template', {
             method: "PUT",
         })

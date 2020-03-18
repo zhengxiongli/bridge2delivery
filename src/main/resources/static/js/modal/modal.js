@@ -14,7 +14,7 @@
  */
 export function newModal(config) {
     const modal = {};
-    function defaultFunc() {};
+    function defaultFunc() {}
     config.beforeShow = config.beforeShow || defaultFunc;
     config.afterShow = config.afterShow || defaultFunc;
     config.onClose = config.onClose || defaultFunc;
@@ -57,11 +57,11 @@ export function newModal(config) {
         left.className = 'left';
         right.className = 'right';
         buttonContainer.className = 'modal-buttons';
-        if (!config.buttons || config.buttons.length == 0) {
+        if (!config.buttons || config.buttons.length === 0) {
             return buttonContainer;
         }
         for (let i = 0; i < config.buttons.length; i++) {
-            if (config.buttons[i].type == 'check') {
+            if (config.buttons[i].type === 'check') {
                 createCheckBox(config.buttons[i], left, right);
             } else {
                 createButton(config.buttons[i], left, right);
@@ -78,7 +78,7 @@ export function newModal(config) {
         button.addEventListener('click', function () {
             btnConfig.onClick && btnConfig.onClick.apply(this);
         });
-        btnConfig.align && btnConfig.align == 'left' ? left.append(button) : right.append(button);
+        btnConfig.align && btnConfig.align === 'left' ? left.append(button) : right.append(button);
     }
 
     function createCheckBox(btnConfig, left, right) {
@@ -92,7 +92,7 @@ export function newModal(config) {
         label.append(checkBox);
         label.append(icon);
         label.append(text);
-        btnConfig.align && btnConfig.align == 'left' ? left.append(label) : right.append(label);
+        btnConfig.align && btnConfig.align === 'left' ? left.append(label) : right.append(label);
     }
 
     modal.show = function() {
@@ -118,12 +118,12 @@ export function newModal(config) {
         config.beforeShow && config.beforeShow.apply(modal);
         modalWindow.style.display = '';
         config.afterShow && config.afterShow.apply(modal);
-    }
+    };
 
     modal.close = function() {
         modal.window.style.display = 'none';
         modal.window.parentNode.removeChild(modal.window);
-    }
+    };
 
     return modal;
 }
