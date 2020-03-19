@@ -238,7 +238,7 @@ function appendPToBody() {
     clearTimeout(timeOutId);
     timeOutId = setTimeout(function(){
         const lastChild = ue.body.lastChild;
-        if (lastChild.tagName !== 'P') {
+        if (!lastChild || lastChild.tagName !== 'P') {
             const node = ue.document.createElement("p");
             node.innerHTML = '&#8203;';
             ue.body.append(node)

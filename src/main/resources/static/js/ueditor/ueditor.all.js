@@ -21470,8 +21470,39 @@ UE.plugins['table'] = function () {
         return parseInt(domUtils.getComputedStyle(cell, "width"), 10);
     }
 
+    function getStyle(node, attr) {
+        if (node.currentStyle) {
+            return node.currentStyle[attr];
+        }
+        return me.document.defaultView.getComputedStyle(node, null)[attr];
+    }
+
+    function getPaddingWidth(td) {
+        var left = getStyle(td, 'padding-left'), right = getStyle(td, 'padding-right');
+        left = !left ? 0 : parseInt(left.replace(/px/ig, ''), 10);
+        right = !right ? 0 : parseInt(right.replace(/px/ig, ''), 10);
+        return left + right;
+    }
+
+    function initColWidth(uTable) {
+        if (!uTable || !uTable.table) {
+            return;
+        }
+        var rows = uTable.table.tBodies[0].rows;
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].cells;
+            for (var j = 0; j < cells.length; j++) {
+                if (!!cells[j].getAttribute('width') || !cells[j].nextSibling) {
+                    continue;
+                }
+                cells[j].setAttribute('width', cells[j].clientWidth - getPaddingWidth(cells[j]));
+            }
+        }
+    }
+
     function changeColWidth(cell, changeValue) {
         var ut = getUETable(cell);
+        initColWidth(ut);
         if (ut) {
 
             //根据当前移动的边框获取相关的单元格
@@ -21488,15 +21519,16 @@ UE.plugins['table'] = function () {
 
                 utils.each( cells, function( cellGroup ){
 
-                    cellGroup.left.width = (+cellGroup.left.width)+changeValue;
-                    // cellGroup.right && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
+                    //  合并了行之后，可能出现没有left的情况
+                    cellGroup.left && (cellGroup.left.width = (+cellGroup.left.width)+changeValue);
+                    cellGroup.right && cellGroup.right.nextSibling && ( cellGroup.right.width = (+cellGroup.right.width)-changeValue );
 
                 } );
 
             } else {
 
                 utils.each( cells, function( cellGroup ){
-                    cellGroup.left.width -= -changeValue;
+                    cellGroup.left && (cellGroup.left.width -= -changeValue);
                 } );
 
             }
@@ -21523,6 +21555,42 @@ UE.plugins['table'] = function () {
     }
 
     /**
+     * 设置每个单元格取消合并后的index
+     */
+    function rowSpanColsNum(rows) {
+        for (var i = 0; i < rows.length; i++) {
+            var currentIndex = 0;
+            for (var j = 0; j < rows[i].cells.length; j++) {
+                var cell = rows[i].cells[j];
+                currentIndex += (cell.colSpan || 1);
+                cell.realIndex = currentIndex;
+            }
+        }
+        for (var i = 0; i < rows.length; i++) {
+            for (var j = 0; j < rows[i].cells.length; j++) {
+                var cell = rows[i].cells[j];
+                if (cell.rowSpan && cell.rowSpan > 1) {
+                    handleRowSpan(rows, i, cell.rowSpan, j == 0 ? 0 : rows[i].cells[j - 1].realIndex, cell.colSpan || 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * 处理合并行
+     */
+    function handleRowSpan(rows, currentRow, rowSpan, preIndex, colsNum) {
+        for (var i = currentRow + 1; i < currentRow + rowSpan; i++) {
+            for (var j = 0; j < rows[i].cells.length; j++) {
+                var cell = rows[i].cells[j];
+                if (cell.realIndex > preIndex) {
+                    cell.realIndex += colsNum;
+                }
+            }
+        }
+    }
+
+    /**
      * 获取调整单元格大小的相关单元格
      * @isContainMergeCell 返回的结果中是否包含发生合并后的单元格
      */
@@ -21536,33 +21604,20 @@ UE.plugins['table'] = function () {
             return null;
         }
 
-        //获取到该单元格所在行的序列号
-        var index = domUtils.getNodeIndex( cell ),
-            temp = cell,
-            rows = table.rows,
-            colIndex = 0;
-
-        while( temp ) {
-            //获取到当前单元格在未发生单元格合并时的序列
-            if( temp.nodeType === 1 ) {
-                colIndex += (temp.colSpan || 1);
-            }
-            temp = temp.previousSibling;
-        }
-
-        temp = null;
+        //计算所有单元格序号
+        rowSpanColsNum(table.rows);
+        var rows = table.rows, colIndex = cell.realIndex;
 
         //记录想关的单元格
         var borderCells = [];
 
         utils.each(rows, function( tabRow ){
 
-            var cells = tabRow.cells,
-                currIndex = 0;
+            var cells = tabRow.cells;
 
             utils.each( cells, function( tabCell ){
 
-                currIndex += (tabCell.colSpan || 1);
+                var currIndex = tabCell.realIndex;
 
                 if( currIndex === colIndex ) {
 
@@ -21578,6 +21633,10 @@ UE.plugins['table'] = function () {
                     if( isContainMergeCell ) {
                         borderCells.push({
                             left: tabCell
+                        });
+                    } else {
+                        borderCells.push({
+                            right: tabCell
                         });
                     }
 
@@ -21661,7 +21720,6 @@ UE.plugins['table'] = function () {
             width -= getTableCellOffset( cell );
 
         }
-
         width = width < 0 ? 0 : width;
 
         try {
