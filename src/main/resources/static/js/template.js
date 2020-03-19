@@ -258,7 +258,7 @@ function autoShowInstruction() {
 function showInstruction() {
     const modal = newModal({
         title: '如何使用',
-        contentWidth: '320px',
+        contentWidth: '368px',
         buttons: [{
             text: '不再自动弹出',
             type: 'check',
