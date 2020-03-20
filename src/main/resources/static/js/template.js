@@ -314,6 +314,13 @@ function addUEEditorListener() {
     });
 }
 
+function intervalAppendP() {
+    setTimeout(function() {
+        appendPToBody();
+        intervalAppendP();
+    }, 2000);
+}
+
 ue.addListener('ready', () => {
     window.templateTree = createTemplateTree({
         root: 'swagger',
@@ -323,9 +330,7 @@ ue.addListener('ready', () => {
         initCallBack: function () {
             initUEEditor();
             addUEEditorListener();
-            setInterval(function() {
-                appendPToBody();
-            }, 2000);
+            intervalAppendP();
             $('.template-instruction a').addEventListener('click', function() {
                 showInstruction();
             });

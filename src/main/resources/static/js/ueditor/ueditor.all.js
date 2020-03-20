@@ -21292,7 +21292,6 @@ UE.plugins['table'] = function () {
 
     //边框拖动
     function tableBorderDrag( evt ) {
-
         isInResizeBuffer = false;
 
         startTd = evt.target || evt.srcElement;
@@ -21303,8 +21302,8 @@ UE.plugins['table'] = function () {
             startTd = getUETable(startTd).getPreviewCell(startTd, state == 'v');
         }
         hideDragLine(me);
-        getDragLine(me, me.document);
         me.fireEvent('saveScene');
+        getDragLine(me, me.document);
         showDragLineAt(state, startTd);
         mousedown = true;
         //拖动开始
@@ -21823,6 +21822,7 @@ UE.plugins['table'] = function () {
     function hideDragLine(editor) {
         if (mousedown)return;
         var line;
+
         while (line = editor.document.getElementById('ue_tableDragLine')) {
             domUtils.remove(line)
         }
