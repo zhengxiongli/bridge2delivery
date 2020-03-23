@@ -55,6 +55,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    compile('io.cucumber:cucumber-java8:5.5.0')
+    compile('io.cucumber:cucumber-spring:5.5.0')
 }
 
 dependencyManagement {
