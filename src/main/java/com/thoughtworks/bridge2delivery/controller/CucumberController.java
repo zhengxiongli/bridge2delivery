@@ -53,7 +53,12 @@ public class CucumberController {
         List<Feature> featureList = new ArrayList<>(files.length);
         UploadResult uploadResult = new UploadResult();
         for (MultipartFile file : files) {
-            Feature feature = CucumberParser.parse(file).orElseThrow(null);
+            Feature feature = null;
+            try {
+                feature = CucumberParser.parse(file).orElseThrow(null);
+            } catch (CustomException e) {
+                log.error("parse error:{}", file.getOriginalFilename(), e);
+            }
             if (feature != null) {
                 uploadResult.addFeatureFile(file.getOriginalFilename());
                 featureList.add(feature);
