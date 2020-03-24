@@ -63,20 +63,19 @@ body {
 }
 
 .app-main .menu {
-    display:grid;
-    grid-template-columns: repeat(3,1fr);
-    justify-content: space-around;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 0 10px;
     margin-bottom: 94px;
     padding: 0 40px;
 }
 
 .app-main .menu .item {
-    /*width: 446px;*/
+    width: 366px;
+    margin: 0 10px;
     background-color: #007cdc;
     text-align: center;
-    padding: 40px 90px 29px;
+    padding: 40px 56px 29px;
     color: #fff;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -92,13 +91,12 @@ body {
     text-align: center;
     display: inline-block;
 }
-.app-main .menu .item.swagger {
-    grid-column: 2 / span 1;
-}
 
 .app-main .menu .item .desc {
     font-size: 13px;
     height: 53px;
+    width: 100%;
+    line-height: 1.4;
 }
 .app-main .menu .item .link {
     display: inline-block;

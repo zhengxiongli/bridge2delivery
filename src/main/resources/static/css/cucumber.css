@@ -1,0 +1,28 @@
+.swagger-container {
+    background-color: #34c482;
+}
+
+.swagger-container .swagger-wrap {
+    border-color: #175a36;
+    background-color: #158249;
+}
+
+.swagger-wrap .search .prefix img {
+    width: 16px;
+}
+
+.swagger-wrap .search .prefix {
+    padding: 0;
+    padding-right: 10px;
+    background: transparent;
+    border: none;
+}
+
+.swagger-container .swagger-wrap .search button.search-container {
+    border: none;
+    outline: none;
+    padding: 0 18px;
+    cursor: pointer;
+    border-radius: 1px;
+    border: solid 0.5px #000000;
+}

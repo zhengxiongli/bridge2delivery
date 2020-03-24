@@ -25,9 +25,11 @@ class CucumberControllerTest {
         Path filePath = Paths.get("src", "test", "resources", "features", "user-creation.feature");
         MockMultipartFile file = new MockMultipartFile("fileName", Files.readAllBytes(filePath));
         MockHttpServletRequest request = new MockHttpServletRequest();
+        MockMultipartFile[] files = new MockMultipartFile[1];
+        files[0] = file;
 
         // when
-        cucumberController.upload(file, request);
+        cucumberController.uploadFeatureFiles(files, request);
 
         // then
         Assertions.assertNotNull(Objects.requireNonNull(request.getSession())

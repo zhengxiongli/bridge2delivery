@@ -21,6 +21,11 @@ public class IndexController {
         return "template";
     }
 
+    @GetMapping("/cucumber")
+    public String cucumber() {
+        return "cucumber";
+    }
+
     @GetMapping("/template-portal")
     public String templatePortal() {
         return "template-portal";
