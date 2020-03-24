@@ -18,7 +18,8 @@ public class SwaggerConfig {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .tags(new Tag("Swagger Resource", "Swagger资源操作"),
-                        new Tag("Template Resource", "Template资源操作"))
+                        new Tag("Template Resource", "Template资源操作"),
+                        new Tag("Cucumber Resource", "Cucumber资源操作"))
                 .apiInfo(apiInfo())
                 .select()
                 .paths(Predicates.not(PathSelectors.regex("/error.*")))

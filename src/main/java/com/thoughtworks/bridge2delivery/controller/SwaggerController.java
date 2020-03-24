@@ -106,7 +106,7 @@ public class SwaggerController {
         return ApiResponse.ok();
     }
 
-    @GetMapping(value = "word")
+    @GetMapping(value = "/word")
     @ApiOperation(value = "导出word文档")
     public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream;charset=utf-8");
