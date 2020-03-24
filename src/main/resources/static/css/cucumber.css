@@ -1,0 +1,21 @@
+.swagger-container {
+    background-color: #34c482;
+}
+
+.swagger-container .swagger-wrap {
+    border-color: #175a36;
+    background-color: #158249;
+}
+
+.swagger-wrap .search .prefix img {
+    width: 16px;
+}
+
+.swagger-wrap .search .prefix {
+    padding-right: 10px;
+}
+
+.swagger-wrap .search .analysis {
+    background-color: #185c37;
+    border-color: #185c37;
+}
