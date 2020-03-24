@@ -24,7 +24,7 @@ function onResetDefaultTemplate() {
 }
 
 function proxyFileSelect() {
-    const selectFileBtn = $('.select-file-button');
+    const selectFileBtn = $('button.search-container');
     if (!selectFileBtn) return;
     selectFileBtn.addEventListener('click', () => {
         fileInput.click()

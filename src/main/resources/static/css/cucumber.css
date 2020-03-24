@@ -12,10 +12,17 @@
 }
 
 .swagger-wrap .search .prefix {
+    padding: 0;
     padding-right: 10px;
+    background: transparent;
+    border: none;
 }
 
-.swagger-wrap .search .analysis {
-    background-color: #185c37;
-    border-color: #185c37;
+.swagger-container .swagger-wrap .search button.search-container {
+    border: none;
+    outline: none;
+    padding: 0 18px;
+    cursor: pointer;
+    border-radius: 1px;
+    border: solid 0.5px #000000;
 }

@@ -19,16 +19,14 @@
         <section class="swagger-container">
             <div class="swagger-wrap">
                 <div class="logo"><img class="img-response" th:src="@{/assets/cucumber-logo.svg}" alt=""></div>
-                <p class="desc">请输入你的Cucumber文件夹</p>
+                <p class="desc">请载入你的Cucumber文件夹</p>
                 <div class="search">
-                    <div class="search-container">
+                    <input name="select-file-input" type="file" webkitdirectory mozdirectory hidden/>
+                    <button class="search-container">
                         <span class="prefix"><img src="/assets/folder.svg"></span>
-                        <input type="text" class="url-input" placeholder="http://swagger-url"/>
-                        <button type="button" class="analysis">解析</button>
-                    </div>
+                        <span>点击选择文件夹</span>
+                    </button>
                     <p>
-                        <input name="select-file-input" type="file" accept="application/json" webkitdirectory mozdirectory hidden/>
-                        <button class="select-file-button">点击选择文件夹</button>
                         或直接拽文件夹进来
                     </p>
                 </div>
