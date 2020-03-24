@@ -390,7 +390,7 @@ UE.parse.register('table', function (utils) {
                 selector + ' table.sortEnabled tr.firstRow th,' + selector + ' table.sortEnabled tr.firstRow td{padding-right:20px; background-repeat: no-repeat;' +
                     'background-position: center right; background-image:url(' + this.rootPath + 'themes/default/images/sortable.png);}' +
                 selector + ' table.sortEnabled tr.firstRow th:hover,' + selector + ' table.sortEnabled tr.firstRow td:hover{background-color: #EEE;}' +
-                selector + ' table{margin-bottom:10px;border-collapse:collapse;display:table;}' +
+                selector + ' table{border-collapse:collapse;display:table;}' +
                 selector + ' td,' + selector + ' th{ background:white; padding: 5px 10px;border: 1px solid #DDD;}' +
                 selector + ' caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}' +
                 selector + ' th{border-top:1px solid #BBB;background:#F7F7F7;}' +
