@@ -13,10 +13,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 class CucumberParserTest {
@@ -28,11 +26,10 @@ class CucumberParserTest {
         MockMultipartFile file = new MockMultipartFile("fileName", Files.readAllBytes(filePath));
 
         // when
-        Optional<Feature> parse = CucumberParser.parse(file);
+        Feature parse = CucumberParser.parse(file);
 
         // then
-        assertTrue(parse.isPresent());
-        assertEquals(parse.get().getUri().toString(), "fileName");
+        assertEquals(parse.getName(), "Create Employee");
     }
 
     @Test

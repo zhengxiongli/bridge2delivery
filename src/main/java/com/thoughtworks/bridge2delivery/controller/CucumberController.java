@@ -37,7 +37,7 @@ public class CucumberController {
     @PostMapping(value = "/single")
     @ApiOperation(value = "上传feature文件")
     public ApiResponse<?> upload(@RequestParam("feature") MultipartFile file, HttpServletRequest request) {
-        Feature feature = CucumberParser.parse(file).orElseThrow(() -> new CustomException("解析后无内容"));
+        Feature feature = CucumberParser.parse(file);
         request.getSession().setAttribute(SessionAttributes.CUCUMBER_INFO, feature);
         return ApiResponse.ok();
     }

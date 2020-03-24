@@ -19,7 +19,7 @@ public final class CucumberParser {
     private CucumberParser() {
     }
 
-    public static Optional<Feature> parse(MultipartFile featureFile) {
+    public static Feature parse(MultipartFile featureFile) {
         if (featureFile.isEmpty()) {
             throw new CustomException(FILE_CAN_NOT_BE_NULL);
         }
@@ -27,7 +27,7 @@ public final class CucumberParser {
         FeatureParser parser = new FeatureParser(UUID::randomUUID);
 
         try {
-            return parser.parseResource(new Resource() {
+            Optional<Feature> feature = parser.parseResource(new Resource() {
                 @Override
                 public URI getUri() {
                     return URI.create(featureFile.getName());
@@ -38,7 +38,9 @@ public final class CucumberParser {
                     return featureFile.getInputStream();
                 }
             });
+            return feature.get();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(PARSE_ERROR);
         }
     }

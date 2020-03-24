@@ -1,0 +1,2 @@
+io.cucumber.core.gherkin.vintage.GherkinVintageFeatureParser
+com.thoughtworks.bridge2delivery.cucumber.CustomFeatureParser

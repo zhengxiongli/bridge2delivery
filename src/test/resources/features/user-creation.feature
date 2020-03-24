@@ -1,5 +1,5 @@
 Feature: Create Employee
-
+  这是一段Feature的介绍
   Scenario: WITH ALL REQUIRED FIELDS IS SUCCESSFUL
 
     Given when a customer wanna create a user with the following attributes
@@ -13,4 +13,10 @@ Feature: Create Employee
 
     When save 'WITH ALL REQUIRED FIELDS'
     Then the save 'OK'
-
+  Scenario: test2
+    Given i'm given
+    But buttttt
+    When i'm when
+    Given agein
+    * btttt2
+    Then i'm then
