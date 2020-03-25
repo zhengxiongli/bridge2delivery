@@ -7,6 +7,7 @@ import com.thoughtworks.bridge2delivery.exception.CustomException;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.swing.Java2DRenderer;
 import org.xml.sax.SAXException;
@@ -86,5 +87,12 @@ public final class Utils {
         } catch (JsonProcessingException e) {
             throw new CustomException(Messages.INVALID_JSON, e);
         }
+    }
+
+    public static String parseFileExtension(String fileName) {
+        if (StringUtils.isEmptyOrWhitespace(fileName)) {
+            throw new CustomException(Messages.INVALID_FILE_NAME);
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 }

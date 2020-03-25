@@ -23,7 +23,7 @@ class CucumberControllerTest {
     public void should_parse_json_and_set_into_session() throws IOException {
         // given
         Path filePath = Paths.get("src", "test", "resources", "features", "user-creation.feature");
-        MockMultipartFile file = new MockMultipartFile("fileName", Files.readAllBytes(filePath));
+        MockMultipartFile file = new MockMultipartFile("fileName", "user-creation.feature", null,  Files.readAllBytes(filePath));
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockMultipartFile[] files = new MockMultipartFile[1];
         files[0] = file;

@@ -30,6 +30,11 @@ function registerFileSelectListener() {
     })
 }
 
+function showScanResultIFrame() {
+    const scanResult = $('.scan-result'), scanResultIframe = $('.scan-result-iframe');
+    scanResult.style.display = "block";
+}
+
 function showPreviewIFrame() {
     const preview = $('.preview');
     const previewIframe = $('.preview-iframe');
@@ -97,7 +102,8 @@ function uploadFeatures(files) {
         method: 'POST',
         body: fd,
     }).then(validateResponse)
-        .then(showPreviewIFrame)
+        .then(showScanResultIFrame)
+        .then(showPreviewIFrame);
 }
 
 function registerGlobalErrorHandler() {

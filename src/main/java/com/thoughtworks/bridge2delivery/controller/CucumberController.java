@@ -57,17 +57,24 @@ public class CucumberController {
         List<Feature> featureList = new ArrayList<>(files.length);
         UploadResult uploadResult = new UploadResult();
         for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            String fileExtension = Utils.parseFileExtension(fileName);
+            if (!fileExtension.equals("feature")) {
+                uploadResult.addOtherFile(fileName);
+                continue;
+            }
+
             Feature feature = null;
             try {
                 feature = CucumberParser.parse(file);
             } catch (CustomException e) {
-                log.error("parse error:{}", file.getOriginalFilename(), e);
+                log.error("parse error:{}", fileName, e);
             }
             if (feature != null) {
-                uploadResult.addFeatureFile(file.getOriginalFilename());
+                uploadResult.addFeatureFile(fileName);
                 featureList.add(feature);
             } else {
-                uploadResult.addOtherFile(file.getOriginalFilename());
+                uploadResult.addUnrecognizedFeatureFile(fileName);
             }
         }
         request.getSession().setAttribute(SessionAttributes.CUCUMBER_INFO, featureList);

@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class UploadResult {
     private List<String> featureFiles;
+    private List<String> unrecognizedFeatureFiles;
     private List<String> otherFiles;
 
     public void addFeatureFile(String fileName) {
@@ -17,6 +18,13 @@ public class UploadResult {
             featureFiles = new ArrayList<>();
         }
         featureFiles.add(fileName);
+    }
+
+    public void addUnrecognizedFeatureFile(String fileName) {
+        if (unrecognizedFeatureFiles == null) {
+            unrecognizedFeatureFiles = new ArrayList<>();
+        }
+        unrecognizedFeatureFiles.add(fileName);
     }
 
     public void addOtherFile(String fileName) {

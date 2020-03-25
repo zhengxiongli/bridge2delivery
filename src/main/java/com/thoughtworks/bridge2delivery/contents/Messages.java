@@ -13,4 +13,5 @@ public class Messages {
     public static final String REQUEST_TIMEOUT = "访问超时";
     public static final String INVALID_URL = "无法识别的URL";
     public static final String UNREALIZED = "未实现";
+    public static final String INVALID_FILE_NAME = "非法文件名";
 }
