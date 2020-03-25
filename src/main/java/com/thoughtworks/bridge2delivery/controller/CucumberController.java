@@ -1,8 +1,10 @@
 package com.thoughtworks.bridge2delivery.controller;
 
+import com.google.common.collect.Lists;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.cucumber.CucumberParser;
+import com.thoughtworks.bridge2delivery.cucumber.model.CucumberExportInfo;
 import com.thoughtworks.bridge2delivery.cucumber.model.FeatureInfo;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.dto.cucumber.UploadResult;
@@ -33,9 +35,11 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/cucumber")
@@ -56,6 +60,7 @@ public class CucumberController {
                                                         HttpServletRequest request) {
         List<Feature> featureList = new ArrayList<>(files.length);
         UploadResult uploadResult = new UploadResult();
+        Arrays.stream(files).sorted(Comparator.comparing(MultipartFile::getName));
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();
             String fileExtension = Utils.parseFileExtension(fileName);
@@ -132,14 +137,27 @@ public class CucumberController {
         if (featureInfos.isEmpty()) {
             throw new CustomException(Messages.UPLOAD_FEATURE_FILE);
         }
-        FeatureInfo featureInfo = featureInfos.get(0);
-        if (isPreview && featureInfo.getScenarioInfo().size() > PREVIEW_MAX_USE_CASE_10) {
-            featureInfo.setScenarioInfo(featureInfo.getScenarioInfo().subList(0, PREVIEW_MAX_USE_CASE_10));
+
+        List<CucumberExportInfo> cucumberExportInfos = Lists.newArrayList();
+        featureInfos.forEach(featureInfo -> featureInfo.getScenarioInfo().forEach(scenarioInfo -> cucumberExportInfos.add(CucumberExportInfo.builder()
+                .caseNumber(scenarioInfo.getCaseNumber())
+                .featureName(featureInfo.getName())
+                .description(scenarioInfo.getDescription())
+                .given(scenarioInfo.getGiven())
+                .when(scenarioInfo.getWhen())
+                .then(scenarioInfo.getThen())
+                .name(scenarioInfo.getName())
+                .featureDescription(featureInfo.getDescription())
+                .featureApproval(featureInfo.getApproval())
+                .build())));
+
+        if (isPreview && cucumberExportInfos.size() > PREVIEW_MAX_USE_CASE_10) {
+            return getHtml(request, cucumberExportInfos.subList(0, PREVIEW_MAX_USE_CASE_10));
         }
-        return getHtml(request, featureInfo);
+        return getHtml(request, cucumberExportInfos);
     }
 
-    private String getHtml(HttpServletRequest request, FeatureInfo featureInfo) {
+    private String getHtml(HttpServletRequest request, List<CucumberExportInfo> cucumberExportInfos) {
         String template = (String) request.getSession().getAttribute(SessionAttributes.CUCUMBER_TEMPLATE);
 
         if (StringUtils.isEmpty(template)) {
@@ -147,7 +165,7 @@ public class CucumberController {
             request.getSession().setAttribute(SessionAttributes.CUCUMBER_TEMPLATE, template);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("featureInfo", featureInfo);
+        map.put("cucumberExportInfos", cucumberExportInfos);
         try {
             return thymeleafService.renderTemplate(template, map);
         } catch (Exception e) {

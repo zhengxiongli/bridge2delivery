@@ -56,15 +56,15 @@
             审批人
         </td>
     </tr>
-    <tr th:each="scenario: ${featureInfo.scenarioInfo}">
-        <td valign="top" th:text="|T123-${featureInfo.description}|"></td>
-        <td valign="top" th:text="${featureInfo.name}"></td>
-        <td valign="top" th:text="${scenario.caseNumber}"></td>
-        <td valign="top" th:text="${scenario.name}"></td>
-        <td valign="top" th:text="${scenario.given}"></td>
-        <td valign="top" th:text="${scenario.when}"></td>
-        <td valign="top" th:text="${scenario.then}"></td>
-        <td valign="top" th:text="${featureInfo.approval}"></td>
+    <tr th:each="cucumberExportInfo: ${cucumberExportInfos}">
+        <td valign="top" th:text="|T123-${cucumberExportInfo.featureDescription}|"></td>
+        <td valign="top" th:text="${cucumberExportInfo.featureName}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.caseNumber}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.name}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.given}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.when}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.then}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.featureApproval}"></td>
     </tr>
     </tbody>
 </table>
