@@ -3,6 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        table.noBorderTable td, table.noBorderTable th, table.noBorderTable caption {
+            border: 1px dashed #ddd !important
+        }
+
+        table {
+            border-collapse: collapse;
+            display: table;
+            font-size: 12px
+        }
+
+        td, th {
+            padding: 5px 5px;
+            border: 1px solid #DDD;
+        }
+
+        caption {
+            border: 1px dashed #DDD;
+            border-bottom: 0;
+            padding: 3px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <table width="100%">
@@ -33,15 +56,15 @@
             审批人
         </td>
     </tr>
-    <tr>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
-        <td valign="top"></td>
+    <tr th:each="scenario: ${featureInfo.scenarioInfo}">
+        <td valign="top" th:text="|T123-${featureInfo.description}|"></td>
+        <td valign="top" th:text="${featureInfo.name}"></td>
+        <td valign="top" th:text="${scenario.caseNumber}"></td>
+        <td valign="top" th:text="${scenario.name}"></td>
+        <td valign="top" th:text="${scenario.given}"></td>
+        <td valign="top" th:text="${scenario.when}"></td>
+        <td valign="top" th:text="${scenario.then}"></td>
+        <td valign="top" th:text="${featureInfo.approval}"></td>
     </tr>
     </tbody>
 </table>

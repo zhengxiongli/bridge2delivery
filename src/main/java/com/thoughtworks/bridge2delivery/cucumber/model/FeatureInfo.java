@@ -148,4 +148,8 @@ public class FeatureInfo implements Feature {
     public List<ScenarioInfo> getScenarioInfo() {
         return scenarioInfo;
     }
+
+    public void setScenarioInfo(List<ScenarioInfo> scenarioInfo) {
+        this.scenarioInfo = scenarioInfo;
+    }
 }

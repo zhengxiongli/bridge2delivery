@@ -3,6 +3,7 @@ package com.thoughtworks.bridge2delivery.controller;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.cucumber.CucumberParser;
+import com.thoughtworks.bridge2delivery.cucumber.model.FeatureInfo;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.dto.cucumber.UploadResult;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,14 +33,16 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cucumber")
 @Slf4j
 @Api(tags = {"Cucumber"})
 public class CucumberController {
-
+    private static final int PREVIEW_MAX_USE_CASE_10 = 10;
     private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/cucumber-default-template.html";
     private final ThymeleafService thymeleafService;
 
@@ -91,7 +95,7 @@ public class CucumberController {
             String fileName = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".xls";
             response.setHeader("Content-disposition", "attachment;filename=cucumber-" +
                     URLEncoder.encode(fileName, "utf-8"));
-            byte[] bytes = getFinallyHtml(request).getBytes();
+            byte[] bytes = getFinallyHtml(request, false).getBytes();
             bos.write(bytes, 0, bytes.length);
             bos.flush();
         }
@@ -101,18 +105,7 @@ public class CucumberController {
     @ApiOperation(value = "html预览", produces = MediaType.TEXT_HTML_VALUE)
     public String htmlPreview(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
-        return "html";
-    }
-
-    private String getFinallyHtml(HttpServletRequest request) {
-        try {
-            ClassPathResource resource = new ClassPathResource(DEFAULT_TEMPLATE_CLASSPATH);
-            try (InputStream inputStream = resource.getInputStream()) {
-                return Utils.getTextFromInputStream(inputStream);
-            }
-        } catch (IOException e) {
-            throw new CustomException(Messages.TEMPLATE_FILE_NOT_FOUND);
-        }
+        return getFinallyHtml(request, true);
     }
 
     private String getDefaultTemplate() {
@@ -126,4 +119,32 @@ public class CucumberController {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
+    private String getFinallyHtml(HttpServletRequest request, boolean isPreview) {
+        List<FeatureInfo> featureInfos = (List<FeatureInfo>) request.getSession().getAttribute(SessionAttributes.CUCUMBER_INFO);
+        if (featureInfos.isEmpty()) {
+            throw new CustomException(Messages.UPLOAD_FEATURE_FILE);
+        }
+        FeatureInfo featureInfo = featureInfos.get(0);
+        if (isPreview && featureInfo.getScenarioInfo().size() > PREVIEW_MAX_USE_CASE_10) {
+            featureInfo.setScenarioInfo(featureInfo.getScenarioInfo().subList(0, PREVIEW_MAX_USE_CASE_10));
+        }
+        return getHtml(request, featureInfo);
+    }
+
+    private String getHtml(HttpServletRequest request, FeatureInfo featureInfo) {
+        String template = (String) request.getSession().getAttribute(SessionAttributes.CUCUMBER_TEMPLATE);
+
+        if (StringUtils.isEmpty(template)) {
+            template = getDefaultTemplate();
+            request.getSession().setAttribute(SessionAttributes.CUCUMBER_TEMPLATE, template);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("featureInfo", featureInfo);
+        try {
+            return thymeleafService.renderTemplate(template, map);
+        } catch (Exception e) {
+            throw new CustomException(Messages.PARSE_ERROR);
+        }
+    }
 }
