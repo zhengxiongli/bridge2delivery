@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 public class UploadResult {
-    private List<String> featureFiles;
-    private List<String> unrecognizedFeatureFiles;
-    private List<String> otherFiles;
+    private List<String> featureFiles = new ArrayList<>();
+    private List<String> unrecognizedFeatureFiles = new ArrayList<>();
+    private List<String> otherFiles = new ArrayList<>();
 
     public void addFeatureFile(String fileName) {
         if (featureFiles == null) {

@@ -5,6 +5,7 @@ import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.cucumber.CucumberParser;
 import com.thoughtworks.bridge2delivery.cucumber.model.CucumberExportInfo;
+import com.thoughtworks.bridge2delivery.cucumber.model.FeatureFile;
 import com.thoughtworks.bridge2delivery.cucumber.model.FeatureInfo;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.dto.cucumber.UploadResult;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +61,7 @@ public class CucumberController {
     public ApiResponse<UploadResult> uploadFeatureFiles(@RequestParam("file") MultipartFile[] files,
                                                         HttpServletRequest request) {
         List<Feature> featureList = new ArrayList<>(files.length);
+        List<FeatureFile> featureFiles = Lists.newArrayList();
         UploadResult uploadResult = new UploadResult();
         Arrays.stream(files).sorted(Comparator.comparing(MultipartFile::getName));
         for (MultipartFile file : files) {
@@ -68,7 +71,9 @@ public class CucumberController {
                 uploadResult.addOtherFile(fileName);
                 continue;
             }
-
+            FeatureFile featureFile = new FeatureFile();
+            featureFile.setName(fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length()));
+            featureFile.setPath(fileName.substring(0, fileName.lastIndexOf("/") + 1));
             Feature feature = null;
             try {
                 feature = CucumberParser.parse(file);
@@ -76,13 +81,19 @@ public class CucumberController {
                 log.error("parse error:{}", fileName, e);
             }
             if (feature != null) {
+                featureFile.setRecognized(true);
                 uploadResult.addFeatureFile(fileName);
                 featureList.add(feature);
             } else {
+                featureFile.setRecognized(false);
                 uploadResult.addUnrecognizedFeatureFile(fileName);
             }
+            featureFiles.add(featureFile);
         }
-        request.getSession().setAttribute(SessionAttributes.CUCUMBER_INFO, featureList);
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionAttributes.CUCUMBER_INFO, featureList);
+        session.setAttribute(SessionAttributes.FEATURE_FILE, featureFiles);
+        session.setAttribute(SessionAttributes.UNRECOGNIZED_FEATURE_FILE_COUNT, uploadResult.getUnrecognizedFeatureFiles().size());
         return ApiResponse.ok(uploadResult);
     }
 
@@ -118,7 +129,7 @@ public class CucumberController {
     public String scanResult(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         //TODO(jun): 实现扫描结果页面
-        return getFinallyHtml(request, true);
+        return getScanResultHtml(request);
     }
 
     @GetMapping("/html")
@@ -126,6 +137,20 @@ public class CucumberController {
     public String htmlPreview(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         return getFinallyHtml(request, true);
+    }
+
+    private String getScanResultHtml(HttpServletRequest request) {
+        String template = Utils.getTemplateClassPath(SessionAttributes.FEATURE_FILE_TEMPLATE);
+        List<FeatureFile> featureFiles = (List<FeatureFile>) request.getSession().getAttribute(SessionAttributes.FEATURE_FILE);
+        Integer unrecognizedFeatureFileCount = (Integer) request.getSession().getAttribute(SessionAttributes.UNRECOGNIZED_FEATURE_FILE_COUNT);
+        Map<String, Object> map = new HashMap<>();
+        map.put("featureFiles", featureFiles);
+        map.put("unrecognizedFeatureFileCount", unrecognizedFeatureFileCount);
+        try {
+            return thymeleafService.renderTemplate(template, map);
+        } catch (Exception e) {
+            throw new CustomException(Messages.PARSE_ERROR);
+        }
     }
 
     private String getDefaultTemplate() {

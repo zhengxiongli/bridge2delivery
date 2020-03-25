@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public final class Utils {
     private static final int IMAGE_WIDTH = 800;
     private static final int IMAGE_HEIGHT = 1000;
     private static RestTemplate restTemplate;
+    private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/";
 
     static {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
@@ -47,6 +49,17 @@ public final class Utils {
                 throw new CustomException(Messages.REQUEST_TIMEOUT);
             }
             throw new CustomException(Messages.INVALID_URL);
+        }
+    }
+
+    public static String getTemplateClassPath(String templateName) {
+        try {
+            ClassPathResource resource = new ClassPathResource(DEFAULT_TEMPLATE_CLASSPATH + templateName + ".html");
+            try (InputStream inputStream = resource.getInputStream()) {
+                return Utils.getTextFromInputStream(inputStream);
+            }
+        } catch (IOException e) {
+            throw new CustomException(Messages.TEMPLATE_FILE_NOT_FOUND);
         }
     }
 
