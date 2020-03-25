@@ -11,7 +11,8 @@
 <div class="scan-result">
     <div class="scan-result-head">
         <div class="scan-result-title">扫描结果</div>
-        <p th:text="'共成功识别到' + ${#lists.size(featureFiles)} + '个.feature文件，另有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别'">test</p>
+        <!--<p th:text="'共成功识别到' + ${#lists.size(featureFiles) - unrecognizedFeatureFileCount} + '个.feature文件，另有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别'">test</p>-->
+        <p th:text="${#lists.size(featureFiles) eq unrecognizedFeatureFileCount} ? '所有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别' : '共成功识别到' + ${#lists.size(featureFiles) - unrecognizedFeatureFileCount} + '个.feature文件，另有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别'"></p>
     </div>
 </div>
 <table width="100%">
