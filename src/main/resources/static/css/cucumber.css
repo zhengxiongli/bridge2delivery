@@ -51,3 +51,9 @@
 .scan-result .scan-result-head .scan-result-txt {
     padding: 10px;
 }
+
+.scan-result .scan-result-content iframe {
+    width: 100%;
+    border: none;
+    height: 800px;
+}

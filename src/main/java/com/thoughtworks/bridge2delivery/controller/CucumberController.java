@@ -113,6 +113,14 @@ public class CucumberController {
         }
     }
 
+    @GetMapping("/scan-result")
+    @ApiOperation(value = "feature文件扫描结果", produces = MediaType.TEXT_HTML_VALUE)
+    public String scanResult(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        //TODO(jun): 实现扫描结果页面
+        return getFinallyHtml(request, true);
+    }
+
     @GetMapping("/html")
     @ApiOperation(value = "html预览", produces = MediaType.TEXT_HTML_VALUE)
     public String htmlPreview(HttpServletRequest request, HttpServletResponse response) {

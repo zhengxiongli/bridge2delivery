@@ -31,8 +31,10 @@ function registerFileSelectListener() {
 }
 
 function showScanResultIFrame() {
-    const scanResult = $('.scan-result'), scanResultIframe = $('.scan-result-iframe');
+    const scanResult = $('.scan-result');
+    const scanResultIframe = $('.scan-result-content-iframe');
     scanResult.style.display = "block";
+    scanResultIframe.src = `/cucumber/scan-result?${Date.now()}`;
 }
 
 function showPreviewIFrame() {
