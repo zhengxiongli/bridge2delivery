@@ -11,7 +11,6 @@ import java.util.List;
 public class UploadResult {
     private List<String> featureFiles = new ArrayList<>();
     private List<String> unrecognizedFeatureFiles = new ArrayList<>();
-    private List<String> otherFiles = new ArrayList<>();
 
     public void addFeatureFile(String fileName) {
         if (featureFiles == null) {
@@ -25,12 +24,5 @@ public class UploadResult {
             unrecognizedFeatureFiles = new ArrayList<>();
         }
         unrecognizedFeatureFiles.add(fileName);
-    }
-
-    public void addOtherFile(String fileName) {
-        if (otherFiles == null) {
-            otherFiles = new ArrayList<>();
-        }
-        otherFiles.add(fileName);
     }
 }

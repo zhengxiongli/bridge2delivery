@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/convert.css}"/>
     <link rel="stylesheet" th:href="@{/css/cucumber.css}"/>
     <link rel="stylesheet" th:href="@{/css/tool-info.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
     <div th:replace="header::header"></div>
@@ -30,11 +31,40 @@
                         或直接拽文件夹进来
                     </p>
                 </div>
-                <div class="scan-result">
+                <div class="scan-result" id="scan-result">
                     <div class="scan-result-head">
-                    <div class="scan-result-content">
-                        <iframe class="scan-result-content-iframe" src="">
-                        </iframe>
+                        <div><h3>扫描结果</h3></div>
+                        <div class="message">
+                            <span id="result-message"></span>
+                            <a href="javascript:" class="collspand">
+                                查看详情
+                                <img src="/assets/arrow-down-green.svg" class="arrow-down">
+                                <img src="/assets/arrow-up.svg" class="arrow-up">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="feature-info">
+                        <div class="feature-list">
+                            <div class="feature-title">
+                                <div class="checkbox">
+                                    <label>
+                                    <input type="checkbox" id="check-all-features">
+                                    <span></span>
+                                    </label>
+                                </div>
+                                <div class="feature-desc">
+                                    <span>全选</span>
+                                    <span style="float: right">拖拽排序（按住command可多选，按住shift可连续选择）</span>
+                                </div>
+                            </div>
+                            <div id="feature-items">
+
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button class="update" id="update-preview">更新预览</button><br>
+                            <button class="reset" id="reset-order">还原顺序</button>
+                        </div>
                     </div>
                 </div>
                 <div class="preview">
@@ -44,7 +74,7 @@
                             <button class="btn reset-to-default-btn">恢复默认模板</button>
                             <input name="select-template-input" type="file" accept="text/html" hidden/>
                             <button class="btn select-template-btn">更换模板</button>
-                            <a href="/cucumber/excel" class="btn generate">生成</a>
+                            <a href="javascript:" id="download-excel" class="btn generate">生成</a>
                         </div>
                     </div>
                     <div class="preview-content">

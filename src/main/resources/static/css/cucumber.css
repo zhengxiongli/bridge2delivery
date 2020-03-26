@@ -28,32 +28,111 @@
 }
 
 .scan-result {
-    margin: 24px 56px;
-    background-color: #fff;
+    margin: 20px 56px;
+    text-align: start;
+    background-color: white;
     display: none;
 }
 
 .scan-result .scan-result-head {
-    padding: 12px 18px;
     background-color: #f4f4f4;
+    padding: 14px 30px;
+}
+
+.scan-result .scan-result-head h3 {
+    margin: 0;
+}
+
+.scan-result .scan-result-head .message {
+    margin-top: 12px;
+}
+
+.scan-result .scan-result-head .message a {
+    color: #007aff;
+    float: right;
+}
+
+.scan-result .scan-result-head .message .expand .arrow-down {
+    display: none;
+}
+
+.scan-result .scan-result-head .message .collspand .arrow-up {
+    display: none;
+}
+
+.scan-result .scan-result-head .message img {
+    width: 14px;
+    margin-left: 2px;
+}
+
+.scan-result .feature-info {
+    padding: 30px;
     display: flex;
 }
 
-.scan-result .scan-result-head .scan-result-title {
-    margin-left: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 40px;
+.scan-result .feature-info .feature-list {
     flex: 1;
-    text-align: left;
 }
 
-.scan-result .scan-result-head .scan-result-txt {
-    padding: 10px;
+.scan-result .feature-info .feature-list .feature-item,
+.scan-result .feature-info .feature-list .feature-title{
+    display: flex;
 }
 
-.scan-result .scan-result-content iframe {
-    width: 100%;
+.scan-result .feature-info .feature-list .feature-item .checkbox,
+.scan-result .feature-info .feature-list .feature-title .checkbox{
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scan-result .feature-info .feature-list .feature-item .file-info,
+.scan-result .feature-info .feature-list .feature-title .feature-desc {
+    flex: 1;
+    padding: 6px;
+}
+
+.scan-result .feature-item .file-info img {
+    float: left;
+    width: 16px;
+    margin-right: 4px;
+    margin-top: 7px;
+}
+
+.scan-result .feature-item .file-info .file-path,
+.scan-result .feature-item.disabled .file-info .file-name{
+    color: #8c8c8c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scan-result .feature-item .file-info .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scan-result .feature-info .buttons {
+    width: 180px;
+    text-align: center;
+}
+
+.scan-result .feature-info .buttons button {
+    margin-top: 20px;
+    outline: none;
     border: none;
-    height: 800px;
+    border: solid 1px #34c482;
+    border-radius: 2px;
+    padding: 12px 30px;
+    cursor: pointer;
+}
+
+.scan-result .feature-info .buttons button.update {
+    background-color: #34c482;
+    background-color: #34c482;
+    color: white;
+}
+
+.scan-result .feature-info .buttons button.reset {
+    color: #34c482;
 }
