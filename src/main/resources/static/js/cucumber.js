@@ -257,6 +257,16 @@ function initScanResultModel() {
         changeAllCheck(this.checked);
     });
 
+    $('#expand-result').addEventListener('click', function() {
+       if (this.className.indexOf('expand') >= 0) {
+           this.className = this.className.replace('expand', 'collspand');
+           $('#feature-info').style.display = 'none';
+       } else {
+           this.className = this.className.replace('collspand', 'expand');
+           $('#feature-info').style.display = '';
+       }
+    });
+
     $('#download-excel').addEventListener('click', function() {
        const downloadElm = document.createElement('a'), indexes = getPathIndexs();
         if (indexes.length == 0) {
