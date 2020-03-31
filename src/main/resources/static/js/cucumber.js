@@ -1,4 +1,5 @@
 import {$, getReader, validateResponse, validateTemplate, validateTemplateMeta, throwError} from "./utils.js";
+import {initDrag} from "./drag/drag.js";
 
 const fileInput = $('input[name="select-file-input"]');
 const templateInput = $('input[name="select-template-input"]');
@@ -326,4 +327,8 @@ window.onload = () => {
     registerTemplateSelectListener();
     onResetDefaultTemplate();
     initScanResultModel();
+    initDrag({container: '#feature-items',
+        filterItem: function(ele) {
+            return ele.className && ele.className.indexOf('disabled') >= 0;
+        }}).start();
 };

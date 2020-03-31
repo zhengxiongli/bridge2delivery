@@ -11,10 +11,11 @@
     <link rel="stylesheet" th:href="@{/css/cucumber.css}"/>
     <link rel="stylesheet" th:href="@{/css/tool-info.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/drag/drag.css}">
 </head>
 <body>
     <div th:replace="header::header"></div>
-    <main class="app-main">
+    <main class="app-main" draggable="false">
         <h2 class="title swagger-title"><img th:src="@{/assets/cucumber-convert.svg}" alt=""> Cucumber转Excel</h2>
         <p class="description">测试文档转换</p>
         <section class="swagger-container">
@@ -90,4 +91,5 @@
     </main>
 </body>
 <script th:src="@{/js/cucumber.js}" type="module"></script>
+<script th:src="@{/js/drag/drag.js}" type="module"></script>
 </html>
