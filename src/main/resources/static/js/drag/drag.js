@@ -274,14 +274,15 @@ export function initDrag(config) {
             setTimeout(function() {
                 mouseOnNode.style.transition = '';
                 mouseOnNode.style.transform = '';
+                const next = mouseOnNode.nextSibling;
                 for (let i = 0; i < movingNodes.length; i++) {
                     movingNodes[i].remove();
                     movingNodes[i].style.transition = '';
                     movingNodes[i].style.transform = '';
                     if (location === 'before') {
                         container.insertBefore(movingNodes[i], mouseOnNode);
-                    } else if (mouseOnNode.nextSibling) {
-                        container.insertBefore(movingNodes[i], mouseOnNode.nextSibling);
+                    } else if (next) {
+                        container.insertBefore(movingNodes[i], next);
                     } else {
                         container.appendChild(movingNodes[i]);
                     }
