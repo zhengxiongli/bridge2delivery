@@ -50,6 +50,7 @@ dependencies {
     implementation "io.springfox:springfox-swagger-ui:2.9.2"
     compile group: 'org.xhtmlrenderer', name: 'core-renderer', version: 'R8'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compile group: 'com.apple', name: 'AppleJavaExtensions', version: '1.4'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

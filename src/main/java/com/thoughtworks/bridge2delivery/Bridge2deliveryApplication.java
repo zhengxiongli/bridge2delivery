@@ -10,7 +10,6 @@ public class Bridge2deliveryApplication {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Bridge2deliveryApplication.class);
         builder.headless(false).run(args);
 
-        DiDaClient diDaClient = new DiDaClient();
-        diDaClient.start();
+        new DiDaClient();
     }
 }
