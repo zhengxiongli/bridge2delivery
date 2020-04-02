@@ -158,7 +158,7 @@ function showUploadResult(resetorder) {
             .replace('@{dataIndex}', i)
             .replace('@{checked}', '')
             .replace('@{disabled}', 'disabled')
-            .replace('@{image}', '/assets/unkown-file.svg')
+            .replace('@{image}', '/assets/unknown-file.svg')
             .replace('@{name}', fileInfo.name)
             .replace('@{path}', fileInfo.path);
     }
@@ -205,7 +205,9 @@ function showUploadResult(resetorder) {
         }
         return checkStatus;
     }
-    collspandResult();
+    if (!resetorder) {
+        collspandResult();
+    }
 }
 
 function addItemCheckListener() {

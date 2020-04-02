@@ -21,7 +21,7 @@
     opacity: 0.9;
 }
 
-.drag-move-container:after {
+.drag-move-container:before {
     content: attr(data-number);
     z-index: 1001;
     position: absolute;
@@ -32,6 +32,6 @@
     color: white;
     line-height: 20px;
     text-align: center;
-    right: -6px;
+    left: -6px;
     top: -6px;
 }
