@@ -23,7 +23,7 @@ public class DiDaClient extends JFrame {
     private static final int HEIGHT = 450;
 
     public DiDaClient() throws HeadlessException {
-        this.setTitle("嘀哒验收小工具");
+        this.setTitle("嘀哒验收小工具（V1.0.0）");
         Button begin = new Button("点击这里，开始文档转换吧");
         this.add(begin);
         this.setBounds(X, Y, WIDTH, HEIGHT);
@@ -54,7 +54,17 @@ public class DiDaClient extends JFrame {
 
         BufferedImage bufferedImage = getBufferedImage();
         this.setIconImage(bufferedImage);
-        Application.getApplication().setDockIconImage(bufferedImage);
+        try {
+            if (System.getProperty("os.name").startsWith("Mac OS X")) {
+                Application application = Application.getApplication();
+                application.setDockIconImage(bufferedImage);
+                application.removeAboutMenuItem();
+                application.removePreferencesMenuItem();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         this.setVisible(true);
     }
 
