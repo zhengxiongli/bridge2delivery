@@ -20,4 +20,5 @@ public class TemplateInfo {
     private String rootDesc;
     private List<TemplateNode> templateNodes;
     private TemplateType templateType;
+    private FileType fileType;
 }

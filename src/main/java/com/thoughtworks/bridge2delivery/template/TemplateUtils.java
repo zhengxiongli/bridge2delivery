@@ -16,6 +16,9 @@ public final class TemplateUtils {
     }
 
     public static List<TemplateNode> getTemplateNodes(Class<?> clazz) {
+        if (clazz == null) {
+            return Collections.emptyList();
+        }
         Field[] fields = clazz.getDeclaredFields();
         if (fields.length == 0) {
             return Collections.emptyList();
