@@ -12,18 +12,10 @@ config: {
 export function createTemplateTree(config) {
     const tree = {}, nodeMap = [], treeConfig = config;
     let focusPath = '';
-    //预览URL
-    tree.previewUrl = '';
-    //默认模板url
-    tree.defaultUrl = '';
-    //root节点
-    tree.rootName = '';
-    //
-    tree.rootDesc = '';
     tree.type = config.type;
 
     tree.focusNode = function (path, disableOthers = true) {
-        const pathStr = path == null || path.length === 0 ? tree.rootName : path.join('-');
+        const pathStr = path == null || path.length === 0 ? tree.data.rootName : path.join('-');
         if (nodeMap.length === 0 || pathStr === focusPath) {
             return;
         }
@@ -47,8 +39,31 @@ export function createTemplateTree(config) {
         }
     };
 
+    tree.disableAll = function() {
+        for (let i = 0; i < nodeMap.length; i++) {
+            const node = nodeMap[i];
+            if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
+                node.node.className = node.node.className + ' disabled';
+            }
+        }
+        focusPath = '';
+    }
+
+    tree.enableAll = function(exceptArray) {
+        for (let i = 0; i < nodeMap.length; i++) {
+            const node = nodeMap[i];
+            if (node.config.isArray && exceptArray || node.path == tree.data.rootName) {
+                continue;
+            } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
+                node.node.className = node.node.className + ' disabled';
+            }
+            node.node.className = node.node.className.replace(/disabled/ig, '').trim();
+        }
+        focusPath = '';
+    }
+
     tree.getParentNode = function (nodeInfo) {
-        if (nodeInfo.path === tree.rootName) {
+        if (nodeInfo.path === tree.data.rootName) {
             return null;
         }
         const parentPath = nodeInfo.path.replace(new RegExp('(-' + nodeInfo.config.name + ')$'), '');
@@ -77,53 +92,64 @@ export function createTemplateTree(config) {
         getConfig(config.type);
     }
 
+    async function validateResponse(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return response;
+        }
+        const {message} = await response.json();
+        throw new Error(message || "");
+    }
+
     function getConfig(type) {
         fetch('/template/config?type=' + type, {
             method: 'GET'
         })
+            .then(validateResponse)
             .then(res => res.json())
-            .then(buildTree).then(!config.initCallBack || config.initCallBack());
+            .then(buildTree);
     }
 
     function buildTree(response) {
         const data = response.data;
-        tree.previewUrl = data.previewUrl;
-        tree.defaultUrl = data.defaultUrl;
-        tree.rootName = data.rootName;
-        tree.rootDesc = data.rootDesc;
+        tree.data = data;
         tree.container = $(config.container);
         if (!data.templateNodes || data.templateNodes.length === 0) {
             throwError("配置错误");
         }
         const nodes = data.templateNodes;
-        const rootNode = buildRootNode(treeConfig.root);
+        const rootNode = buildRootNode();
         for (let i = 0; i < nodes.length; i++) {
             buildNode(rootNode, nodes[i]);
         }
+        !config.initCallBack || config.initCallBack(tree)
+
     }
 
     function buildRootNode() {
+        if (!tree.data.rootName) {
+            return;
+        }
         const wrapper = document.createElement('div');
         wrapper.className = 'template-tree-wrapper root';
         const node = document.createElement('div');
         node.className = 'template-tree-node disabled';
         const name = document.createElement('span');
-        name.innerText = tree.rootName;
+        name.innerText = tree.data.rootName;
         name.className = 'tree-node-name';
         name.style.color = '#333';
         const tip = document.createElement('span');
-        tip.innerText = tree.rootName;
+        tip.innerText = tree.data.rootName;
         tip.className = 'tree-node-tip';
-        tip.dataset.path = tree.rootName;
+        tip.dataset.path = tree.data.rootName;
         tip.innerText = '👈';
         const description = document.createElement('span');
-        description.innerText = tree.rootDesc;
+        description.innerText = tree.data.rootDesc;
         description.className = 'tree-node-desc';
         node.append(name);
         node.append(description);
         node.append(tip);
         wrapper.append(node);
-        const nodeInfo = {path: tree.rootName, wrapper: wrapper, node: node, config: {name: tree.rootName}};
+        const nodeInfo = {path: tree.data.rootName, wrapper: wrapper, node: node, config: {name: tree.data.rootName}};
         node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
                 expandClick(e);
@@ -163,14 +189,15 @@ export function createTemplateTree(config) {
         name.className = 'tree-node-name';
         if (config.isArray) {
             name.innerHTML = config.name + '<span style="color: #ec7375">[array]</span>:';
+            tree.data.fileType === 'EXCEL' && (node.className += ' disabled');
         }
         const description = document.createElement('span');
         description.innerText = config.description;
         description.className = 'tree-node-desc';
         const tip = document.createElement('span');
-        tip.innerText = tree.rootName;
+        tip.innerText = tree.data.rootName;
         tip.className = 'tree-node-tip';
-        tip.dataset.path = tree.rootName;
+        tip.dataset.path = tree.data.rootName;
         tip.innerText = '👈';
         const path = !!parentNode && !!parentNode.path ? parentNode.path + '-' + config.name : config.name;
         node.dataset.path = path;

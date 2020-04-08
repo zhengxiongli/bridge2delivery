@@ -21,4 +21,5 @@ public class TemplateInfo {
     private List<TemplateNode> templateNodes;
     private TemplateType templateType;
     private FileType fileType;
+    private String filePrefix;
 }

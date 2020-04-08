@@ -24,7 +24,6 @@ public class FeatureInfo implements Feature {
     private static final String AND_DESC = "并且，";
     private String name;
     private String description;
-    private String approval;
     private List<ScenarioInfo> scenarioInfo;
     private GherkinDocument gherkinDocument;
     private String sourceString;
@@ -38,7 +37,6 @@ public class FeatureInfo implements Feature {
         this.description =
                 StringUtils.trimWhitespace(gherkinDocument.getFeature().getDescription());
         this.name = gherkinDocument.getFeature().getName();
-        this.approval = "嘀哒";
         this.scenarioInfo = buildScenario(pickles, gherkinDocument);
     }
 
@@ -160,10 +158,6 @@ public class FeatureInfo implements Feature {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getApproval() {
-        return approval;
     }
 
     public List<ScenarioInfo> getScenarioInfo() {

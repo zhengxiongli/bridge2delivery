@@ -2202,6 +2202,23 @@ var domUtils = dom.domUtils = {
             return tagNames[node.tagName] && !(excludeFn && excludeFn(node));
         }, includeSelf);
     },
+    findChildrenByTagName: function(node, tagName, filterFn) {
+        if (!node) {
+            return [];
+        }
+        var children = node.children, result = [];
+        tagName = tagName.toUpperCase();
+        if (!children || children.length == 0) {
+            return result;
+        }
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].tagName == tagName && (!filterFn || filterFn(children[i]))) {
+                result.push(children[i]);
+            }
+            result = result.concat(domUtils.findChildrenByTagName(children[i], tagName, filterFn));
+        }
+        return result;
+    },
     /**
      * 查找节点node的祖先节点集合， 查找的起点是给定节点的父节点，结果集中不包含给定的节点。
      * @method findParents
@@ -8939,10 +8956,13 @@ var filterWord = UE.filterWord = function () {
                 }
                 this.children = [];
                 var tmpRoot = UE.htmlparser(htmlstr);
-                for (var i = 0, ci; ci = tmpRoot.children[i++];) {
-                    this.children.push(ci);
-                    ci.parentNode = this;
+                if (!!tmpRoot) {
+                    for (var i = 0, ci; ci = tmpRoot.children[i++];) {
+                        this.children.push(ci);
+                        ci.parentNode = this;
+                    }
                 }
+
                 return this;
             } else {
                 var tmpRoot = new UE.uNode({
@@ -20115,6 +20135,7 @@ UE.plugins['table'] = function () {
         utils.cssRule('table',
             //选中的td上的样式
             '.selectTdClass{background-color:#edf5fa !important}' +
+            'td{mso-number-format:"\\@";}' +
                 'table.noBorderTable td,table.noBorderTable th,table.noBorderTable caption{border:1px dashed #ddd !important}' +
                 //插入的表格的默认样式
                 'table{border-collapse:collapse;display:table;font-size:12px}' +

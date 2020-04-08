@@ -137,3 +137,7 @@
     color: #34c482;
 }
 
+.preview .preview-content iframe {
+    width: 100%;
+    border: none;
+}

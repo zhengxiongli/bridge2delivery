@@ -307,7 +307,7 @@ function registerGlobalErrorHandler() {
 
 function reloadTemplate(file) {
     const reader = getReader('模版', () => {
-        validateTemplateMeta(reader.result);
+        validateTemplateMeta(reader.result, 'CUCUMBER');
     });
     reader.readAsText(file, 'utf-8');
 

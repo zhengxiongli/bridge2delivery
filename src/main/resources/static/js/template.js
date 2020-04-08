@@ -1,9 +1,9 @@
-import {$, getSessionData, META_KEY, removeSessionData, TEMPLATE_TYPE} from "./utils.js";
+import {$, getSessionData, META_KEY, removeSessionData, getUrlParam} from "./utils.js";
 import {createTemplateTree} from "./template.tree.js";
 import EDITOR_CONFIG from './editor.config.js'
 import {newModal} from "./modal/modal.js"
 
-const ue = UE.getEditor('editor', EDITOR_CONFIG);
+let ue = null;
 const domUtils = UE.dom.domUtils, notAutoShowInstruction = 'notAutoShowInstruction';
 let colorIndex = 1, timeOutId;
 
@@ -30,8 +30,10 @@ function generateTemplate() {
     ue.addMeta(META_KEY, templateTree.type);
     const html = ue.getAllHtml();
     ue.loadClassFile('/js/ueditor/themes/iframe.css');
-    ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
-    const filename = `Swagger转doc模板_${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
+    if (!isExcelTemplate()) {
+        ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
+    }
+    const filename = `${templateTree.data.filePrefix}${date.getFullYear()}${formatDateAndMonth(date.getMonth() + 1)}${formatDateAndMonth(date.getDate())}.html`;
     const a = document.createElement('a');
     const url = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
     a.href = url;
@@ -41,7 +43,7 @@ function generateTemplate() {
 }
 
 function initDefaultTemplate() {
-    fetch('/template/swagger.html', {
+    fetch(templateTree.data.defaultUrl, {
         method: 'GET'
     })
         .then((res) => res.blob())
@@ -67,18 +69,36 @@ export function insertBodyFromHtml(html) {
 }
 
 function dbClick(e, nodeInfo) {
-    ue.execCommand('inserthtml', getInsertHtml(nodeInfo), false);
+    if (isExcelTemplate()) {
+        const tr = getInsertTr(ue.selection.getStart());
+        if (!tr) {
+            alert('请在表格中添加');
+            return;
+        }
+        let parentNode = templateTree.getParentNode(nodeInfo);
+        while (parentNode && !parentNode.config.isArray) {
+            parentNode = templateTree.getParentNode(parentNode);
+        }
+        if (parentNode == null) {
+            alert('Excel配置错误');
+            return;
+        }
+        domUtils.setAttributes(tr, {'th:each': `item: \${${getInsertVariable(parentNode)}}`});
+        domUtils.setAttributes(tr, {'data-path': `${parentNode.config.name}`});
+    }
+    const insertHtml = getInsertHtml(nodeInfo);
+    ue.execCommand('inserthtml', insertHtml, false);
 }
 
 function getInsertHtml(nodeInfo) {
     const variable = getInsertVariable(nodeInfo);
     let insertHtml;
-    if (!nodeInfo.config.name === templateTree.rootName) {
+    if (!nodeInfo.config.name === templateTree.data.rootName) {
         insertHtml = `<div data-path="${nodeInfo.config.name}"></div>`
     } else if (nodeInfo.config.isArray) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
-        const dot = nodeInfo.config.nodeType === 'ARRAY_INDEX' ? '.' : '';
+        const dot = nodeInfo.config.nodeType === 'ARRAY_INDEX' && !isExcelTemplate() ? '.' : '';
         insertHtml = '<span><span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span>' + dot + '&nbsp;</span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
@@ -152,11 +172,10 @@ function getInsertParentHtml(nodeInfo, selfHtml) {
         return !!node.dataset && node.dataset['path'] === parentNode.config.name;
     }, true);
     if (parent == null) {
-        let insertHtml;
-        selfHtml = selfHtml || '';
+        let insertHtml = selfHtml || '';
         if (parentNode.config.isArray) {
             insertHtml = getInsertArrayHtml(parentNode, `<br>${selfHtml}<br>`);
-        } else {
+        } else if (templateTree.data.fileType !== 'EXCEL'){
             insertHtml = `<div data-path="${parentNode.config.name}"><div>${selfHtml}</div></div>`;
         }
         return getInsertParentHtml(parentNode, insertHtml);
@@ -174,7 +193,9 @@ function getCurrentUEInfo() {
         path: [],//路径
     };
     const selectItem = ue.selection.getStart();
-    info.inTable = !!domUtils.findParentByTagName(selectItem, ["table"], true);
+    info.table = domUtils.findParentByTagName(selectItem, ["table"], true);
+    info.inTable = !!info.table;
+
     const parents = domUtils.findParents(selectItem, true, function (node) {
         return !!node.dataset && !!node.dataset['path'];
     });
@@ -182,11 +203,11 @@ function getCurrentUEInfo() {
         info.path.push(parents[i].dataset['path']);
     }
     if (info.path == null || info.path.length === 0) {
-        info.path = [templateTree.rootName];
+        info.path = [templateTree.data.rootName];
     }
     if (info.path && info.path.length > 0) {
-        if (info.path[0] !== templateTree.rootName) {
-            info.path.unshift(templateTree.rootName);
+        if (info.path[0] !== templateTree.data.rootName) {
+            info.path.unshift(templateTree.data.rootName);
         }
     }
     return info;
@@ -210,10 +231,10 @@ function getThymeleafVariable(pathList) {
     for (let i = parentPaths.length - 1; i >= 0; i--) {
         const nodeInfo = templateTree.getNode(parentPaths.slice(0, i + 1));
         if (nodeInfo.config && nodeInfo.config.isArray) {
-            variable = 'item.';
+            variable = 'item.' + variable;
             break;
         } else {
-            variable = nodeInfo.path + '.' + variable;
+            variable = nodeInfo.config.name + '.' + variable;
         }
     }
     if (currentNodeInfo.config.nodeType === 'ARRAY_INDEX') {
@@ -289,9 +310,15 @@ function showInstruction() {
     modal.show();
 }
 
+function isExcelTemplate() {
+    return templateTree.data.fileType === 'EXCEL';
+}
+
 function initUEEditor() {
     ue.removeItems(['style#tablesort', 'style#list', 'style#pagebreak', 'style#pre', 'style#loading', 'style#anchor']);
-    ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
+    if (!isExcelTemplate()) {
+        ue.loadClassFile('/js/ueditor/themes/iframe-preview.css');
+    }
     const uploadTemplate = getSessionData('uploadTemplate');
     if (uploadTemplate) {
         insertBodyFromHtml(uploadTemplate);
@@ -307,7 +334,19 @@ function initUEEditor() {
 function addUEEditorListener() {
     ue.addListener('selectionchange', function () {
         let info = getCurrentUEInfo();
-        templateTree.focusNode(info.path, true);
+        if (isExcelTemplate()) {
+            const trNodes = domUtils.findChildrenByTagName(info.table, 'tr', function(node) {
+                return !!node.getAttribute('th:each');
+            });
+            const trNode = trNodes.length > 0 ? trNodes[0] : null;
+            if (!!trNode && domUtils.findParentByTagName(ue.selection.getStart(), 'tr') != trNode) {
+                templateTree.disableAll();
+                return;
+            } else {
+                templateTree.enableAll(true);
+            }
+        }
+        templateTree.focusNode(info.path, !isExcelTemplate());
     });
     ue.addListener('contentChange', function() {
         appendPToBody();
@@ -321,20 +360,37 @@ function intervalAppendP() {
     }, 2000);
 }
 
-ue.addListener('ready', () => {
+function init() {
+    const type = getUrlParam('type') || 'SWAGGER';
     window.templateTree = createTemplateTree({
-        root: 'swagger',
-        type: TEMPLATE_TYPE,
+        type: type,
         container: '.template-container-tree',
         dbClick: dbClick,
-        initCallBack: function () {
-            initUEEditor();
-            addUEEditorListener();
-            intervalAppendP();
-            $('.template-instruction a').addEventListener('click', function() {
-                showInstruction();
+        initCallBack: function (tree) {
+            const ueConfig = EDITOR_CONFIG;
+            if (tree.data.fileType === 'EXCEL') {
+                const toolbars = [];
+                for (let i = 0; i < ueConfig.toolbars[0].length; i++) {
+                    if (ueConfig.toolbars[0][i] === 'paragraph') {
+                        ueConfig.toolbars[0].splice(i, 2);
+                        break;
+                    }
+                }
+            }
+            ue = UE.getEditor('editor', ueConfig);
+            ue.addListener('ready', () => {
+                initUEEditor();
+                addUEEditorListener();
+                intervalAppendP();
+                $('.template-instruction a').addEventListener('click', function() {
+                    showInstruction();
+                });
+                autoShowInstruction();
             });
-            autoShowInstruction();
         }
     });
-});
+}
+
+init();
+
+

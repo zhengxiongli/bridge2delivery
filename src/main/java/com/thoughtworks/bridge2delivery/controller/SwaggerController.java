@@ -9,6 +9,7 @@ import com.thoughtworks.bridge2delivery.service.ThymeleafService;
 import com.thoughtworks.bridge2delivery.swagger.SwaggerParser;
 import com.thoughtworks.bridge2delivery.swagger.model.PathTag;
 import com.thoughtworks.bridge2delivery.swagger.model.SwaggerInfo;
+import com.thoughtworks.bridge2delivery.template.TemplateType;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/swagger")
@@ -46,7 +49,6 @@ import java.util.Map;
 @Api(tags = {"Swagger Resource"})
 public class SwaggerController {
     private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/swagger.html";
-    private static final String SWAGGER_KEYWORD = "${swaggerInfo.";
     private final ThymeleafService thymeleafService;
 
     public SwaggerController(final ThymeleafService thymeleafService) {
@@ -90,8 +92,10 @@ public class SwaggerController {
 
         String scriptRegex = "<script[^>]*?>[\\s\\S]*?</script>";
         template = template.replaceAll(scriptRegex, "");
-
-        if (template.contains(SWAGGER_KEYWORD)) {
+        Pattern metaPattern = Pattern.compile("<meta[\\s+]name=\"template-type\"[\\s+]value=\""
+                + TemplateType.SWAGGER.name() + "\">");
+        Matcher matcher = metaPattern.matcher(template);
+        if (matcher.find()) {
             request.getSession().setAttribute(SessionAttributes.SWAGGER_TEMPLATE, template);
             return ApiResponse.ok();
         } else {

@@ -1,4 +1,4 @@
-import {$, getReader, setSessionData, validateTemplate, validateTemplateMeta} from "./utils.js";
+import {$, getReader, setSessionData, validateTemplate, validateTemplateMeta, getTemplateType} from "./utils.js";
 
 const fileInput = $('input[name="select-file-input"]');
 
@@ -23,9 +23,9 @@ function registerFileSelectListener() {
 function loadTemplate(file) {
     const reader = getReader('模版', () => {
         const content = reader.result;
-        validateTemplateMeta(content);
+        const templateType = getTemplateType(content);
         setSessionData('uploadTemplate', content);
-        window.location.href = '/template';
+        window.location.href = `/template?type=${templateType}`;
     });
     reader.readAsText(file, 'utf-8')
 }

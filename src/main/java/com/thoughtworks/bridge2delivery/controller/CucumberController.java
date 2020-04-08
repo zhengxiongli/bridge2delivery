@@ -4,12 +4,15 @@ import com.google.common.collect.Lists;
 import com.thoughtworks.bridge2delivery.contents.Messages;
 import com.thoughtworks.bridge2delivery.contents.SessionAttributes;
 import com.thoughtworks.bridge2delivery.cucumber.CucumberParser;
-import com.thoughtworks.bridge2delivery.cucumber.model.CucumberExportInfo;
+import com.thoughtworks.bridge2delivery.cucumber.model.CucumberInfo;
+import com.thoughtworks.bridge2delivery.cucumber.model.FeatureExportInfo;
 import com.thoughtworks.bridge2delivery.cucumber.model.FeatureInfo;
+import com.thoughtworks.bridge2delivery.cucumber.model.ScenarioInfo;
 import com.thoughtworks.bridge2delivery.dto.ApiResponse;
 import com.thoughtworks.bridge2delivery.dto.cucumber.UploadResult;
 import com.thoughtworks.bridge2delivery.exception.CustomException;
 import com.thoughtworks.bridge2delivery.service.ThymeleafService;
+import com.thoughtworks.bridge2delivery.template.TemplateType;
 import com.thoughtworks.bridge2delivery.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +43,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,7 +53,7 @@ import java.util.stream.Collectors;
 @Api(tags = {"Cucumber"})
 public class CucumberController {
     private static final int PREVIEW_MAX_USE_CASE_10 = 10;
-    private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/cucumber-default-template.html";
+    private static final String DEFAULT_TEMPLATE_CLASSPATH = "static/template/cucumber.html";
     private final ThymeleafService thymeleafService;
 
     public CucumberController(final ThymeleafService thymeleafService) {
@@ -84,13 +89,30 @@ public class CucumberController {
 
     @PostMapping("/template")
     @ApiOperation(value = "上传模板")
-    public ApiResponse<?> uploadTemplate(@RequestParam("param") MultipartFile multipartFile) {
+    public ApiResponse<?> uploadTemplate(@RequestParam("file") MultipartFile file,
+                                         HttpServletRequest request) throws IOException {
+        if (file.isEmpty()) {
+            throw new CustomException(Messages.FILE_CAN_NOT_BE_NULL);
+        }
+        String template = Utils.getTextFromFile(file);
+
+        String scriptRegex = "<script[^>]*?>[\\s\\S]*?</script>";
+        template = template.replaceAll(scriptRegex, "");
+        Pattern metaPattern = Pattern.compile("<meta[\\s+]name=\"template-type\"[\\s+]value=\""
+                + TemplateType.CUCUMBER.name() + "\">");
+        Matcher matcher = metaPattern.matcher(template);
+        if (matcher.find()) {
+            request.getSession().setAttribute(SessionAttributes.CUCUMBER_TEMPLATE, template);
+        } else {
+            throw new CustomException(Messages.CUCUMBER_TEMPLATE_INVALID);
+        }
         return ApiResponse.ok();
     }
 
     @PutMapping("/default/template")
     @ApiOperation(value = "恢复为默认模板")
-    public ApiResponse<?> resetToDefault() {
+    public ApiResponse<?> resetToDefault(HttpServletRequest request) {
+        request.getSession().setAttribute(SessionAttributes.CUCUMBER_TEMPLATE, getDefaultTemplate());
         return ApiResponse.ok();
     }
 
@@ -145,27 +167,27 @@ public class CucumberController {
             tempFeatureInfos.add(featureInfos.get(index));
         }
 
-        List<CucumberExportInfo> cucumberExportInfos = Lists.newArrayList();
+        List<FeatureExportInfo> featureExportInfos = Lists.newArrayList();
         tempFeatureInfos.forEach(featureInfo -> featureInfo.getScenarioInfo()
-                .forEach(scenarioInfo -> cucumberExportInfos.add(CucumberExportInfo.builder()
-                .caseNumber(scenarioInfo.getCaseNumber())
-                .featureName(featureInfo.getName())
-                .description(scenarioInfo.getDescription())
-                .given(scenarioInfo.getGiven())
-                .when(scenarioInfo.getWhen())
-                .then(scenarioInfo.getThen())
-                .name(scenarioInfo.getName())
-                .featureDescription(featureInfo.getDescription())
-                .featureApproval(featureInfo.getApproval())
+                .forEach(scenarioInfo -> featureExportInfos.add(FeatureExportInfo.builder()
+                .name(featureInfo.getName())
+                .description(featureInfo.getDescription())
+                .scenarioInfo(ScenarioInfo.builder()
+                        .caseNumber(scenarioInfo.getCaseNumber())
+                        .name(scenarioInfo.getName())
+                        .given(scenarioInfo.getGiven())
+                        .when(scenarioInfo.getWhen())
+                        .then(scenarioInfo.getThen())
+                        .description(scenarioInfo.getDescription()).build())
                 .build())));
 
-        if (isPreview && cucumberExportInfos.size() > PREVIEW_MAX_USE_CASE_10) {
-            return getHtml(request, cucumberExportInfos.subList(0, PREVIEW_MAX_USE_CASE_10));
+        if (isPreview && featureExportInfos.size() > PREVIEW_MAX_USE_CASE_10) {
+            return getHtml(request, new CucumberInfo(featureExportInfos.subList(0, PREVIEW_MAX_USE_CASE_10)));
         }
-        return getHtml(request, cucumberExportInfos);
+        return getHtml(request, new CucumberInfo(featureExportInfos));
     }
 
-    private String getHtml(HttpServletRequest request, List<CucumberExportInfo> cucumberExportInfos) {
+    private String getHtml(HttpServletRequest request, CucumberInfo cucumberInfo) {
         String template = (String) request.getSession().getAttribute(SessionAttributes.CUCUMBER_TEMPLATE);
 
         if (StringUtils.isEmpty(template)) {
@@ -173,7 +195,7 @@ public class CucumberController {
             request.getSession().setAttribute(SessionAttributes.CUCUMBER_TEMPLATE, template);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("cucumberExportInfos", cucumberExportInfos);
+        map.put("cucumberInfo", cucumberInfo);
         try {
             return thymeleafService.renderTemplate(template, map);
         } catch (Exception e) {

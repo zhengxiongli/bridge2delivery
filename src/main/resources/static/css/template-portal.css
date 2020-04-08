@@ -59,11 +59,12 @@
     min-height: 250px;
     background-color: #007cdc;;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .category div {
-    width: 10%;
-    margin: auto;
+    width: 300px;
     text-align: center;
     font-size: 18px;
 }

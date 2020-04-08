@@ -1,7 +1,7 @@
 export const JSON_FILE_TYPE = 'application/json';
 export const TEMPLATE_FILE_TYPE = 'text/html';
-export const TEMPLATE_TYPE = 'SWAGGER';
 export const META_KEY = 'template-type';
+export const TEMPATE_TYPES = ['SWAGGER', 'CUCUMBER']
 
 export function setSessionData(key, value) {
     window.sessionStorage.setItem(key, value);
@@ -62,18 +62,36 @@ export function isValidTemplate(fileType) {
     return !(!fileType || fileType !== TEMPLATE_FILE_TYPE);
 }
 
-export function validateTemplateMeta(htmlContent) {
+export function validateTemplateMeta(htmlContent, templateType) {
     const parser = new DOMParser();
     const htmlDoc = parser.parseFromString(htmlContent, 'text/html');
     const metas = htmlDoc.getElementsByTagName('meta');
     for (let i = 0; i < metas.length; i++) {
         const metaName = metas[i].getAttribute('name');
         const metaValue = metas[i].getAttribute('value');
-        if (metaName === META_KEY && metaValue === TEMPLATE_TYPE) {
+        if (metaName === META_KEY && metaValue === templateType) {
             return;
         }
     }
     throwError('请选择从系统导出的模版文件');
+}
+
+export function getTemplateType(htmlContent) {
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(htmlContent, 'text/html');
+    const metas = htmlDoc.getElementsByTagName('meta');
+    let templateType;
+    for (let i = 0; i < metas.length; i++) {
+        const metaName = metas[i].getAttribute('name');
+        const metaValue = metas[i].getAttribute('value');
+        if (metaName === META_KEY) {
+            templateType = metaValue;
+        }
+    }
+    if (!TEMPATE_TYPES.includes(templateType)) {
+        throwError('请选择从系统导出的模版文件');
+    }
+    return templateType;
 }
 
 export function validateTemplate(file) {
@@ -98,4 +116,10 @@ export function getReader(fileType, onload) {
         onload();
     };
     return reader;
+}
+
+export function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r!=null) return (r[2]); return null;
 }
