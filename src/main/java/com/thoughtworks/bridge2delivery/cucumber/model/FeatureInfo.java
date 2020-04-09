@@ -45,11 +45,11 @@ public class FeatureInfo implements Feature {
 
         return pickles.stream()
                 .map(pickle -> ScenarioInfo.builder()
-                        .name(pickle.getName())
-                        .description(
+                        .scenarioName(pickle.getName())
+                        .scenarioDescription(
                                 gherkinDocument.getFeature().getChildren().stream().filter(child -> Objects.equals(child.getName(), pickle.getName()))
                                         .findFirst().get().getDescription())
-                        .caseNumber(index.incrementAndGet())
+                        .scenarioNumber(index.incrementAndGet())
                         .given(extractStep(pickle.getSteps(), StepType.GIVEN))
                         .when(extractStep(pickle.getSteps(), StepType.WHEN))
                         .then(extractStep(pickle.getSteps(), StepType.THEN))

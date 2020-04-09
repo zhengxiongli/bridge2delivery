@@ -49,10 +49,11 @@ export function createTemplateTree(config) {
         focusPath = '';
     }
 
-    tree.enableAll = function(exceptArray) {
+    tree.enableAll = function(isExcel) {
         for (let i = 0; i < nodeMap.length; i++) {
             const node = nodeMap[i];
-            if (node.config.isArray && exceptArray || node.path == tree.data.rootName) {
+            if ((isExcel && node.config.childNodes && node.config.childNodes.length > 0)
+                || node.path == tree.data.rootName) {
                 continue;
             } else if (!node.node.className || node.node.className.indexOf('disabled') < 0) {
                 node.node.className = node.node.className + ' disabled';
@@ -149,7 +150,7 @@ export function createTemplateTree(config) {
         node.append(description);
         node.append(tip);
         wrapper.append(node);
-        const nodeInfo = {path: tree.data.rootName, wrapper: wrapper, node: node, config: {name: tree.data.rootName}};
+        const nodeInfo = {path: tree.data.rootName, wrapper: wrapper, node: node, config: {name: tree.data.rootName}, isRoot: true};
         node.addEventListener('click', function (e) {
             if (isExpandClick(e)) {
                 expandClick(e);
@@ -189,8 +190,8 @@ export function createTemplateTree(config) {
         name.className = 'tree-node-name';
         if (config.isArray) {
             name.innerHTML = config.name + '<span style="color: #ec7375">[array]</span>:';
-            tree.data.fileType === 'EXCEL' && (node.className += ' disabled');
         }
+        tree.data.fileType === 'EXCEL' && config.childNodes && config.childNodes.length > 0 && (node.className += ' disabled');
         const description = document.createElement('span');
         description.innerText = config.description;
         description.className = 'tree-node-desc';

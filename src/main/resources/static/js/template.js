@@ -99,7 +99,11 @@ function getInsertHtml(nodeInfo) {
         insertHtml = getInsertArrayHtml(nodeInfo, `{${nodeInfo.config.description}}`);
     } else {
         const dot = nodeInfo.config.nodeType === 'ARRAY_INDEX' && !isExcelTemplate() ? '.' : '';
-        insertHtml = '<span><span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + nodeInfo.config.name + '">{' + nodeInfo.config.description + '}</span>' + dot + '&nbsp;</span>';
+        let path = nodeInfo.config.name;
+        if (isExcelTemplate() && variable.split('.').length > 2) {
+            path = variable.split('.').slice(1).join('-');
+        }
+        insertHtml = '<span><span th:text="${' + wrapperEmptyHandle(variable) + '}" data-path="' + path + '">{' + nodeInfo.config.description + '}</span>' + dot + '&nbsp;</span>';
     }
     return getInsertParentHtml(nodeInfo, insertHtml);
 }
@@ -337,13 +341,14 @@ function addUEEditorListener() {
         if (isExcelTemplate()) {
             const trNodes = domUtils.findChildrenByTagName(info.table, 'tr', function(node) {
                 return !!node.getAttribute('th:each');
-            });
+            }), node = templateTree.getNode(info.path);
             const trNode = trNodes.length > 0 ? trNodes[0] : null;
-            if (!!trNode && domUtils.findParentByTagName(ue.selection.getStart(), 'tr') != trNode) {
+            if (!!trNode && domUtils.findParentByTagName(ue.selection.getStart(), 'tr') != trNode
+                || (node && !node.isRoot && (!node.config.childNodes || node.config.childNodes.length == 0))) {
                 templateTree.disableAll();
                 return;
             } else {
-                templateTree.enableAll(true);
+                templateTree.enableAll(isExcelTemplate());
             }
         }
         templateTree.focusNode(info.path, !isExcelTemplate());

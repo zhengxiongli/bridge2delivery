@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class FeatureExportInfo {
-    @Template(order = 0, description = "名字")
-    private String name;
-    @Template(order = 1, description = "描述")
-    private String description;
+    @Template(order = 0, description = "Feature名")
+    private String featureName;
+    @Template(order = 1, description = "Feature描述")
+    private String featureDescription;
     @Template(order = 2, description = "测试用例")
     private ScenarioInfo scenarioInfo;
 }

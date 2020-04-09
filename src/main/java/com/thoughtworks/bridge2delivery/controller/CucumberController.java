@@ -170,15 +170,15 @@ public class CucumberController {
         List<FeatureExportInfo> featureExportInfos = Lists.newArrayList();
         tempFeatureInfos.forEach(featureInfo -> featureInfo.getScenarioInfo()
                 .forEach(scenarioInfo -> featureExportInfos.add(FeatureExportInfo.builder()
-                .name(featureInfo.getName())
-                .description(featureInfo.getDescription())
+                .featureName(featureInfo.getName())
+                .featureDescription(featureInfo.getDescription())
                 .scenarioInfo(ScenarioInfo.builder()
-                        .caseNumber(scenarioInfo.getCaseNumber())
-                        .name(scenarioInfo.getName())
+                        .scenarioNumber(scenarioInfo.getScenarioNumber())
+                        .scenarioName(scenarioInfo.getScenarioName())
                         .given(scenarioInfo.getGiven())
                         .when(scenarioInfo.getWhen())
                         .then(scenarioInfo.getThen())
-                        .description(scenarioInfo.getDescription()).build())
+                        .scenarioDescription(scenarioInfo.getScenarioDescription()).build())
                 .build())));
 
         if (isPreview && featureExportInfos.size() > PREVIEW_MAX_USE_CASE_10) {
