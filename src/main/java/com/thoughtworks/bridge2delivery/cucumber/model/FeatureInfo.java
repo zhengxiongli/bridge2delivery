@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class FeatureInfo implements Feature {
-    private static final String BUT_DESC = "但是，";
-    private static final String AND_DESC = "并且，";
+    private static final String BUT_DESC = "但是";
+    private static final String AND_DESC = "并且";
     private String name;
     private String description;
     private List<ScenarioInfo> scenarioInfo;
@@ -92,9 +92,7 @@ public class FeatureInfo implements Feature {
                 builder.replace(builder.length() - 1, builder.length(), "。");
             }
             builder.append(step.getText());
-            if (i == steps.size() - 1) {
-                builder.append("。");
-            } else {
+            if (i != steps.size() - 1) {
                 builder.append("，");
             }
         }
