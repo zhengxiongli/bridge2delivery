@@ -54,6 +54,7 @@ public class DiDaClient extends JFrame {
 
         BufferedImage bufferedImage = getBufferedImage();
         this.setIconImage(bufferedImage);
+        this.setVisible(true);
         try {
             if (System.getProperty("os.name").startsWith("Mac OS X")) {
                 Application application = Application.getApplication();
@@ -64,8 +65,6 @@ public class DiDaClient extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        this.setVisible(true);
     }
 
     private BufferedImage getBufferedImage() {
