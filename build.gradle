@@ -6,6 +6,8 @@ plugins {
     id 'jacoco'
 }
 
+apply from: 'functionalTest.gradle'
+
 group = 'com.thoughtworks'
 version = '1.0.0'
 sourceCompatibility = '1.8'
