@@ -1,0 +1,32 @@
+/*可以在这里添加你自己的css*/
+.template-placeholder {
+    position: relative;
+    border: 1px solid transparent;
+    margin: 4px 0;
+    padding: 4px 2px;
+}
+
+.template-placeholder:before {
+    content: attr(data-path);
+    position: absolute;
+    top: -8px;
+    font-size: 12px;
+    color: #9c9c9c;
+    left: 4px;
+}
+
+.template-placeholder.color0 {
+    border-color: #969696;
+}
+
+.template-placeholder.color1 {
+    border-color: #aa5500;
+}
+
+.template-placeholder.color2 {
+    border-color: #E95492;
+}
+
+.template-placeholder.color3 {
+    border-color: #770088;
+}

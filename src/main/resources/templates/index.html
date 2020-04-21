@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>嘀嗒验收小工具</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <link rel="stylesheet" th:href="@{/css/tool-info.css}">
+    <script type="module" th:src="@{/js/swagger.js}"></script>
+</head>
+<body>
+<div th:replace="header::header"></div>
+<main class="app-main">
+    <h2 class="title">For Agile!</h2>
+    <p class="description">为敏捷而生</p>
+    <div class="menu">
+        <!--        <div class="item">-->
+        <!--          <div class="cover"><img class="img-response" src="/assets/jira.svg" alt="jira"></div>-->
+        <!--          <p class="desc">支持jira导出的csv文件导入数据源，选择合适的输出模板样式，一键导出需求文档</p>-->
+        <!--          <a class="link" href="/">查看</a>-->
+        <!--        </div>-->
+        <div class="item swagger">
+            <div class="cover"><img class="img-response" th:src="@{/assets/swagger.svg}" alt="swagger"></div>
+            <p class="desc">支持swagger接口请求或是离线文件方式导入接口数据源，选择合适的输出模板样式，一键导出成Word, Excel格式的接口文档</p>
+            <a class="link" th:href="@{/swagger}">查看</a>
+        </div>
+        <div class="item">
+           <div class="cover"><img class="img-response" th:src="@{/assets/cucumber.svg}" alt="Cucumber"></div>
+           <p class="desc">支持cucumber需求文档转换为Excel测试文档，选择合适的输出模板，一键导出成Excel</p>
+           <a class="link" th:href="@{/cucumber}">查看</a>
+        </div>
+    </div>
+    <div th:replace="tool-info::toolInfo"></div>
+</main>
+</body>
+</html>

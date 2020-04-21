@@ -4,6 +4,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+checkstyle.cache
+.DS_Store
+.history
 
 ### STS ###
 .apt_generated
@@ -30,3 +33,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### npm ###
+src/functionalTest/node_modules/

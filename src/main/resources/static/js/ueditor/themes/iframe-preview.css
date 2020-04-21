@@ -1,0 +1,15 @@
+body {
+    margin: 0 auto;
+    padding-left: 3px!important;
+    padding-right: 3px!important;
+    width: 620px;
+    background-color: white;
+    height: auto;
+    min-height: 600px;
+    border: 1px solid #e2e2e2;
+}
+
+html {
+    background-color: #f9f9f9!important;;
+    height: auto!important;
+}

@@ -1,0 +1,21 @@
+task npmInstall(type: Exec) {
+    description = 'npm install for functional test'
+    group = 'other'
+    workingDir "${rootProject.projectDir}/src/functionalTest/"
+    commandLine 'npm', 'install'
+}
+
+task functionalTest(type: Exec, dependsOn: ['npmInstall']) {
+    description = 'Runs the functional tests.'
+    group = 'verification'
+    commandLine '/bin/bash', './functionalTest.sh'
+}
+
+
+task npmClean(type: DefaultTask) {
+    description = 'delete npm libraries for functional test'
+    group = 'other'
+    doLast {
+        delete "${rootProject.projectDir}/src/functionalTest/node_modules"
+    }
+}

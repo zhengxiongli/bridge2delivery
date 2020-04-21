@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+.scan-result {
+    background-color: #fff;
+    display: block;
+}
+
+.scan-result .scan-result-head {
+    padding: 12px 18px;
+    background-color: #f4f4f4;
+    display: flex;
+}
+
+.scan-result .scan-result-head .scan-result-title {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+    flex: 1;
+    text-align: left;
+}
+
+.scan-result .scan-result-head .scan-result-txt {
+    font-size: 14px;
+    margin-left: 10px;
+    line-height: 40px;
+    flex: 1;
+    text-align: left;
+}
+    </style>
+</head>
+<body>
+
+<div class="scan-result">
+    <div class="scan-result-head">
+        <span>
+            <div class="scan-result-title">扫描结果</div>
+            <div class="scan-result-txt" th:text="${#lists.size(featureFiles) eq unrecognizedFeatureFileCount} ? '所有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别'
+            : '共成功识别到' + ${#lists.size(featureFiles) - unrecognizedFeatureFileCount} + '个.feature文件，另有' + ${unrecognizedFeatureFileCount} + '个.feature文件不识别'"></div>
+        </span>
+    </div>
+</div>
+
+<table width="100%">
+    <tbody>
+    <tr class="firstRow">
+        <td valign="top">
+            全选
+        </td>
+        <td valign="top">
+            拖拽排序（按住Command可多选，按住Shift可以连续选择）<br/>
+        </td>
+    </tr>
+    <tr th:each="featureFile: ${featureFiles}">
+        <td valign="top" th:text="${featureFile.name}"></td>
+        <td valign="top" th:text="${featureFile.path}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

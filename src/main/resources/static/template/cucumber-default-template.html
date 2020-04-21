@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table.noBorderTable td, table.noBorderTable th, table.noBorderTable caption {
+            border: 1px dashed #ddd !important
+        }
+
+        table {
+            border-collapse: collapse;
+            display: table;
+            font-size: 12px
+        }
+
+        td, th {
+            padding: 5px 5px;
+            border: 1px solid #DDD;
+        }
+
+        caption {
+            border: 1px dashed #DDD;
+            border-bottom: 0;
+            padding: 3px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<table width="100%">
+    <tbody>
+    <tr class="firstRow">
+        <td valign="top">
+            编号
+        </td>
+        <td valign="top">
+            功能点<br/>
+        </td>
+        <td valign="top">
+            用例编号
+        </td>
+        <td valign="top">
+            说明
+        </td>
+        <td valign="top">
+            前置条件
+        </td>
+        <td valign="top">
+            步骤
+        </td>
+        <td valign="top">
+            期待结果
+        </td>
+        <td valign="top">
+            审批人
+        </td>
+    </tr>
+    <tr th:each="cucumberExportInfo: ${cucumberExportInfos}">
+        <td valign="top" th:text="|T123-${cucumberExportInfo.featureDescription}|"></td>
+        <td valign="top" th:text="${cucumberExportInfo.featureName}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.caseNumber}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.name}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.given}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.when}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.then}"></td>
+        <td valign="top" th:text="${cucumberExportInfo.featureApproval}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>嘀嗒验收小工具</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <link rel="stylesheet" th:href="@{/css/template.css}"/>
+    <link rel="stylesheet" th:href="@{/css/template-tree.css}">
+</head>
+<body>
+<div th:replace="header::header"></div>
+<span th:text="${message}"></span>
+<div class="template-container">
+    <div class="template-container-left">
+        <div class="template-container-tree"></div>
+        <div class="template-instruction"><a href="javascript:">如何使用？</a></div>
+    </div>
+    <div class="template-container-editor" id="editor" style="width: 100%;height: calc(100% - 66px)"></div>
+</div>
+</body>
+<script th:src="@{/js/template.js}" type="module"></script>
+<script th:src="@{/js/template.tree.js}" type="module"></script>
+<script th:src="@{/js/modal/modal.js}" type="module"></script>
+<script th:src="@{/js/ueditor/ueditor.config.js}"></script>
+<script th:src="@{/js/ueditor/ueditor.all.js}"></script>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>嘀嗒验收小工具</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" th:href="@{/css/template-portal.css}" />
+    <script th:src="@{/js/template-portal.js}" type="module"></script>
+  </head>
+  <body>
+  <div th:replace="header::header"></div>
+    <main class="app-main">
+      <div class="portal-title">
+        <div><img class="picture" th:src="@{/assets/template.svg}" alt=""></div>
+        <div class="content">
+          <h2>制作模版</h2>
+          <span>选择模版类型</span>
+        </div>
+        <input name="select-file-input" type="file" accept="text/html" hidden/>
+        <button class="load-template-btn">加载已有模版</button>
+      </div>
+      <hr color="#e0e0e0" width="75%" size="1px"/>
+      <div>
+        <div class="step-choose">
+          <div class="selected-step">
+            <strong>1.选择类别</strong>
+          </div>
+          <div class="not-selected">
+            <strong>2.制作模版</strong>
+          </div>
+        </div>
+        <div class="category">
+          <div>
+            <a href="/template?type=SWAGGER">
+              <img th:src="@{/assets/swagger.svg}" alt="">
+              <p>Swagger</p>
+            </a>
+          </div>
+          <div>
+            <a href="/template?type=CUCUMBER">
+              <img th:src="@{/assets/cucumber.svg}" alt="">
+              <p>Cucumber</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>嘀嗒验收小工具</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="short icon" href="/assets/di-da.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/swagger.css" />
+    <link rel="stylesheet" href="/css/tool-info.css">
+  </head>
+  <body>
+    <div th:replace="header::header"/>
+    <main class="app-main">
+      <h2 class="title"><img style="width: 17px; height: 23px; vertical-align: middle" src="/assets/transfer.svg" alt=""> Swagger转Word</h2>
+      <p class="description">接口文档转换</p>
+      <section class="swagger-container">
+        <div class="swagger-wrap">
+          <div class="logo"><img class="img-response" src="/assets/swagger-logo.svg" alt=""></div>
+          <p class="desc">请输入你的Swagger源</p>
+          <div class="search">
+            <div class="search-container">
+              <span class="prefix">URL</span>
+              <input type="text" class="url-input" placeholder="http://swagger-url"/>
+              <button type="button" class="analysis">解析</button>
+            </div>
+            <p>
+              <input type="file" hidden/>
+              <button class="select-file-button">点击选择文件</button>
+              或直接拽文件进来
+            </p>
+          </div>
+          <div class="preview">
+            <div class="preview-head">
+              <div class="preview-title">效果预览</div>
+              <div class="preview-btns">
+                <button class="reset-to-default">恢复默认模板</button>
+                <button class="select-template-btn" >更换模板</button>
+                <button class="generate">生成</button>
+              </div>
+            </div>
+            <div class="preview-content">
+              <img class="preview-img" style="display: none" src="">
+              <iframe class="preview-iframe" src="">
+
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div th:replace="tool-info::toolInfo"></div>
+      <section class="guide">
+        <h2 class="guide-title">如何将Swagger转成接口文档</h2>
+        <div class="guide-list">
+          <div class="guide-item"></div>
+          <div class="guide-item"></div>
+          <div class="guide-item"></div>
+        </div>
+        <p class="guide-more"><a href="#">查看更多</a></p>
+      </section>
+    </main>
+  </body>
+  <script src="/js/swagger.js"></script>
+</html>

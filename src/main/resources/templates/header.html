@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>嘀嗒验收小工具</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico?v=2}">
+</head>
+<body>
+<header class="app-header" th:fragment="header">
+    <div class="logo" title="V1.0.0"><a href="/"><img th:src="@{/assets/di-da.svg}" alt="logo"></a></div>
+    <ul class="nav">
+        <li th:classappend="${#httpServletRequest.getRequestURI() == '/swagger' ? 'active' : ''}"><a th:href="@{/swagger}">Swagger转Word</a></li>
+        <li th:classappend="${#httpServletRequest.getRequestURI() == '/cucumber' ? 'active' : ''}"><a th:href="@{/cucumber}">Cucumber转Excel</a></li>
+        <li th:classappend="${#httpServletRequest.getRequestURI().indexOf('/template') != -1 ? 'active' : ''}"><a th:href="@{/template-portal}">创建新模板</a></li>
+    </ul>
+</header>
+</body>
+</html>

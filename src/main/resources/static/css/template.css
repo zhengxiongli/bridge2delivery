@@ -1,0 +1,68 @@
+body {
+    padding-bottom: 0px;
+}
+
+.template-container {
+    display: grid;
+    grid-template-columns: 365px 1fr;
+    height: calc(100vh - 66px);
+}
+
+.template-container .template-container-left {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 40px;
+    position: relative;
+}
+
+.template-container .template-container-left .template-instruction {
+    text-align: center;
+    color: #8c8c8c;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: white;
+    width: 365px;
+    line-height: 40px;
+}
+
+.template-container .template-container-left .template-instruction a {
+    color: #8c8c8c;
+}
+
+.template-container .template-container-editor .edui-default .edui-toolbar {
+    padding: 10px !important;
+}
+
+.template-container .template-container-editor .edui-default .edui-editor-toolbarboxouter {
+    background: #fff;
+}
+
+.template-container .edui-editor-toolbarboxinner {
+    display: flex;
+}
+
+.template-generate-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 5px;
+}
+.template-container .template-generate-btn {
+    width: 120px;
+    height: 35px;
+    border-radius: 1px;
+    background-color: #5094ed;
+    text-align: center;
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    right: 0;
+    bottom: 0;
+}
+
+.modal-window a {
+    color: #5094ed;
+}

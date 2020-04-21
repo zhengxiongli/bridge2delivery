@@ -1,0 +1,122 @@
+body {
+    margin: 0;
+    padding: 0 0 200px 0;
+    font-size: 14px;
+    color: #000;
+    font-family: "Microsoft YaHei","微软雅黑",Sans-Serif;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    height: 66px;
+    background: #fff;
+    box-shadow: 0 1px 0 0 #e0e0e0;
+}
+
+.app-header .logo {
+    width: 84px;
+    margin-left: 31px;
+}
+
+.app-header .logo img {
+    width: 100%
+}
+
+.app-header .nav {
+    flex: 1;
+}
+
+.app-header .nav li {
+    display: inline-block;
+    margin-left: 28px;
+    position: relative;
+}
+.app-header .nav li.active:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -160%;
+    width: 60px;
+    border: 2px solid #00a6f3;
+    transform: translateX(-50%);
+}
+
+.app-main {
+    max-width: 1440px;
+    min-width: 1200px;
+    margin: 0 auto;
+    padding: 26px 0;
+}
+
+.app-main .title {
+     font-size: 26px;
+     font-weight: bold;
+     text-align: center;
+ }
+
+.app-main .description {
+    font-size: 18px;
+    color: #353535;
+    text-align: center;
+    margin: 14px 0 25px 0;
+}
+
+.app-main .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 94px;
+    padding: 0 40px;
+}
+
+.app-main .menu .item {
+    width: 366px;
+    margin: 0 10px;
+    background-color: #007cdc;
+    text-align: center;
+    padding: 40px 56px 29px;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+.app-main .menu .item .cover {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 33px;
+    overflow: hidden;
+    text-align: center;
+    display: inline-block;
+}
+
+.app-main .menu .item .desc {
+    font-size: 13px;
+    height: 53px;
+    width: 100%;
+    line-height: 1.4;
+}
+.app-main .menu .item .link {
+    display: inline-block;
+    width: 150px;
+    height: 40px;
+    outline: none;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: none;
+    cursor: pointer;
+    line-height: 40px;
+}
+
+.app-main .menu .item .cover img {
+    width: 100%
+}
+
+.swagger-title img {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin: 0 4px 4px 0;
+}
